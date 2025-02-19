@@ -1,1 +1,1 @@
-__version__ = "0.1.0" 
+from .lassaseq import fetch_sequences, process_sequences
