@@ -344,11 +344,10 @@ def write_summary(outdir, total_count, segment_counts, location_counts, requeste
             f.write(f"  S segments: lassa_s_segments.fasta\n")
             f.write(f"  Unknown segments: lassa_unknown_segments.fasta\n")
         else:
-            f.write(f"  {requested_segment.upper()} segments written: {written_counts['segment']}\n")
-            f.write(f"  Unknown segments written: {written_counts['unknown']}\n")
+            # Use the correct key (L or S) based on requested segment
+            f.write(f"  {requested_segment.upper()} segments written: {written_counts[requested_segment.upper()]}\n")
             f.write(f"Output files:\n")
             f.write(f"  {requested_segment.upper()} segments: lassa_{requested_segment.lower()}_segments.fasta\n")
-            f.write(f"  Unknown segments: lassa_unknown_segments.fasta\n")
 
 def cli_main():
     parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
@@ -394,8 +393,10 @@ def cli_main():
         unknown_output = os.path.join(args.outdir, "lassa_unknown_segments.fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
+        # Use consistent keys for written_counts
         written_counts = {
-            'segment': len(filtered_sequences),
+            'L': len(filtered_sequences) if args.segment.upper() == 'L' else 0,
+            'S': len(filtered_sequences) if args.segment.upper() == 'S' else 0,
             'unknown': len(unknown_sequences)
         }
         print(f"\nWrote {len(filtered_sequences)} {args.segment} segments and {len(unknown_sequences)} unknown segments")
