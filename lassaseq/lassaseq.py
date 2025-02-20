@@ -207,7 +207,7 @@ def process_sequences(sequences, segment_type):
                 final_segment = seq['segment']
             else:
                 # For unknown segments, try to determine from protein names
-                final_segment = get_segment_from_protein(record.description)
+                final_segment = get_segment_from_protein(original_header)
             
             # Only modify header after classification is complete
             record.id = get_metadata(record)
@@ -224,8 +224,6 @@ def process_sequences(sequences, segment_type):
         return l_sequences, s_sequences, unknown_sequences, unknown_headers
     else:
         filtered_sequences = []
-        unknown_sequences = []
-        unknown_headers = []
         target_segment = segment_type.upper()
         
         for seq in sequences:
@@ -234,24 +232,17 @@ def process_sequences(sequences, segment_type):
             
             # First try the official segment annotation
             if seq['segment'] == target_segment:
+                final_segment = seq['segment']
+            else:
+                # For unknown segments, try to determine from protein names
+                final_segment = get_segment_from_protein(original_header)
+            
+            if final_segment == target_segment:
                 record.id = get_metadata(record)
                 record.description = ''
                 filtered_sequences.append(record)
-            elif seq['segment'] is None:
-                # For unknown segments, try to determine from protein names
-                inferred_segment = get_segment_from_protein(record.description)
-                if inferred_segment == target_segment:
-                    record.id = get_metadata(record)
-                    record.description = ''
-                    filtered_sequences.append(record)
-                else:
-                    # Either wrong segment or truly unknown
-                    record.id = get_metadata(record)
-                    record.description = ''
-                    unknown_sequences.append(record)
-                    unknown_headers.append(original_header)
                     
-        return filtered_sequences, unknown_sequences, unknown_headers
+        return filtered_sequences
 
 def write_summary(outdir, total_count, segment_counts, location_counts, requested_segment, written_counts, sequences):
     """Write summary report to a file"""
@@ -363,9 +354,17 @@ def cli_main():
     
     sequences, segment_counts, location_counts = fetch_sequences()
     
+    # Always process both segments for consistent counting
+    l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(sequences, 'both')
+    
+    written_counts = {
+        'L': len(l_sequences), 
+        'S': len(s_sequences),
+        'unknown': len(unknown_sequences)
+    }
+    
+    # Write only the requested segment files
     if args.segment.upper() == 'BOTH':
-        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(sequences, args.segment)
-        
         # Write L segments
         l_output = os.path.join(args.outdir, "lassa_l_segments.fasta")
         SeqIO.write(l_sequences, l_output, "fasta")
@@ -374,32 +373,21 @@ def cli_main():
         s_output = os.path.join(args.outdir, "lassa_s_segments.fasta")
         SeqIO.write(s_sequences, s_output, "fasta")
         
-        # Write unknown segments
+        # Write unknown segments (only for 'both' option)
         unknown_output = os.path.join(args.outdir, "lassa_unknown_segments.fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
-        written_counts = {
-            'L': len(l_sequences), 
-            'S': len(s_sequences),
-            'unknown': len(unknown_sequences)
-        }
         print(f"\nWrote {len(l_sequences)} L segments, {len(s_sequences)} S segments, and {len(unknown_sequences)} unknown segments")
     else:
-        filtered_sequences, unknown_sequences, unknown_headers = process_sequences(sequences, args.segment)
-        output_file = os.path.join(args.outdir, f"lassa_{args.segment.lower()}_segments.fasta")
-        SeqIO.write(filtered_sequences, output_file, "fasta")
-        
-        # Write unknown segments
-        unknown_output = os.path.join(args.outdir, "lassa_unknown_segments.fasta")
-        SeqIO.write(unknown_sequences, unknown_output, "fasta")
-        
-        # Use consistent keys for written_counts
-        written_counts = {
-            'L': len(filtered_sequences) if args.segment.upper() == 'L' else 0,
-            'S': len(filtered_sequences) if args.segment.upper() == 'S' else 0,
-            'unknown': len(unknown_sequences)
-        }
-        print(f"\nWrote {len(filtered_sequences)} {args.segment} segments and {len(unknown_sequences)} unknown segments")
+        # Write only the requested segment
+        if args.segment.upper() == 'L':
+            output_file = os.path.join(args.outdir, "lassa_l_segments.fasta")
+            SeqIO.write(l_sequences, output_file, "fasta")
+            print(f"\nWrote {len(l_sequences)} L segments")
+        else:  # S segment
+            output_file = os.path.join(args.outdir, "lassa_s_segments.fasta")
+            SeqIO.write(s_sequences, output_file, "fasta")
+            print(f"\nWrote {len(s_sequences)} S segments")
     
     # Write summary report
     write_summary(args.outdir, len(sequences), segment_counts, location_counts, args.segment, written_counts, sequences)
