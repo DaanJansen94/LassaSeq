@@ -317,7 +317,31 @@ def process_sequences(sequences, segment_type):
                     
         return filtered_sequences
 
-def write_summary(outdir, initial_total, filtered_total, initial_segment_counts, location_counts, requested_segment, written_counts, filtered_sequences, genome_choice, completeness=None, sequences=None, host_choice=None):
+def calculate_location_counts(sequences):
+    """Calculate location counts for each segment type"""
+    locations = {'L': {}, 'S': {}, 'unknown': {}}
+    
+    for seq in sequences:
+        record = seq['record']
+        segment = get_segment_type(record)
+        segment_type = 'unknown' if segment is None else segment
+        
+        location = "UnknownLoc"
+        for feature in record.features:
+            if feature.type == "source":
+                if 'geo_loc_name' in feature.qualifiers:
+                    geo_loc = feature.qualifiers['geo_loc_name'][0]
+                    if 'missing' not in geo_loc.lower():
+                        location = geo_loc.split(':')[0].strip()
+                        location = clean_country_name(location)
+        
+        if location not in locations[segment_type]:
+            locations[segment_type][location] = 0
+        locations[segment_type][location] += 1
+    
+    return locations
+
+def write_summary(outdir, initial_total, filtered_total, initial_segment_counts, location_counts, requested_segment, written_counts, filtered_sequences, genome_choice, completeness=None, sequences=None, host_choice=None, completeness_filtered=None):
     """Write summary report to a file"""
     summary_file = os.path.join(outdir, "summary_Lassa.txt")
     
@@ -325,6 +349,34 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
         f.write("Lassa Virus Sequence Download Summary\n")
         f.write("====================================\n\n")
         f.write(f"Total Lassa virus sequences found: {initial_total}\n")
+        
+        # Add host distribution section
+        f.write("\nHost Distribution in Initial Sequences:\n")
+        f.write("-----------------------------------\n")
+        host_counts = {}
+        no_host_count = 0
+        
+        for seq in sequences:
+            record = seq['record']
+            host_found = False
+            
+            for feature in record.features:
+                if feature.type == "source":
+                    if 'host' in feature.qualifiers:
+                        host = feature.qualifiers['host'][0].lower()
+                        if host not in host_counts:
+                            host_counts[host] = 0
+                        host_counts[host] += 1
+                        host_found = True
+                        break
+            
+            if not host_found:
+                no_host_count += 1
+        
+        for host, count in sorted(host_counts.items(), key=lambda x: (-x[1], x[0])):
+            f.write(f"{host}: {count} sequences\n")
+        if no_host_count > 0:
+            f.write(f"\nSequences with no host information: {no_host_count}\n")
         
         # Initial distribution
         f.write("\nInitial Segment Distribution:\n")
@@ -358,91 +410,43 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
                 initial_locations[segment_type][location] = 0
             initial_locations[segment_type][location] += 1
         
-        write_geographical_distribution(f, initial_locations)
+        write_geographical_distribution(f, initial_locations, "Initial Geographical Distribution")
         
-        # After completeness filtering (if applied)
+        # After completeness filtering
         if genome_choice != '3':
             f.write("\nAfter Completeness Filtering:\n")
             f.write("--------------------------\n")
             if genome_choice == '1':
-                f.write(f"Filtering for completeness (>99%)\n")
+                f.write("Filtering for completeness (>99%)\n")
             else:
                 f.write(f"Filtering for completeness (>{completeness}%)\n")
             
-            completeness_locations = {'L': {}, 'S': {}, 'unknown': {}}
-            completeness_counts = {'L': 0, 'S': 0, 'unknown': 0}
-            
-            for seq in filtered_sequences:
-                record = seq['record']
-                segment = get_segment_type(record)
-                segment_type = 'unknown' if segment is None else segment
-                completeness_counts[segment_type] += 1
-                
-                location = "UnknownLoc"
-                for feature in record.features:
-                    if feature.type == "source":
-                        if 'geo_loc_name' in feature.qualifiers:
-                            geo_loc = feature.qualifiers['geo_loc_name'][0]
-                            if 'missing' not in geo_loc.lower():
-                                location = geo_loc.split(':')[0].strip()
-                                location = clean_country_name(location)
-                
-                if location not in completeness_locations[segment_type]:
-                    completeness_locations[segment_type][location] = 0
-                completeness_locations[segment_type][location] += 1
-            
-            f.write(f"\nSegment counts after completeness filtering:\n")
+            completeness_counts = calculate_segment_counts(completeness_filtered)
+            f.write("\nSegment counts after completeness filtering:\n")
             f.write(f"L segments: {completeness_counts['L']}\n")
             f.write(f"S segments: {completeness_counts['S']}\n")
             f.write(f"Unknown segments: {completeness_counts['unknown']}\n\n")
             
-            f.write("Geographical Distribution After Completeness Filtering:\n")
-            f.write("------------------------------------------------\n")
-            f.write("Country        L segments    S segments    Unknown         Total\n")
-            f.write("-----------   -----------   -----------   ---------   ----------\n")
-            write_geographical_distribution(f, completeness_locations)
+            completeness_locations = calculate_location_counts(completeness_filtered)
+            write_geographical_distribution(f, completeness_locations, "Geographical Distribution After Completeness Filtering")
         
-        # After host filtering (if applied)
+        # After host filtering
         if host_choice != '3':
             f.write("\nAfter Host Filtering:\n")
             f.write("-------------------\n")
             if host_choice == '1':
-                f.write("Filtering for human host only\n")
-            else:
-                f.write("Filtering for non-human host only\n")
+                f.write("Filtering for human sequences\n")
+            elif host_choice == '2':
+                f.write("Filtering for non-human sequences\n")
             
-            final_locations = {'L': {}, 'S': {}, 'unknown': {}}
-            final_counts = {'L': 0, 'S': 0, 'unknown': 0}
-            
-            for seq in filtered_sequences:
-                record = seq['record']
-                segment = get_segment_type(record)
-                segment_type = 'unknown' if segment is None else segment
-                final_counts[segment_type] += 1
-                
-                location = "UnknownLoc"
-                for feature in record.features:
-                    if feature.type == "source":
-                        if 'geo_loc_name' in feature.qualifiers:
-                            geo_loc = feature.qualifiers['geo_loc_name'][0]
-                            if 'missing' not in geo_loc.lower():
-                                location = geo_loc.split(':')[0].strip()
-                                location = clean_country_name(location)
-                
-                if location not in final_locations[segment_type]:
-                    final_locations[segment_type][location] = 0
-                final_locations[segment_type][location] += 1
-            
-            f.write(f"\nFinal segment counts:\n")
+            final_counts = calculate_segment_counts(filtered_sequences)
+            f.write("\nFinal segment counts:\n")
             f.write(f"L segments: {final_counts['L']}\n")
             f.write(f"S segments: {final_counts['S']}\n")
             f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
             
-            f.write("Final Geographical Distribution:\n")
-            f.write("-----------------------------\n")
-            f.write("Country        L segments    S segments    Unknown         Total\n")
-            f.write("-----------   -----------   -----------   ---------   ----------\n")
-            write_geographical_distribution(f, final_locations)
+            final_locations = calculate_location_counts(filtered_sequences)
+            write_geographical_distribution(f, final_locations, "Final Geographical Distribution")
         
         # Write output files section
         f.write("\nOutput files:\n")
@@ -450,8 +454,13 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
         f.write("  FASTA/S_segment/lassa_s_segments.fasta\n")
         f.write("  FASTA/unknown_segment/lassa_unknown_segments.fasta\n")
 
-def write_geographical_distribution(f, locations):
+def write_geographical_distribution(f, locations, title):
     """Helper function to write geographical distribution tables"""
+    f.write(f"\n{title}:\n")
+    f.write("-" * len(title) + "\n")
+    f.write("Country        L segments    S segments    Unknown         Total\n")
+    f.write("-----------   -----------   -----------   ---------   ----------\n")
+    
     all_countries = set()
     for segment_type in ['L', 'S', 'unknown']:
         all_countries.update(locations[segment_type].keys())
@@ -535,6 +544,46 @@ def meets_minimum_completeness(record, min_completeness):
     
     return completeness >= min_completeness
 
+def calculate_segment_counts(sequences):
+    """Calculate segment counts from a list of sequences"""
+    counts = {'L': 0, 'S': 0, 'unknown': 0}
+    for seq in sequences:
+        segment = get_segment_type(seq['record'])
+        if segment:
+            counts[segment] += 1
+        else:
+            counts['unknown'] += 1
+    return counts
+
+def analyze_hosts(sequences):
+    """Print all unique hosts found in sequences"""
+    host_counts = {}
+    no_host_count = 0
+    
+    for seq in sequences:
+        record = seq['record']
+        host_found = False
+        
+        for feature in record.features:
+            if feature.type == "source":
+                if 'host' in feature.qualifiers:
+                    host = feature.qualifiers['host'][0].lower()
+                    if host not in host_counts:
+                        host_counts[host] = 0
+                    host_counts[host] += 1
+                    host_found = True
+                    break
+        
+        if not host_found:
+            no_host_count += 1
+    
+    print("\nHost distribution in sequences:")
+    print("-----------------------------")
+    for host, count in sorted(host_counts.items(), key=lambda x: (-x[1], x[0])):
+        print(f"{host}: {count} sequences")
+    if no_host_count > 0:
+        print(f"\nSequences with no host information: {no_host_count}")
+
 def cli_main():
     try:
         parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
@@ -546,7 +595,7 @@ def cli_main():
         parser.add_argument('--completeness', type=float,
                            help='Minimum sequence completeness (1-100), required when --genome=2')
         parser.add_argument('--host', choices=['1', '2', '3'],
-                           help='Host filter: 1=Human only, 2=Non-human only, 3=No host filter')
+                           help='Host filter: 1=Human, 2=Non-human, 3=No host filter')
         
         args = parser.parse_args()
         
@@ -583,13 +632,16 @@ def cli_main():
             host_choice = args.host
         else:
             print("\nHost filtering options:")
-            print("1. Human sequences only")
-            print("2. Non-human sequences only")
+            print("1. Human sequences")
+            print("2. Non-human sequences")
             print("3. No host filter")
             host_choice = get_user_input("", ['1', '2', '3'])
         
         sequences, segment_counts, location_counts = fetch_sequences()
         initial_total = len(sequences)
+        
+        # Add host analysis before filtering
+        analyze_hosts(sequences)
         
         # Get initial counts before filtering
         initial_segment_counts = {'L': 0, 'S': 0, 'unknown': 0}
@@ -600,24 +652,33 @@ def cli_main():
             else:
                 initial_segment_counts['unknown'] += 1
         
-        # Filter sequences based on completeness and host
-        filtered_sequences = []
+        # First apply completeness filter
+        completeness_filtered = []
         for seq in sequences:
             include_sequence = True
             record = seq['record']
             
             # Completeness filter
             if genome_choice == '1':
-                if not is_complete_sequence(record):
+                if not is_complete_sequence(record):  # >99%
                     include_sequence = False
             elif genome_choice == '2':
-                if not meets_minimum_completeness(record, completeness):
+                if not meets_minimum_completeness(record, completeness):  # >X%
                     include_sequence = False
             
-            # Host filter
-            if include_sequence and host_choice != '3':
+            if include_sequence:
+                completeness_filtered.append(seq)
+        
+        # Then apply host filter to the completeness-filtered sequences
+        filtered_sequences = []
+        if host_choice != '3':  # If host filtering is requested
+            for seq in completeness_filtered:
+                include_sequence = True
+                record = seq['record']
+                
                 host_found = False
                 is_human = False
+                
                 for feature in record.features:
                     if feature.type == "source":
                         if 'host' in feature.qualifiers:
@@ -626,15 +687,18 @@ def cli_main():
                             is_human = 'homo sapiens' in host or 'human' in host
                             break
                 
-                if host_choice == '1':  # Human only
+                if host_choice == '1':  # Human
                     if not (host_found and is_human):
                         include_sequence = False
-                elif host_choice == '2':  # Non-human only
+                elif host_choice == '2':  # Non-human
                     if not (host_found and not is_human):
                         include_sequence = False
-            
-            if include_sequence:
-                filtered_sequences.append(seq)
+                
+                if include_sequence:
+                    filtered_sequences.append(seq)
+        else:
+            # If no host filtering, use completeness-filtered sequences
+            filtered_sequences = completeness_filtered
         
         # Process both segments
         l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(filtered_sequences, 'both')
@@ -663,7 +727,7 @@ def cli_main():
         # Update the summary file to reflect new directory structure
         write_summary(args.outdir, initial_total, len(filtered_sequences), initial_segment_counts, 
                      location_counts, 'both', written_counts, filtered_sequences, 
-                     genome_choice, completeness, sequences, host_choice)
+                     genome_choice, completeness, sequences, host_choice, completeness_filtered)
         print(f"Summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
         
     except KeyboardInterrupt:
