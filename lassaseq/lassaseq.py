@@ -350,7 +350,7 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
         f.write("====================================\n\n")
         f.write(f"Total Lassa virus sequences found: {initial_total}\n")
         
-        # Add host distribution section
+        # Host Distribution
         f.write("\nHost Distribution in Initial Sequences:\n")
         f.write("-----------------------------------\n")
         host_counts = {}
@@ -378,38 +378,15 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
         if no_host_count > 0:
             f.write(f"\nSequences with no host information: {no_host_count}\n")
         
-        # Initial distribution
+        # Initial Segment Distribution
         f.write("\nInitial Segment Distribution:\n")
         f.write("---------------------------\n")
         f.write(f"L segments: {initial_segment_counts['L']}\n")
         f.write(f"S segments: {initial_segment_counts['S']}\n")
         f.write(f"Unknown segments: {initial_segment_counts['unknown']}\n\n")
         
-        f.write("Initial Geographical Distribution:\n")
-        f.write("--------------------------------\n")
-        f.write("Country        L segments    S segments    Unknown         Total\n")
-        f.write("-----------   -----------   -----------   ---------   ----------\n")
-        
-        # Calculate initial location counts
-        initial_locations = {'L': {}, 'S': {}, 'unknown': {}}
-        for seq in sequences:
-            record = seq['record']
-            segment = get_segment_type(record)
-            segment_type = 'unknown' if segment is None else segment
-            
-            location = "UnknownLoc"
-            for feature in record.features:
-                if feature.type == "source":
-                    if 'geo_loc_name' in feature.qualifiers:
-                        geo_loc = feature.qualifiers['geo_loc_name'][0]
-                        if 'missing' not in geo_loc.lower():
-                            location = geo_loc.split(':')[0].strip()
-                            location = clean_country_name(location)
-            
-            if location not in initial_locations[segment_type]:
-                initial_locations[segment_type][location] = 0
-            initial_locations[segment_type][location] += 1
-        
+        # Initial Geographical Distribution
+        initial_locations = calculate_location_counts(sequences)
         write_geographical_distribution(f, initial_locations, "Initial Geographical Distribution")
         
         # After completeness filtering
