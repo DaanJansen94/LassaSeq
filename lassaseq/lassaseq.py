@@ -148,30 +148,19 @@ def fetch_sequences():
             
             for record in batch_records:
                 segment_type = get_segment_type(record)
+                # Store original header
+                original_header = f"{record.description}"
                 # Add sequence regardless of segment type
                 sequences.append({
                     'id': record.id,
                     'record': record,
-                    'segment': segment_type  # This will be None for unknown segments
+                    'segment': segment_type,  # This will be None for unknown segments
+                    'original_header': original_header  # Store original header
                 })
                 
                 # Update counts
                 if segment_type:
                     segment_counts[segment_type] += 1
-                    
-                    # Get location and update location counts only for known segments
-                    location = "UnknownLoc"
-                    for feature in record.features:
-                        if feature.type == "source":
-                            if 'geo_loc_name' in feature.qualifiers:
-                                geo_loc = feature.qualifiers['geo_loc_name'][0]
-                                if 'missing' not in geo_loc.lower():
-                                    location = geo_loc.split(':')[0].strip()
-                                    location = clean_country_name(location)
-                    
-                    if location not in location_counts[segment_type]:
-                        location_counts[segment_type][location] = 0
-                    location_counts[segment_type][location] += 1
                 else:
                     segment_counts['Unknown'] += 1
             
@@ -183,68 +172,125 @@ def fetch_sequences():
     
     return sequences, segment_counts, location_counts
 
+def get_segment_from_protein(description):
+    """Helper function to determine segment type from protein names in header"""
+    description = description.lower()
+    
+    # S segment proteins
+    s_proteins = ['nucleoprotein', 'glycoprotein', 'gpc', 'np']
+    # L segment proteins
+    l_proteins = ['polymerase', 'z protein', 'l protein']
+    
+    for protein in s_proteins:
+        if protein in description:
+            return 'S'
+    for protein in l_proteins:
+        if protein in description:
+            return 'L'
+    
+    return None
+
 def process_sequences(sequences, segment_type):
     """Process sequences based on segment type (L, S, or both)"""
     if segment_type.upper() == 'BOTH':
         l_sequences = []
         s_sequences = []
         unknown_sequences = []
-        unknown_headers = []  # New list to store original headers
+        unknown_headers = []
         
         for seq in sequences:
             record = seq['record']
-            # Store original header for unknown segments
-            if seq['segment'] is None:
-                unknown_headers.append(f">{record.id} {record.description}")
+            original_header = seq['original_header']
             
+            # First try the official segment annotation
+            if seq['segment'] in ['L', 'S']:
+                final_segment = seq['segment']
+            else:
+                # For unknown segments, try to determine from protein names
+                final_segment = get_segment_from_protein(record.description)
+            
+            # Only modify header after classification is complete
             record.id = get_metadata(record)
-            record.description = ''  # Clear description to avoid duplication
+            record.description = ''
             
-            if seq['segment'] == 'L':
+            if final_segment == 'L':
                 l_sequences.append(record)
-            elif seq['segment'] == 'S':
+            elif final_segment == 'S':
                 s_sequences.append(record)
-            elif seq['segment'] is None:
+            else:
                 unknown_sequences.append(record)
+                unknown_headers.append(original_header)
                 
         return l_sequences, s_sequences, unknown_sequences, unknown_headers
     else:
         filtered_sequences = []
         unknown_sequences = []
-        unknown_headers = []  # New list to store original headers
+        unknown_headers = []
+        target_segment = segment_type.upper()
         
         for seq in sequences:
             record = seq['record']
-            # Store original header for unknown segments
-            if seq['segment'] is None:
-                unknown_headers.append(f">{record.id} {record.description}")
+            original_header = seq['original_header']
             
-            record.id = get_metadata(record)
-            record.description = ''
-            
-            if seq['segment'] == segment_type.upper():
+            # First try the official segment annotation
+            if seq['segment'] == target_segment:
+                record.id = get_metadata(record)
+                record.description = ''
                 filtered_sequences.append(record)
             elif seq['segment'] is None:
-                unknown_sequences.append(record)
-                
+                # For unknown segments, try to determine from protein names
+                inferred_segment = get_segment_from_protein(record.description)
+                if inferred_segment == target_segment:
+                    record.id = get_metadata(record)
+                    record.description = ''
+                    filtered_sequences.append(record)
+                else:
+                    # Either wrong segment or truly unknown
+                    record.id = get_metadata(record)
+                    record.description = ''
+                    unknown_sequences.append(record)
+                    unknown_headers.append(original_header)
+                    
         return filtered_sequences, unknown_sequences, unknown_headers
 
-def write_summary(outdir, total_count, segment_counts, location_counts, segment_type, written_counts, sequences):
+def write_summary(outdir, total_count, segment_counts, location_counts, requested_segment, written_counts, sequences):
     """Write summary report to a file"""
     summary_file = os.path.join(outdir, "lassa_download_summary.txt")
     
-    # First, calculate unknown segment counts by location
+    # Recalculate location counts after reclassification
+    final_location_counts = {'L': {}, 'S': {}}
     unknown_locations = {}
+    
     for seq in sequences:
-        if seq['segment'] is None:
-            location = "UnknownLoc"
-            for feature in seq['record'].features:
-                if feature.type == "source":
-                    if 'geo_loc_name' in feature.qualifiers:
-                        geo_loc = feature.qualifiers['geo_loc_name'][0]
-                        if 'missing' not in geo_loc.lower():
-                            location = geo_loc.split(':')[0].strip()
-                            location = clean_country_name(location)
+        record = seq['record']
+        # Get location
+        location = "UnknownLoc"
+        for feature in record.features:
+            if feature.type == "source":
+                if 'geo_loc_name' in feature.qualifiers:
+                    geo_loc = feature.qualifiers['geo_loc_name'][0]
+                    if 'missing' not in geo_loc.lower():
+                        location = geo_loc.split(':')[0].strip()
+                        location = clean_country_name(location)
+        
+        # First try official annotation, then try header-based classification
+        final_segment = None
+        if seq['segment'] in ['L', 'S']:
+            final_segment = seq['segment']
+        else:
+            # For unknown segments, try to determine from protein names using original header
+            final_segment = get_segment_from_protein(seq['original_header'])
+        
+        # Update counts based on final classification
+        if final_segment == 'L':
+            if location not in final_location_counts['L']:
+                final_location_counts['L'][location] = 0
+            final_location_counts['L'][location] += 1
+        elif final_segment == 'S':
+            if location not in final_location_counts['S']:
+                final_location_counts['S'][location] = 0
+            final_location_counts['S'][location] += 1
+        else:  # Only truly unknown sequences
             if location not in unknown_locations:
                 unknown_locations[location] = 0
             unknown_locations[location] += 1
@@ -254,39 +300,42 @@ def write_summary(outdir, total_count, segment_counts, location_counts, segment_
         f.write("====================================\n\n")
         f.write(f"Total Lassa virus sequences found: {total_count}\n")
         f.write(f"Segments found in database:\n")
-        f.write(f"  L segments: {segment_counts['L']}\n")
-        f.write(f"  S segments: {segment_counts['S']}\n")
-        f.write(f"  Unknown/unspecified: {segment_counts['Unknown']}\n\n")
+        f.write(f"  L segments: {written_counts['L']}\n")
+        f.write(f"  S segments: {written_counts['S']}\n")
+        f.write(f"  Unknown/unspecified: {written_counts['unknown']}\n\n")
         
         f.write("Geographical Distribution of Segments:\n")
         f.write("-------------------------------------\n")
-        f.write("Country      L segments  S segments  Unknown       Total\n")
-        f.write("---------   ----------  ----------  -------    --------\n")
+        f.write("Country        L segments    S segments    Unknown         Total\n")
+        f.write("-----------   -----------   -----------   ---------   ----------\n")
         
         # Get all unique countries
-        all_countries = set(location_counts['L'].keys()) | set(location_counts['S'].keys()) | set(unknown_locations.keys())
+        all_countries = set(final_location_counts['L'].keys()) | \
+                       set(final_location_counts['S'].keys()) | \
+                       set(unknown_locations.keys())
         
         # Calculate and write counts for each country
         total_l = 0
         total_s = 0
         total_unknown = 0
         for country in sorted(all_countries):
-            l_count = location_counts['L'].get(country, 0)
-            s_count = location_counts['S'].get(country, 0)
+            l_count = final_location_counts['L'].get(country, 0)
+            s_count = final_location_counts['S'].get(country, 0)
             unknown_count = unknown_locations.get(country, 0)
             country_total = l_count + s_count + unknown_count
-            f.write(f"{country:<12} {l_count:>10}  {s_count:>10}  {unknown_count:>7}    {country_total:>8}\n")
+            if country_total > 0:  # Only write countries with sequences
+                f.write(f"{country:<13} {l_count:>11}   {s_count:>11}   {unknown_count:>9}   {country_total:>10}\n")
             total_l += l_count
             total_s += s_count
             total_unknown += unknown_count
         
-        # Write totals
-        f.write("-" * 52 + "\n")
+        # Write totals with matching format
+        f.write("-" * 60 + "\n")
         total_all = total_l + total_s + total_unknown
-        f.write(f"{'Total':<12} {total_l:>10}  {total_s:>10}  {total_unknown:>7}    {total_all:>8}\n\n")
+        f.write(f"{'Total':<13} {total_l:>11}   {total_s:>11}   {total_unknown:>9}   {total_all:>10}\n\n")
         
         f.write("Sequences downloaded:\n")
-        if segment_type.upper() == 'BOTH':
+        if requested_segment.upper() == 'BOTH':
             f.write(f"  L segments written: {written_counts['L']}\n")
             f.write(f"  S segments written: {written_counts['S']}\n")
             f.write(f"  Unknown segments written: {written_counts['unknown']}\n")
@@ -295,10 +344,10 @@ def write_summary(outdir, total_count, segment_counts, location_counts, segment_
             f.write(f"  S segments: lassa_s_segments.fasta\n")
             f.write(f"  Unknown segments: lassa_unknown_segments.fasta\n")
         else:
-            f.write(f"  {segment_type.upper()} segments written: {written_counts['segment']}\n")
+            f.write(f"  {requested_segment.upper()} segments written: {written_counts['segment']}\n")
             f.write(f"  Unknown segments written: {written_counts['unknown']}\n")
             f.write(f"Output files:\n")
-            f.write(f"  {segment_type.upper()} segments: lassa_{segment_type.lower()}_segments.fasta\n")
+            f.write(f"  {requested_segment.upper()} segments: lassa_{requested_segment.lower()}_segments.fasta\n")
             f.write(f"  Unknown segments: lassa_unknown_segments.fasta\n")
 
 def cli_main():
@@ -330,18 +379,12 @@ def cli_main():
         unknown_output = os.path.join(args.outdir, "lassa_unknown_segments.fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
-        # Write unknown headers
-        unknown_headers_output = os.path.join(args.outdir, "unknown_segments_headers.txt")
-        with open(unknown_headers_output, 'w') as f:
-            f.write('\n'.join(unknown_headers))
-        
         written_counts = {
             'L': len(l_sequences), 
             'S': len(s_sequences),
             'unknown': len(unknown_sequences)
         }
         print(f"\nWrote {len(l_sequences)} L segments, {len(s_sequences)} S segments, and {len(unknown_sequences)} unknown segments")
-        print(f"Unknown segment headers written to: {unknown_headers_output}")
     else:
         filtered_sequences, unknown_sequences, unknown_headers = process_sequences(sequences, args.segment)
         output_file = os.path.join(args.outdir, f"lassa_{args.segment.lower()}_segments.fasta")
@@ -351,17 +394,11 @@ def cli_main():
         unknown_output = os.path.join(args.outdir, "lassa_unknown_segments.fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
-        # Write unknown headers
-        unknown_headers_output = os.path.join(args.outdir, "unknown_segments_headers.txt")
-        with open(unknown_headers_output, 'w') as f:
-            f.write('\n'.join(unknown_headers))
-        
         written_counts = {
             'segment': len(filtered_sequences),
             'unknown': len(unknown_sequences)
         }
         print(f"\nWrote {len(filtered_sequences)} {args.segment} segments and {len(unknown_sequences)} unknown segments")
-        print(f"Unknown segment headers written to: {unknown_headers_output}")
     
     # Write summary report
     write_summary(args.outdir, len(sequences), segment_counts, location_counts, args.segment, written_counts, sequences)
