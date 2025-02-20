@@ -1,0 +1,36 @@
+Lassa Virus Sequence Download Summary
+====================================
+
+Total Lassa virus sequences found: 2800
+Segments found in database:
+  L segments: 741
+  S segments: 956
+  Unknown/unspecified: 1103
+
+Geographical Distribution of Segments:
+-------------------------------------
+Country      L segments  S segments  Unknown       Total
+---------   ----------  ----------  -------    --------
+Benin                10          15        7          32
+China                 0           0        1           1
+Ghana                 0           0        4           4
+Guinea                9          13      484         506
+IvoryCoast           26          26        6          58
+Liberia              30          51        2          83
+Mali                 12          14        1          27
+Nigeria             516         682      289        1487
+SierraLeone         102         124      183         409
+Togo                  3           3        0           6
+USA                   0           0        5           5
+UnknownLoc           33          28      121         182
+----------------------------------------------------
+Total               741         956     1103        2800
+
+Sequences downloaded:
+  L segments written: 741
+  S segments written: 956
+  Unknown segments written: 1103
+Output files:
+  L segments: lassa_l_segments.fasta
+  S segments: lassa_s_segments.fasta
+  Unknown segments: lassa_unknown_segments.fasta

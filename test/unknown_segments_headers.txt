@@ -1,0 +1,1103 @@
+>PP079055.1 Mammarenavirus lassaense strain Bri-496 glycoprotein gene, partial cds
+>PP079054.1 Mammarenavirus lassaense strain Bri-493 glycoprotein gene, partial cds
+>PP079053.1 Mammarenavirus lassaense strain Bri-489 glycoprotein gene, partial cds
+>PP079052.1 Mammarenavirus lassaense strain Bri-488 glycoprotein gene, partial cds
+>PP079051.1 Mammarenavirus lassaense strain Bri-480 glycoprotein gene, partial cds
+>PP079050.1 Mammarenavirus lassaense strain Bri-476 glycoprotein gene, partial cds
+>PP079049.1 Mammarenavirus lassaense strain Bri-474 glycoprotein gene, partial cds
+>PP079048.1 Mammarenavirus lassaense strain Bri-473 glycoprotein gene, partial cds
+>PP079047.1 Mammarenavirus lassaense strain Bri-466 glycoprotein gene, partial cds
+>PP079046.1 Mammarenavirus lassaense strain Bri-465 glycoprotein gene, partial cds
+>PP079045.1 Mammarenavirus lassaense strain Bri-463 glycoprotein gene, partial cds
+>PP079044.1 Mammarenavirus lassaense strain Bri-451 glycoprotein gene, partial cds
+>PP079043.1 Mammarenavirus lassaense strain Bri-450 glycoprotein gene, partial cds
+>PP079042.1 Mammarenavirus lassaense strain Bri-449 glycoprotein gene, partial cds
+>PP079041.1 Mammarenavirus lassaense strain Bri-444 glycoprotein gene, partial cds
+>PP079040.1 Mammarenavirus lassaense strain Bri-439 glycoprotein gene, partial cds
+>PP079039.1 Mammarenavirus lassaense strain Bri-438 glycoprotein gene, partial cds
+>PP079038.1 Mammarenavirus lassaense strain Bri-421 glycoprotein gene, partial cds
+>PP079037.1 Mammarenavirus lassaense strain Bri-408 glycoprotein gene, partial cds
+>PP079036.1 Mammarenavirus lassaense strain Bri-271 glycoprotein gene, partial cds
+>7OJL_D Chain D, Lassa virus L protein in a pre-initiation conformation [PREINITIATION]
+>7OJL_E Chain E, Lassa virus L protein in a pre-initiation conformation [PREINITIATION]
+>PF321337.1 KR 1020230134487-A/132: RNA CONSTRUCT
+>7ELA_C Chain C, Structure of Lassa virus polymerase in complex with 3'-vRNA and Z mutant (F36A)
+>7OJN_E Chain E, Lassa virus L protein in an elongation conformation [ELONGATION]
+>7OJN_M Chain M, Lassa virus L protein in an elongation conformation [ELONGATION]
+>7OJN_R Chain R, Lassa virus L protein in an elongation conformation [ELONGATION]
+>7OJN_D Chain D, Lassa virus L protein in an elongation conformation [ELONGATION]
+>7OJK_D Chain D, Lassa virus L protein bound to the distal promoter duplex [DISTAL-PROMOTER]
+>7OJK_E Chain E, Lassa virus L protein bound to the distal promoter duplex [DISTAL-PROMOTER]
+>7OEB_E Chain E, Lassa virus L protein bound to 3' promoter RNA (well-resolved endonuclease) [3END-ENDO]
+>7OEA_E Chain E, Lassa virus L protein bound to 3' promoter RNA (well-resolved polymerase core) [3END-CORE]
+>OR490754.1 Mammarenavirus lassaense strain Yak-20 polymerase gene, partial cds
+>OR490753.1 Mammarenavirus lassaense strain Yak-08 polymerase gene, partial cds
+>OR490752.1 Mammarenavirus lassaense strain Yak-02 polymerase gene, partial cds
+>OR490751.1 Mammarenavirus lassaense strain Mak-67 polymerase gene, partial cds
+>OR490750.1 Mammarenavirus lassaense strain Fal-31 polymerase gene, partial cds
+>OR490749.1 Mammarenavirus lassaense strain Fal-26 polymerase gene, partial cds
+>OR490748.1 Mammarenavirus lassaense strain Bad-27 polymerase gene, partial cds
+>OR490747.1 Mammarenavirus lassaense strain Yar-46 polymerase gene, complete cds
+>OR490746.1 Mammarenavirus lassaense strain Yar-24 polymerase gene, complete cds
+>OR490745.1 Mammarenavirus lassaense strain Tan-491 polymerase gene, complete cds
+>OR490744.1 Mammarenavirus lassaense strain Sil-03 polymerase gene, complete cds
+>OR490743.1 Mammarenavirus lassaense strain Saf-01 polymerase gene, complete cds
+>OR490742.1 Mammarenavirus lassaense strain Kho-29 polymerase gene, complete cds
+>OR490741.1 Mammarenavirus lassaense strain Den-43 polymerase gene, partial cds
+>OR490740.1 Mammarenavirus lassaense strain Dam-49 polymerase gene, complete cds
+>OR490739.1 Mammarenavirus lassaense strain Dam-15 polymerase gene, partial cds
+>OR490738.1 Mammarenavirus lassaense strain Dam-05 polymerase gene, complete cds
+>OR490737.1 Mammarenavirus lassaense strain Dal-11 polymerase gene, complete cds
+>OR490736.1 Mammarenavirus lassaense strain Bri-08 polymerase gene, complete cds
+>OR490735.1 Mammarenavirus lassaense strain Ban-377 polymerase gene, complete cds
+>OR490734.1 Mammarenavirus lassaense strain Mak-68 nucleoprotein gene, partial cds
+>OR490733.1 Mammarenavirus lassaense strain Mak-02 nucleoprotein gene, partial cds
+>OR490732.1 Mammarenavirus lassaense strain Mak-01 nucleoprotein gene, partial cds
+>OR490731.1 Mammarenavirus lassaense strain Mak-67 nucleoprotein gene, complete cds
+>OR490730.1 Mammarenavirus lassaense strain Fal-25 nucleoprotein gene, complete cds
+>OR490729.1 Mammarenavirus lassaense strain Fal-31 nucleoprotein gene, partial cds
+>OR490728.1 Mammarenavirus lassaense strain Fal-26 nucleoprotein gene, partial cds
+>OR490727.1 Mammarenavirus lassaense strain Bad-35 nucleoprotein gene, partial cds
+>OR490726.1 Mammarenavirus lassaense strain Bad-27 nucleoprotein gene, partial cds
+>OR490725.1 Mammarenavirus lassaense strain Yar-46 nucleoprotein gene, complete cds
+>OR490724.1 Mammarenavirus lassaense strain Yar-24 nucleoprotein gene, complete cds
+>OR490723.1 Mammarenavirus lassaense strain Tan-491 nucleoprotein gene, complete cds
+>OR490722.1 Mammarenavirus lassaense strain Sil-03 nucleoprotein gene, complete cds
+>OR490721.1 Mammarenavirus lassaense strain Saf-01 nucleoprotein gene, complete cds
+>OR490720.1 Mammarenavirus lassaense strain Kho-29 nucleoprotein gene, complete cds
+>OR490719.1 Mammarenavirus lassaense strain Den-43 nucleoprotein gene, partial cds
+>OR490718.1 Mammarenavirus lassaense strain Dam-49 nucleoprotein gene, complete cds
+>OR490717.1 Mammarenavirus lassaense strain Dam-15 nucleoprotein gene, partial cds
+>OR490716.1 Mammarenavirus lassaense strain Dam-05 nucleoprotein gene, complete cds
+>OR490715.1 Mammarenavirus lassaense strain Dal-11 nucleoprotein gene, complete cds
+>OR490714.1 Mammarenavirus lassaense strain Bri-08 nucleoprotein gene, complete cds
+>OR490713.1 Mammarenavirus lassaense strain Ban-377 nucleoprotein gene, complete cds
+>OR490712.1 Mammarenavirus lassaense strain Mak-68 glycoprotein gene, partial cds
+>OR490711.1 Mammarenavirus lassaense strain Mak-02 glycoprotein gene, partial cds
+>OR490710.1 Mammarenavirus lassaense strain Mak-01 glycoprotein gene, partial cds
+>OR490709.1 Mammarenavirus lassaense strain Mak-67 glycoprotein gene, partial cds
+>OR490708.1 Mammarenavirus lassaense strain Fal-25 glycoprotein gene, partial cds
+>OR490707.1 Mammarenavirus lassaense strain Fal-31 glycoprotein gene, partial cds
+>OR490706.1 Mammarenavirus lassaense strain Fal-26 glycoprotein gene, partial cds
+>OR490705.1 Mammarenavirus lassaense strain Bad-35 glycoprotein gene, partial cds
+>OR490704.1 Mammarenavirus lassaense strain Bad-27 glycoprotein gene, partial cds
+>OR490703.1 Mammarenavirus lassaense strain Yar-46 glycoprotein gene, complete cds
+>OR490702.1 Mammarenavirus lassaense strain Yar-24 glycoprotein gene, complete cds
+>OR490701.1 Mammarenavirus lassaense strain Tan-491 glycoprotein gene, complete cds
+>OR490700.1 Mammarenavirus lassaense strain Sil-03 glycoprotein gene, complete cds
+>OR490699.1 Mammarenavirus lassaense strain Saf-01 glycoprotein gene, complete cds
+>OR490698.1 Mammarenavirus lassaense strain Kho-29 glycoprotein gene, complete cds
+>OR490697.1 Mammarenavirus lassaense strain Den-43 glycoprotein gene, partial cds
+>OR490696.1 Mammarenavirus lassaense strain Dam-49 glycoprotein gene, complete cds
+>OR490695.1 Mammarenavirus lassaense strain Dam-15 glycoprotein gene, partial cds
+>OR490694.1 Mammarenavirus lassaense strain Dam-05 glycoprotein gene, complete cds
+>OR490693.1 Mammarenavirus lassaense strain Dal-11 glycoprotein gene, complete cds
+>OR490692.1 Mammarenavirus lassaense strain Bri-08 glycoprotein gene, complete cds
+>OR490691.1 Mammarenavirus lassaense strain Ban-377 glycoprotein gene, complete cds
+>OR493504.1 UNVERIFIED: Mammarenavirus lassaense strain OWIYLI013CS genomic sequence
+>OR493503.1 UNVERIFIED: Mammarenavirus lassaense strain OWEHLIZ002CS genomic sequence
+>OR493502.1 UNVERIFIED: Mammarenavirus lassaense strain AIODUGOT002RS genomic sequence
+>OR493501.1 UNVERIFIED: Mammarenavirus lassaense strain AINKWGOT003RS genomic sequence
+>OR493500.1 UNVERIFIED: Mammarenavirus lassaense strain OWEHDOG007OS genomic sequence
+>OR493499.1 UNVERIFIED: Mammarenavirus lassaense strain AINKWGOT002OS genomic sequence
+>OR147790.1 Mammarenavirus lassaense isolate c0141-1 Z protein (Z) gene, complete cds; and polymerase (L) gene, partial cds
+>OR147789.1 Mammarenavirus lassaense isolate c0091-1 Z protein (Z) and polymerase (L) genes, partial cds
+>OR147788.1 Mammarenavirus lassaense isolate c0044-1 Z protein (Z) and polymerase (L) genes, complete cds
+>OR113008.1 Mammarenavirus lassaense isolate G-27952-1-1 Z protein (LASVsLgp1) and L protein (LASVsLgp2) genes, complete cds
+>OR113007.1 Mammarenavirus lassaense isolate G-7843-2-2 nucleoprotein (NP) gene, partial cds; and glycoprotein (GPC) gene, complete cds
+>OR113006.1 Mammarenavirus lassaense isolate G-7840-1-2 nucleoprotein (NP) gene, partial cds; and glycoprotein (GPC) gene, complete cds
+>OR113005.1 Mammarenavirus lassaense isolate G-27961-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR113004.1 Mammarenavirus lassaense isolate G-27952-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041687.1 Mammarenavirus lassaense isolate G-23362-2-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041686.1 Mammarenavirus lassaense isolate G-27785-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041685.1 Mammarenavirus lassaense isolate G-25197-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, partial cds
+>OR041684.1 Mammarenavirus lassaense isolate G-27645-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041683.1 Mammarenavirus lassaense isolate G-26293-2-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041682.1 Mammarenavirus lassaense isolate G-27807-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041681.1 Mammarenavirus lassaense isolate G-27882-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041680.1 Mammarenavirus lassaense isolate G-27879-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041679.1 Mammarenavirus lassaense isolate G-27818-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041678.1 Mammarenavirus lassaense isolate G-24650-2-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OR041677.1 Mammarenavirus lassaense isolate G-27804-1-2 nucleoprotein (LASVsSgp1) gene, complete cds; and glycoprotein (LASVsSgp2) gene, partial cds
+>OR041676.1 Mammarenavirus lassaense isolate G-27901-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919520.1 Mammarenavirus lassaense isolate G-20573-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919519.1 Mammarenavirus lassaense isolate G-27671-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919518.1 Mammarenavirus lassaense isolate G-8439-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919517.1 Mammarenavirus lassaense isolate G-27653-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919516.1 Mammarenavirus lassaense isolate G-7823-2-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919515.1 Mammarenavirus lassaense isolate G-8410-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919514.1 Mammarenavirus lassaense isolate G-7661-1-2 nucleoprotein (LASVsSgp1) gene, partial cds; and glycoprotein (LASVsSgp2) gene, complete cds
+>OQ919513.1 Mammarenavirus lassaense isolate G-7601-4-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919512.1 Mammarenavirus lassaense isolate G-7821-5-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919511.1 Mammarenavirus lassaense isolate G-24650-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919510.1 Mammarenavirus lassaense isolate G-26293-1-2 nucleoprotein (LASVsSgp1) and glycoprotein (LASVsSgp2) genes, complete cds
+>OQ919509.1 Mammarenavirus lassaense isolate G-7795-1-1 LASVsLgp1 gene, complete sequence; and L protein (LASVsLgp2) gene, complete cds
+>OQ919508.1 Mammarenavirus lassaense isolate G-7638-1-1 Z protein (LASVsLgp1) and L protein (LASVsLgp2) genes, complete cds
+>OQ919507.1 Mammarenavirus lassaense isolate G-7821-5-1 Z protein (LASVsLgp1) and L protein (LASVsLgp2) genes, complete cds
+>OQ919506.1 Mammarenavirus lassaense isolate G-27653-1-1 LASVsLgp1 gene, complete sequence; and L protein (LASVsLgp2) gene, complete cds
+>OQ919505.1 Mammarenavirus lassaense isolate G-7661-1-1 Z protein (LASVsLgp1) and L protein (LASVsLgp2) genes, complete cds
+>OQ919504.1 Mammarenavirus lassaense isolate G-8410-1-1 Z protein (LASVsLgp1) and L protein (LASVsLgp2) genes, complete cds
+>OQ919503.1 Mammarenavirus lassaense isolate G-7823-2-1 LASVsLgp1 gene, complete sequence; and L protein (LASVsLgp2) gene, complete cds
+>OQ919502.1 Mammarenavirus lassaense isolate G-27671-1-1 LASVsLgp1 gene, complete sequence; and L protein (LASVsLgp2) gene, partial cds
+>OQ919501.1 Mammarenavirus lassaense isolate G-7284-1-1 LASVsLgp1 gene, complete sequence; and L protein (LASVsLgp2) gene, complete cds
+>OQ919500.1 Mammarenavirus lassaense isolate G-7601-4-1 Z protein (LASVsLgp1) gene, partial cds; and L protein (LASVsLgp2) gene, complete cds
+>OQ919499.1 Mammarenavirus lassaense isolate G-8439-1-1 LASVsLgp1 gene, partial sequence; and L protein (LASVsLgp2) gene, complete cds
+>OQ919498.1 Mammarenavirus lassaense isolate G-7843-2-1 Z protein (LASVsLgp1) gene, complete cds; and L protein (LASVsLgp2) gene, partial cds
+>OQ557079.1 Mammarenavirus lassaense strain OWO-2397 nucleoprotein gene, partial cds
+>OQ557078.1 Mammarenavirus lassaense strain OWO-2396 nucleoprotein gene, partial cds
+>OQ557077.1 Mammarenavirus lassaense strain OWO-2395 nucleoprotein gene, partial cds
+>OQ557076.1 Mammarenavirus lassaense strain OWO-2391 nucleoprotein gene, partial cds
+>OQ557075.1 Mammarenavirus lassaense strain OWO-2385 nucleoprotein gene, partial cds
+>OQ557074.1 Mammarenavirus lassaense strain OWO-2382 nucleoprotein gene, partial cds
+>OQ557073.1 Mammarenavirus lassaense strain OWO-2381 nucleoprotein gene, partial cds
+>OQ557072.1 Mammarenavirus lassaense strain OWO-2380 nucleoprotein gene, partial cds
+>OQ557071.1 Mammarenavirus lassaense strain OWO-2379 nucleoprotein gene, partial cds
+>OQ557070.1 Mammarenavirus lassaense strain OWO-2378 nucleoprotein gene, partial cds
+>OQ557069.1 Mammarenavirus lassaense strain OWO-2367 nucleoprotein gene, partial cds
+>OQ557068.1 Mammarenavirus lassaense strain OWO-2353 nucleoprotein gene, partial cds
+>OQ557067.1 Mammarenavirus lassaense strain OWO-2337 nucleoprotein gene, partial cds
+>OQ557066.1 Mammarenavirus lassaense strain EBU-2063 nucleoprotein gene, partial cds
+>OQ557065.1 Mammarenavirus lassaense strain EBU-2046 nucleoprotein gene, partial cds
+>OQ557064.1 Mammarenavirus lassaense strain EBU-2042 nucleoprotein gene, partial cds
+>OQ557063.1 Mammarenavirus lassaense strain EBU-2028 nucleoprotein gene, partial cds
+>OQ557062.1 Mammarenavirus lassaense strain EBU-2019 nucleoprotein gene, partial cds
+>OQ557061.1 Mammarenavirus lassaense strain EBU-2011 nucleoprotein gene, partial cds
+>OQ557060.1 Mammarenavirus lassaense strain EBU-1992 nucleoprotein gene, partial cds
+>OQ557059.1 Mammarenavirus lassaense strain EBU-1991 nucleoprotein gene, partial cds
+>OQ557058.1 Mammarenavirus lassaense strain IFO-1729 nucleoprotein gene, partial cds
+>OQ557057.1 Mammarenavirus lassaense strain IFO-1704 nucleoprotein gene, partial cds
+>OQ557056.1 Mammarenavirus lassaense strain IFO-1703 nucleoprotein gene, partial cds
+>OQ557055.1 Mammarenavirus lassaense strain IFO-1690 nucleoprotein gene, partial cds
+>OQ557054.1 Mammarenavirus lassaense strain OKE-1689 nucleoprotein gene, partial cds
+>OQ557053.1 Mammarenavirus lassaense strain OKE-1687 nucleoprotein gene, partial cds
+>OQ557052.1 Mammarenavirus lassaense strain OKE-1685 nucleoprotein gene, partial cds
+>OQ557051.1 Mammarenavirus lassaense strain OKE-1684 nucleoprotein gene, partial cds
+>OQ557050.1 Mammarenavirus lassaense strain OKE-1682 nucleoprotein gene, partial cds
+>OQ557049.1 Mammarenavirus lassaense strain OKE-1680 nucleoprotein gene, partial cds
+>OQ557048.1 Mammarenavirus lassaense strain OKE-1678 nucleoprotein gene, partial cds
+>OQ557047.1 Mammarenavirus lassaense strain OKE-1677 nucleoprotein gene, partial cds
+>OQ557046.1 Mammarenavirus lassaense strain OKE-1676 nucleoprotein gene, partial cds
+>OQ557045.1 Mammarenavirus lassaense strain OKE-1674 nucleoprotein gene, partial cds
+>OQ557044.1 Mammarenavirus lassaense strain OKE-1669 nucleoprotein gene, partial cds
+>OQ557043.1 Mammarenavirus lassaense strain OKE-1666 nucleoprotein gene, partial cds
+>OQ557042.1 Mammarenavirus lassaense strain OKE-1663 nucleoprotein gene, partial cds
+>OQ557041.1 Mammarenavirus lassaense strain OKE-1662 nucleoprotein gene, partial cds
+>OQ557040.1 Mammarenavirus lassaense strain OKE-1657 nucleoprotein gene, partial cds
+>OQ557039.1 Mammarenavirus lassaense strain OKE-1655 nucleoprotein gene, partial cds
+>OQ557038.1 Mammarenavirus lassaense strain OKE-1654 nucleoprotein gene, partial cds
+>OQ557037.1 Mammarenavirus lassaense strain OKE-1652 nucleoprotein gene, partial cds
+>OQ557036.1 Mammarenavirus lassaense strain OKE-1651 nucleoprotein gene, partial cds
+>OQ557035.1 Mammarenavirus lassaense strain OKE-1650 nucleoprotein gene, partial cds
+>OQ557034.1 Mammarenavirus lassaense strain OKE-1645 nucleoprotein gene, partial cds
+>OQ557033.1 Mammarenavirus lassaense strain OKE-1644 nucleoprotein gene, partial cds
+>OQ557032.1 Mammarenavirus lassaense strain OKE-1643 nucleoprotein gene, partial cds
+>OQ557031.1 Mammarenavirus lassaense strain OKE-1641 nucleoprotein gene, partial cds
+>OQ557030.1 Mammarenavirus lassaense strain OKE-1639 nucleoprotein gene, partial cds
+>OQ557029.1 Mammarenavirus lassaense strain OKE-1637 nucleoprotein gene, partial cds
+>OQ557028.1 Mammarenavirus lassaense strain OKE-1635 nucleoprotein gene, partial cds
+>OQ557027.1 Mammarenavirus lassaense strain OKE-1634 nucleoprotein gene, partial cds
+>OQ557026.1 Mammarenavirus lassaense strain OKE-1627 nucleoprotein gene, partial cds
+>OQ557025.1 Mammarenavirus lassaense strain OKE-1622 nucleoprotein gene, partial cds
+>OQ557024.1 Mammarenavirus lassaense strain OKE-1620 nucleoprotein gene, partial cds
+>OQ557023.1 Mammarenavirus lassaense strain OKE-1615 nucleoprotein gene, partial cds
+>OQ557022.1 Mammarenavirus lassaense strain OKE-1613 nucleoprotein gene, partial cds
+>OQ557021.1 Mammarenavirus lassaense strain OKE-1612 nucleoprotein gene, partial cds
+>OQ557020.1 Mammarenavirus lassaense strain OKE-1611 nucleoprotein gene, partial cds
+>OQ557019.1 Mammarenavirus lassaense strain OKE-1610 nucleoprotein gene, partial cds
+>OQ557018.1 Mammarenavirus lassaense strain OKE-1608 nucleoprotein gene, partial cds
+>OQ557017.1 Mammarenavirus lassaense strain EBU-1598 nucleoprotein gene, partial cds
+>OQ557016.1 Mammarenavirus lassaense strain EBU-1594 nucleoprotein gene, partial cds
+>OQ557015.1 Mammarenavirus lassaense strain EBU-1592 nucleoprotein gene, partial cds
+>OQ557014.1 Mammarenavirus lassaense strain EBU-1590 nucleoprotein gene, partial cds
+>OQ557013.1 Mammarenavirus lassaense strain EBU-1589 nucleoprotein gene, partial cds
+>OQ557012.1 Mammarenavirus lassaense strain EBU-1580 nucleoprotein gene, partial cds
+>OQ557011.1 Mammarenavirus lassaense strain EBU-1571 nucleoprotein gene, partial cds
+>OQ557010.1 Mammarenavirus lassaense strain EBU-1557 nucleoprotein gene, partial cds
+>OQ557009.1 Mammarenavirus lassaense strain EBU-1480 nucleoprotein gene, partial cds
+>OQ557008.1 Mammarenavirus lassaense strain EBU-1457 nucleoprotein gene, partial cds
+>OQ557007.1 Mammarenavirus lassaense strain EBU-1397 nucleoprotein gene, partial cds
+>OQ557006.1 Mammarenavirus lassaense strain EBU-1393 nucleoprotein gene, partial cds
+>OQ557005.1 Mammarenavirus lassaense strain EBU-1340 nucleoprotein gene, partial cds
+>OQ557004.1 Mammarenavirus lassaense strain EBU-1332 nucleoprotein gene, partial cds
+>OQ557003.1 Mammarenavirus lassaense strain EBU-1313 nucleoprotein gene, partial cds
+>OQ557002.1 Mammarenavirus lassaense strain EBU-1295 nucleoprotein gene, partial cds
+>OQ557001.1 Mammarenavirus lassaense strain EBU-1294 nucleoprotein gene, partial cds
+>OQ557000.1 Mammarenavirus lassaense strain EBU-1280 nucleoprotein gene, partial cds
+>OQ556999.1 Mammarenavirus lassaense strain EKP-1254 nucleoprotein gene, partial cds
+>OQ556998.1 Mammarenavirus lassaense strain EKP-1217 nucleoprotein gene, partial cds
+>OQ556997.1 Mammarenavirus lassaense strain OKH-1044 nucleoprotein gene, partial cds
+>OQ556996.1 Mammarenavirus lassaense strain EBU-992 nucleoprotein gene, partial cds
+>OQ556995.1 Mammarenavirus lassaense strain EBU-986 nucleoprotein gene, partial cds
+>OQ556994.1 Mammarenavirus lassaense strain OWO-2397 glycoprotein gene, partial cds
+>OQ556993.1 Mammarenavirus lassaense strain OWO-2396 glycoprotein gene, partial cds
+>OQ556992.1 Mammarenavirus lassaense strain OWO-2395 glycoprotein gene, partial cds
+>OQ556991.1 Mammarenavirus lassaense strain OWO-2391 glycoprotein gene, partial cds
+>OQ556990.1 Mammarenavirus lassaense strain OWO-2385 glycoprotein gene, partial cds
+>OQ556989.1 Mammarenavirus lassaense strain OWO-2382 glycoprotein gene, partial cds
+>OQ556988.1 Mammarenavirus lassaense strain OWO-2381 glycoprotein gene, partial cds
+>OQ556987.1 Mammarenavirus lassaense strain OWO-2380 glycoprotein gene, partial cds
+>OQ556986.1 Mammarenavirus lassaense strain OWO-2379 glycoprotein gene, partial cds
+>OQ556985.1 Mammarenavirus lassaense strain OWO-2378 glycoprotein gene, partial cds
+>OQ556984.1 Mammarenavirus lassaense strain OWO-2367 glycoprotein gene, partial cds
+>OQ556983.1 Mammarenavirus lassaense strain OWO-2353 glycoprotein gene, partial cds
+>OQ556982.1 Mammarenavirus lassaense strain OWO-2337 glycoprotein gene, partial cds
+>OQ556981.1 Mammarenavirus lassaense strain EBU-2063 glycoprotein gene, partial cds
+>OQ556980.1 Mammarenavirus lassaense strain EBU-2046 glycoprotein gene, partial cds
+>OQ556979.1 Mammarenavirus lassaense strain EBU-2042 glycoprotein gene, partial cds
+>OQ556978.1 Mammarenavirus lassaense strain EBU-2028 glycoprotein gene, partial cds
+>OQ556977.1 Mammarenavirus lassaense strain EBU-2019 glycoprotein gene, partial cds
+>OQ556976.1 Mammarenavirus lassaense strain EBU-2011 glycoprotein gene, partial cds
+>OQ556975.1 Mammarenavirus lassaense strain EBU-1992 glycoprotein gene, partial cds
+>OQ556974.1 Mammarenavirus lassaense strain EBU-1991 glycoprotein gene, partial cds
+>OQ556973.1 Mammarenavirus lassaense strain IFO-1729 glycoprotein gene, partial cds
+>OQ556972.1 Mammarenavirus lassaense strain IFO-1704 glycoprotein gene, partial cds
+>OQ556971.1 Mammarenavirus lassaense strain IFO-1703 glycoprotein gene, partial cds
+>OQ556970.1 Mammarenavirus lassaense strain IFO-1690 glycoprotein gene, partial cds
+>OQ556969.1 Mammarenavirus lassaense strain OKE-1689 glycoprotein gene, partial cds
+>OQ556968.1 Mammarenavirus lassaense strain OKE-1687 glycoprotein gene, partial cds
+>OQ556967.1 Mammarenavirus lassaense strain OKE-1685 glycoprotein gene, partial cds
+>OQ556966.1 Mammarenavirus lassaense strain OKE-1684 glycoprotein gene, partial cds
+>OQ556965.1 Mammarenavirus lassaense strain OKE-1682 glycoprotein gene, partial cds
+>OQ556964.1 Mammarenavirus lassaense strain OKE-1680 glycoprotein gene, partial cds
+>OQ556963.1 Mammarenavirus lassaense strain OKE-1678 glycoprotein gene, partial cds
+>OQ556962.1 Mammarenavirus lassaense strain OKE-1677 glycoprotein gene, partial cds
+>OQ556961.1 Mammarenavirus lassaense strain OKE-1676 glycoprotein gene, partial cds
+>OQ556960.1 Mammarenavirus lassaense strain OKE-1674 glycoprotein gene, partial cds
+>OQ556959.1 Mammarenavirus lassaense strain OKE-1669 glycoprotein gene, partial cds
+>OQ556958.1 Mammarenavirus lassaense strain OKE-1666 glycoprotein gene, partial cds
+>OQ556957.1 Mammarenavirus lassaense strain OKE-1663 glycoprotein gene, partial cds
+>OQ556956.1 Mammarenavirus lassaense strain OKE-1662 glycoprotein gene, partial cds
+>OQ556955.1 Mammarenavirus lassaense strain OKE-1657 glycoprotein gene, partial cds
+>OQ556954.1 Mammarenavirus lassaense strain OKE-1655 glycoprotein gene, partial cds
+>OQ556953.1 Mammarenavirus lassaense strain OKE-1654 glycoprotein gene, partial cds
+>OQ556952.1 Mammarenavirus lassaense strain OKE-1652 glycoprotein gene, partial cds
+>OQ556951.1 Mammarenavirus lassaense strain OKE-1651 glycoprotein gene, partial cds
+>OQ556950.1 Mammarenavirus lassaense strain OKE-1650 glycoprotein gene, partial cds
+>OQ556949.1 Mammarenavirus lassaense strain OKE-1645 glycoprotein gene, partial cds
+>OQ556948.1 Mammarenavirus lassaense strain OKE-1644 glycoprotein gene, partial cds
+>OQ556947.1 Mammarenavirus lassaense strain OKE-1643 glycoprotein gene, partial cds
+>OQ556946.1 Mammarenavirus lassaense strain OKE-1641 glycoprotein gene, partial cds
+>OQ556945.1 Mammarenavirus lassaense strain OKE-1639 glycoprotein gene, partial cds
+>OQ556944.1 Mammarenavirus lassaense strain OKE-1637 glycoprotein gene, partial cds
+>OQ556943.1 Mammarenavirus lassaense strain OKE-1635 glycoprotein gene, partial cds
+>OQ556942.1 Mammarenavirus lassaense strain OKE-1634 glycoprotein gene, partial cds
+>OQ556941.1 Mammarenavirus lassaense strain OKE-1627 glycoprotein gene, partial cds
+>OQ556940.1 Mammarenavirus lassaense strain OKE-1622 glycoprotein gene, partial cds
+>OQ556939.1 Mammarenavirus lassaense strain OKE-1620 glycoprotein gene, partial cds
+>OQ556938.1 Mammarenavirus lassaense strain OKE-1615 glycoprotein gene, partial cds
+>OQ556937.1 Mammarenavirus lassaense strain OKE-1613 glycoprotein gene, partial cds
+>OQ556936.1 Mammarenavirus lassaense strain OKE-1612 glycoprotein gene, partial cds
+>OQ556935.1 Mammarenavirus lassaense strain OKE-1611 glycoprotein gene, partial cds
+>OQ556934.1 Mammarenavirus lassaense strain OKE-1610 glycoprotein gene, partial cds
+>OQ556933.1 Mammarenavirus lassaense strain OKE-1608 glycoprotein gene, partial cds
+>OQ556932.1 Mammarenavirus lassaense strain EBU-1598 glycoprotein gene, partial cds
+>OQ556931.1 Mammarenavirus lassaense strain EBU-1594 glycoprotein gene, partial cds
+>OQ556930.1 Mammarenavirus lassaense strain EBU-1592 glycoprotein gene, partial cds
+>OQ556929.1 Mammarenavirus lassaense strain EBU-1590 glycoprotein gene, partial cds
+>OQ556928.1 Mammarenavirus lassaense strain EBU-1589 glycoprotein gene, partial cds
+>OQ556927.1 Mammarenavirus lassaense strain EBU-1580 glycoprotein gene, partial cds
+>OQ556926.1 Mammarenavirus lassaense strain EBU-1571 glycoprotein gene, partial cds
+>OQ556925.1 Mammarenavirus lassaense strain EBU-1557 glycoprotein gene, partial cds
+>OQ556924.1 Mammarenavirus lassaense strain EBU-1480 glycoprotein gene, partial cds
+>OQ556923.1 Mammarenavirus lassaense strain EBU-1457 glycoprotein gene, partial cds
+>OQ556922.1 Mammarenavirus lassaense strain EBU-1397 glycoprotein gene, partial cds
+>OQ556921.1 Mammarenavirus lassaense strain EBU-1393 glycoprotein gene, partial cds
+>OQ556920.1 Mammarenavirus lassaense strain EBU-1340 glycoprotein gene, partial cds
+>OQ556919.1 Mammarenavirus lassaense strain EBU-1332 glycoprotein gene, partial cds
+>OQ556918.1 Mammarenavirus lassaense strain EBU-1313 glycoprotein gene, partial cds
+>OQ556917.1 Mammarenavirus lassaense strain EBU-1295 glycoprotein gene, partial cds
+>OQ556916.1 Mammarenavirus lassaense strain EBU-1294 glycoprotein gene, partial cds
+>OQ556915.1 Mammarenavirus lassaense strain EBU-1280 glycoprotein gene, partial cds
+>OQ556914.1 Mammarenavirus lassaense strain EKP-1254 glycoprotein gene, partial cds
+>OQ556913.1 Mammarenavirus lassaense strain EKP-1217 glycoprotein gene, partial cds
+>OQ556912.1 Mammarenavirus lassaense strain OKH-1044 glycoprotein gene, partial cds
+>OQ556911.1 Mammarenavirus lassaense strain EBU-992 glycoprotein gene, partial cds
+>OQ556910.1 Mammarenavirus lassaense strain EBU-986 glycoprotein gene, partial cds
+>OP723870.1 UNVERIFIED: Lassa mammarenavirus isolate WUXI 87 sequence
+>OK573207.1 UNVERIFIED: Lassa mammarenavirus FDA:FDAARGOS_851 genomic sequence
+>OK573206.1 UNVERIFIED: Lassa mammarenavirus FDA:FDAARGOS_851 genomic sequence
+>OK573205.1 UNVERIFIED: Lassa mammarenavirus FDA:FDAARGOS_851 genomic sequence
+>OK573204.1 UNVERIFIED: Lassa mammarenavirus FDA:FDAARGOS_851 genomic sequence
+>OK573203.1 UNVERIFIED: Lassa mammarenavirus FDA:FDAARGOS_851 genomic sequence
+>MW007355.1 Lassa mammarenavirus isolate PREDICT_SLAR3235 nucleocapsid gene, partial cds
+>MW007354.1 Lassa mammarenavirus isolate PREDICT_SLAR3234 nucleocapsid gene, partial cds
+>MW007353.1 Lassa mammarenavirus isolate PREDICT_SLAR3231 nucleocapsid gene, partial cds
+>MW007352.1 Lassa mammarenavirus isolate PREDICT_SLAR3230 nucleocapsid gene, partial cds
+>MW007351.1 Lassa mammarenavirus isolate PREDICT_SLAR0001956 nucleocapsid gene, partial cds
+>MW776599.1 Lassa mammarenavirus strain Yar-31 glycoprotein gene, partial cds
+>MW776598.1 Lassa mammarenavirus strain Yar-26 glycoprotein gene, partial cds
+>MW776597.1 Lassa mammarenavirus strain Yar-13 glycoprotein gene, partial cds
+>MW776596.1 Lassa mammarenavirus strain Yar-8 glycoprotein gene, partial cds
+>MZ169799.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_61 glycoprotein precursor and nucleoprotein genes, complete cds
+>MZ169797.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_57 glycoprotein precursor, gene, partial cds; and nucleoprotein gene, complete cds
+>MZ169795.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_55 glycoprotein precursor, gene, partial cds; and nucleoprotein gene, complete cds
+>MZ169793.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_46 glycoprotein precursor, gene, partial cds; and nucleoprotein gene, complete cds
+>MZ169791.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_33 glycoprotein precursor and nucleoprotein genes, complete cds
+>MZ169798.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_61 Z protein and polymerase genes, complete cds
+>MZ169796.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_57 polymerase gene, complete cds
+>MZ169794.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_55 polymerase and Z protein genes, complete cds
+>MZ169792.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_46 polymerase gene, partial cds
+>MZ169790.1 Mammarenavirus lassaense isolate H.sapiens-wt/NGA/2018/NML_33 polymerase and Z protein genes, complete cds
+>KF926390.1 Lassa virus isolate Lassa 331 nucleoprotein gene, partial cds
+>MW039391.1 Mammarenavirus lassaense strain YAK-20 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>MW039390.1 Mammarenavirus lassaense strain YAK-08 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, partial cds
+>MW039389.1 Mammarenavirus lassaense strain YAK-02 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, partial cds
+>MW039388.1 Mammarenavirus lassaense strain NYA-44 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, partial cds
+>MT119640.1 Mammarenavirus lassaense strain Yar-217 nucleoprotein gene, partial cds
+>MT119639.1 Mammarenavirus lassaense strain Yar-194 nucleoprotein gene, partial cds
+>MT119638.1 Mammarenavirus lassaense strain Yar-185 nucleoprotein gene, partial cds
+>MT119637.1 Mammarenavirus lassaense strain Yar-151 nucleoprotein gene, partial cds
+>MT119636.1 Mammarenavirus lassaense strain Yar-130 nucleoprotein gene, partial cds
+>MT119635.1 Mammarenavirus lassaense strain Yar-62 nucleoprotein gene, partial cds
+>MT119634.1 Mammarenavirus lassaense strain Yar-51 nucleoprotein gene, partial cds
+>MT119633.1 Mammarenavirus lassaense strain Yar-33 nucleoprotein gene, partial cds
+>MT119632.1 Mammarenavirus lassaense strain Yar-09 nucleoprotein gene, partial cds
+>MT119631.1 Mammarenavirus lassaense strain Son-211 nucleoprotein gene, partial cds
+>MT119630.1 Mammarenavirus lassaense strain Son-198 nucleoprotein gene, partial cds
+>MT119629.1 Mammarenavirus lassaense strain Son-197 nucleoprotein gene, partial cds
+>MT119628.1 Mammarenavirus lassaense strain Son-193 nucleoprotein gene, partial cds
+>MT119627.1 Mammarenavirus lassaense strain Son-146 nucleoprotein gene, partial cds
+>MT119626.1 Mammarenavirus lassaense strain Son-140 nucleoprotein gene, partial cds
+>MT119625.1 Mammarenavirus lassaense strain Son-133 nucleoprotein gene, partial cds
+>MT119624.1 Mammarenavirus lassaense strain Son-124 nucleoprotein gene, partial cds
+>MT119623.1 Mammarenavirus lassaense strain Son-116 nucleoprotein gene, partial cds
+>MT119622.1 Mammarenavirus lassaense strain Son-105 nucleoprotein gene, partial cds
+>MT119621.1 Mammarenavirus lassaense strain Son-69 nucleoprotein gene, partial cds
+>MT119620.1 Mammarenavirus lassaense strain Son-29 nucleoprotein gene, partial cds
+>MT119619.1 Mammarenavirus lassaense strain Sok-104 nucleoprotein gene, partial cds
+>MT119618.1 Mammarenavirus lassaense strain Sok-103 nucleoprotein gene, partial cds
+>MT119617.1 Mammarenavirus lassaense strain Sok-95 nucleoprotein gene, partial cds
+>MT119616.1 Mammarenavirus lassaense strain Sok-77 nucleoprotein gene, partial cds
+>MT119615.1 Mammarenavirus lassaense strain Sok-76 nucleoprotein gene, partial cds
+>MT119614.1 Mammarenavirus lassaense strain Sok-68 nucleoprotein gene, partial cds
+>MT119613.1 Mammarenavirus lassaense strain Sok-62 nucleoprotein gene, partial cds
+>MT119612.1 Mammarenavirus lassaense strain Sok-58 nucleoprotein gene, partial cds
+>MT119611.1 Mammarenavirus lassaense strain Sok-49 nucleoprotein gene, partial cds
+>MT119610.1 Mammarenavirus lassaense strain Sok-42 nucleoprotein gene, partial cds
+>MT119609.1 Mammarenavirus lassaense strain Sok-41 nucleoprotein gene, partial cds
+>MT119608.1 Mammarenavirus lassaense strain Sok-37 nucleoprotein gene, partial cds
+>MT119607.1 Mammarenavirus lassaense strain Sok-34 nucleoprotein gene, partial cds
+>MT119606.1 Mammarenavirus lassaense strain Sok-22 nucleoprotein gene, partial cds
+>MT119605.1 Mammarenavirus lassaense strain Dam-192 nucleoprotein gene, partial cds
+>MT119604.1 Mammarenavirus lassaense strain Dam-183 nucleoprotein gene, partial cds
+>MT119603.1 Mammarenavirus lassaense strain Dam-163 nucleoprotein gene, partial cds
+>MT119602.1 Mammarenavirus lassaense strain Dam-162 nucleoprotein gene, partial cds
+>MT119601.1 Mammarenavirus lassaense strain Dam-151 nucleoprotein gene, partial cds
+>MT119600.1 Mammarenavirus lassaense strain Dam-135 nucleoprotein gene, partial cds
+>MT119599.1 Mammarenavirus lassaense strain Dam-127 nucleoprotein gene, partial cds
+>MT119598.1 Mammarenavirus lassaense strain Dam-119 nucleoprotein gene, partial cds
+>MT119597.1 Mammarenavirus lassaense strain Dam-70 nucleoprotein gene, partial cds
+>MT119596.1 Mammarenavirus lassaense strain Dam-65 nucleoprotein gene, partial cds
+>MT119595.1 Mammarenavirus lassaense strain Dam-59 nucleoprotein gene, partial cds
+>MT119594.1 Mammarenavirus lassaense strain Dam-54 nucleoprotein gene, partial cds
+>MT119593.1 Mammarenavirus lassaense strain Dal-140 nucleoprotein gene, partial cds
+>MT119592.1 Mammarenavirus lassaense strain Dal-139 nucleoprotein gene, partial cds
+>MT119591.1 Mammarenavirus lassaense strain Dal-125 nucleoprotein gene, partial cds
+>MT119590.1 Mammarenavirus lassaense strain Dal-121 nucleoprotein gene, partial cds
+>MT119589.1 Mammarenavirus lassaense strain Dal-120 nucleoprotein gene, partial cds
+>MT119588.1 Mammarenavirus lassaense strain Dal-110 nucleoprotein gene, partial cds
+>MT119587.1 Mammarenavirus lassaense strain Dal-109 nucleoprotein gene, partial cds
+>MT119586.1 Mammarenavirus lassaense strain Dal-107 nucleoprotein gene, partial cds
+>MT119585.1 Mammarenavirus lassaense strain Dal-100 nucleoprotein gene, partial cds
+>MT119584.1 Mammarenavirus lassaense strain Dal-97 nucleoprotein gene, partial cds
+>MT119583.1 Mammarenavirus lassaense strain Dal-94 nucleoprotein gene, partial cds
+>MT119582.1 Mammarenavirus lassaense strain Dal-78 nucleoprotein gene, partial cds
+>MT119581.1 Mammarenavirus lassaense strain Dal-77 nucleoprotein gene, partial cds
+>MT119580.1 Mammarenavirus lassaense strain Dal-47 nucleoprotein gene, partial cds
+>MT119579.1 Mammarenavirus lassaense strain Dal-46 nucleoprotein gene, partial cds
+>MT119578.1 Mammarenavirus lassaense strain Dal-44 nucleoprotein gene, partial cds
+>MT119577.1 Mammarenavirus lassaense strain Dal-31 nucleoprotein gene, partial cds
+>MT119576.1 Mammarenavirus lassaense strain Dal-29 nucleoprotein gene, partial cds
+>MT119575.1 Mammarenavirus lassaense strain Bri-229 nucleoprotein gene, partial cds
+>MT119574.1 Mammarenavirus lassaense strain Bri-228 nucleoprotein gene, partial cds
+>MT119573.1 Mammarenavirus lassaense strain Bri-222 nucleoprotein gene, partial cds
+>MT119572.1 Mammarenavirus lassaense strain Bri-221 nucleoprotein gene, partial cds
+>MT119571.1 Mammarenavirus lassaense strain Bri-216 nucleoprotein gene, partial cds
+>MT119570.1 Mammarenavirus lassaense strain Bri-215 nucleoprotein gene, partial cds
+>MT119569.1 Mammarenavirus lassaense strain Bri-210 nucleoprotein gene, partial cds
+>MT119568.1 Mammarenavirus lassaense strain Bri-201 nucleoprotein gene, partial cds
+>MT119567.1 Mammarenavirus lassaense strain Bri-195 nucleoprotein gene, partial cds
+>MT119566.1 Mammarenavirus lassaense strain Bri-194 nucleoprotein gene, partial cds
+>MT119565.1 Mammarenavirus lassaense strain Bri-174 nucleoprotein gene, partial cds
+>MT119564.1 Mammarenavirus lassaense strain Bri-161 nucleoprotein gene, partial cds
+>MT119563.1 Mammarenavirus lassaense strain Bri-145 nucleoprotein gene, partial cds
+>MT119562.1 Mammarenavirus lassaense strain Bri-124 nucleoprotein gene, partial cds
+>MT119561.1 Mammarenavirus lassaense strain Bri-116 nucleoprotein gene, partial cds
+>MT119560.1 Mammarenavirus lassaense strain Bri-115 nucleoprotein gene, partial cds
+>MT119559.1 Mammarenavirus lassaense strain Bri-103 nucleoprotein gene, partial cds
+>MT119558.1 Mammarenavirus lassaense strain Bri-99 nucleoprotein gene, partial cds
+>MT119557.1 Mammarenavirus lassaense strain Bri-94 nucleoprotein gene, partial cds
+>MT119556.1 Mammarenavirus lassaense strain Yar-217 glycoprotein gene, partial cds
+>MT119555.1 Mammarenavirus lassaense strain Yar-194 glycoprotein gene, partial cds
+>MT119554.1 Mammarenavirus lassaense strain Yar-185 glycoprotein gene, partial cds
+>MT119553.1 Mammarenavirus lassaense strain Yar-151 glycoprotein gene, partial cds
+>MT119552.1 Mammarenavirus lassaense strain Yar-130 glycoprotein gene, partial cds
+>MT119551.1 Mammarenavirus lassaense strain Yar-62 glycoprotein gene, partial cds
+>MT119550.1 Mammarenavirus lassaense strain Yar-51 glycoprotein gene, partial cds
+>MT119549.1 Mammarenavirus lassaense strain Yar-33 glycoprotein gene, partial cds
+>MT119548.1 Mammarenavirus lassaense strain Yar-17 glycoprotein gene, partial cds
+>MT119547.1 Mammarenavirus lassaense strain Yar-09 glycoprotein gene, partial cds
+>MT119546.1 Mammarenavirus lassaense strain Son-211 glycoprotein gene, partial cds
+>MT119545.1 Mammarenavirus lassaense strain Son-198 glycoprotein gene, partial cds
+>MT119544.1 Mammarenavirus lassaense strain Son-197 glycoprotein gene, partial cds
+>MT119543.1 Mammarenavirus lassaense strain Son-193 glycoprotein gene, partial cds
+>MT119542.1 Mammarenavirus lassaense strain Son-146 glycoprotein gene, partial cds
+>MT119541.1 Mammarenavirus lassaense strain Son-140 glycoprotein gene, partial cds
+>MT119540.1 Mammarenavirus lassaense strain Son-133 glycoprotein gene, partial cds
+>MT119539.1 Mammarenavirus lassaense strain Son-124 glycoprotein gene, partial cds
+>MT119538.1 Mammarenavirus lassaense strain Son-116 glycoprotein gene, partial cds
+>MT119537.1 Mammarenavirus lassaense strain Son-105 glycoprotein gene, partial cds
+>MT119536.1 Mammarenavirus lassaense strain Son-69 glycoprotein gene, partial cds
+>MT119535.1 Mammarenavirus lassaense strain Son-29 glycoprotein gene, partial cds
+>MT119534.1 Mammarenavirus lassaense strain Sok-104 glycoprotein gene, partial cds
+>MT119533.1 Mammarenavirus lassaense strain Sok-103 glycoprotein gene, partial cds
+>MT119532.1 Mammarenavirus lassaense strain Sok-95 glycoprotein gene, partial cds
+>MT119531.1 Mammarenavirus lassaense strain Sok-77 glycoprotein gene, partial cds
+>MT119530.1 Mammarenavirus lassaense strain Sok-76 glycoprotein gene, partial cds
+>MT119529.1 Mammarenavirus lassaense strain Sok-68 glycoprotein gene, partial cds
+>MT119528.1 Mammarenavirus lassaense strain Sok-62 glycoprotein gene, partial cds
+>MT119527.1 Mammarenavirus lassaense strain Sok-58 glycoprotein gene, partial cds
+>MT119526.1 Mammarenavirus lassaense strain Sok-49 glycoprotein gene, partial cds
+>MT119525.1 Mammarenavirus lassaense strain Sok-42 glycoprotein gene, partial cds
+>MT119524.1 Mammarenavirus lassaense strain Sok-41 glycoprotein gene, partial cds
+>MT119523.1 Mammarenavirus lassaense strain Sok-37 glycoprotein gene, partial cds
+>MT119522.1 Mammarenavirus lassaense strain Sok-34 glycoprotein gene, partial cds
+>MT119521.1 Mammarenavirus lassaense strain Sok-22 glycoprotein gene, partial cds
+>MT119520.1 Mammarenavirus lassaense strain Dam-192 glycoprotein gene, partial cds
+>MT119519.1 Mammarenavirus lassaense strain Dam-183 glycoprotein gene, partial cds
+>MT119518.1 Mammarenavirus lassaense strain Dam-163 glycoprotein gene, partial cds
+>MT119517.1 Mammarenavirus lassaense strain Dam-162 glycoprotein gene, partial cds
+>MT119516.1 Mammarenavirus lassaense strain Dam-152 glycoprotein gene, partial cds
+>MT119515.1 Mammarenavirus lassaense strain Dam-151 glycoprotein gene, partial cds
+>MT119514.1 Mammarenavirus lassaense strain Dam-135 glycoprotein gene, partial cds
+>MT119513.1 Mammarenavirus lassaense strain Dam-127 glycoprotein gene, partial cds
+>MT119512.1 Mammarenavirus lassaense strain Dam-119 glycoprotein gene, partial cds
+>MT119511.1 Mammarenavirus lassaense strain Dam-96 glycoprotein gene, partial cds
+>MT119510.1 Mammarenavirus lassaense strain Dam-70 glycoprotein gene, partial cds
+>MT119509.1 Mammarenavirus lassaense strain Dam-67 glycoprotein gene, partial cds
+>MT119508.1 Mammarenavirus lassaense strain Dam-65 glycoprotein gene, partial cds
+>MT119507.1 Mammarenavirus lassaense strain Dam-59 glycoprotein gene, partial cds
+>MT119506.1 Mammarenavirus lassaense strain Dam-54 glycoprotein gene, partial cds
+>MT119505.1 Mammarenavirus lassaense strain Dam-31 glycoprotein gene, partial cds
+>MT119504.1 Mammarenavirus lassaense strain Dam-30 glycoprotein gene, partial cds
+>MT119503.1 Mammarenavirus lassaense strain Dam-29 glycoprotein gene, partial cds
+>MT119502.1 Mammarenavirus lassaense strain Dam-27 glycoprotein gene, partial cds
+>MT119501.1 Mammarenavirus lassaense strain Dal-140 glycoprotein gene, partial cds
+>MT119500.1 Mammarenavirus lassaense strain Dal-139 glycoprotein gene, partial cds
+>MT119499.1 Mammarenavirus lassaense strain Dal-125 glycoprotein gene, partial cds
+>MT119498.1 Mammarenavirus lassaense strain Dal-121 glycoprotein gene, partial cds
+>MT119497.1 Mammarenavirus lassaense strain Dal-120 glycoprotein gene, partial cds
+>MT119496.1 Mammarenavirus lassaense strain Dal-110 glycoprotein gene, partial cds
+>MT119495.1 Mammarenavirus lassaense strain Dal-109 glycoprotein gene, partial cds
+>MT119494.1 Mammarenavirus lassaense strain Dal-107 glycoprotein gene, partial cds
+>MT119493.1 Mammarenavirus lassaense strain Dal-100 glycoprotein gene, partial cds
+>MT119492.1 Mammarenavirus lassaense strain Dal-97 glycoprotein gene, partial cds
+>MT119491.1 Mammarenavirus lassaense strain Dal-94 glycoprotein gene, partial cds
+>MT119490.1 Mammarenavirus lassaense strain Dal-78 glycoprotein gene, partial cds
+>MT119489.1 Mammarenavirus lassaense strain Dal-77 glycoprotein gene, partial cds
+>MT119488.1 Mammarenavirus lassaense strain Dal-65 glycoprotein gene, partial cds
+>MT119487.1 Mammarenavirus lassaense strain Dal-47 glycoprotein gene, partial cds
+>MT119486.1 Mammarenavirus lassaense strain Dal-46 glycoprotein gene, partial cds
+>MT119485.1 Mammarenavirus lassaense strain Dal-44 glycoprotein gene, partial cds
+>MT119484.1 Mammarenavirus lassaense strain Dal-31 glycoprotein gene, partial cds
+>MT119483.1 Mammarenavirus lassaense strain Dal-29 glycoprotein gene, partial cds
+>MT119482.1 Mammarenavirus lassaense strain Dal-10 glycoprotein gene, partial cds
+>MT119481.1 Mammarenavirus lassaense strain Bri-229 glycoprotein gene, partial cds
+>MT119480.1 Mammarenavirus lassaense strain Bri-228 glycoprotein gene, partial cds
+>MT119479.1 Mammarenavirus lassaense strain Bri-222 glycoprotein gene, partial cds
+>MT119478.1 Mammarenavirus lassaense strain Bri-221 glycoprotein gene, partial cds
+>MT119477.1 Mammarenavirus lassaense strain Bri-216 glycoprotein gene, partial cds
+>MT119476.1 Mammarenavirus lassaense strain Bri-215 glycoprotein gene, partial cds
+>MT119475.1 Mammarenavirus lassaense strain Bri-210 glycoprotein gene, partial cds
+>MT119474.1 Mammarenavirus lassaense strain Bri-201 glycoprotein gene, partial cds
+>MT119473.1 Mammarenavirus lassaense strain Bri-195 glycoprotein gene, partial cds
+>MT119472.1 Mammarenavirus lassaense strain Bri-194 glycoprotein gene, partial cds
+>MT119471.1 Mammarenavirus lassaense strain Bri-174 glycoprotein gene, partial cds
+>MT119470.1 Mammarenavirus lassaense strain Bri-161 glycoprotein gene, partial cds
+>MT119469.1 Mammarenavirus lassaense strain Bri-145 glycoprotein gene, partial cds
+>MT119468.1 Mammarenavirus lassaense strain Bri-124 glycoprotein gene, partial cds
+>MT119467.1 Mammarenavirus lassaense strain Bri-116 glycoprotein gene, partial cds
+>MT119466.1 Mammarenavirus lassaense strain Bri-115 glycoprotein gene, partial cds
+>MT119465.1 Mammarenavirus lassaense strain Bri-103 glycoprotein gene, partial cds
+>MT119464.1 Mammarenavirus lassaense strain Bri-99 glycoprotein gene, partial cds
+>MT119463.1 Mammarenavirus lassaense strain Bri-94 glycoprotein gene, partial cds
+>MT119462.1 Mammarenavirus lassaense strain Bri-63 glycoprotein gene, partial cds
+>MH028401.1 Mammarenavirus lassaense strain Worogui 51 nucleoprotein gene, partial cds
+>MH028400.1 Mammarenavirus lassaense strain Worogui 50 nucleoprotein gene, partial cds
+>MH028399.1 Mammarenavirus lassaense strain Odo-akaba 13 nucleoprotein gene, partial cds
+>MH028398.1 Mammarenavirus lassaense strain Worogui 51 glycoprotein gene, partial cds
+>MH028397.1 Mammarenavirus lassaense strain Worogui 50 glycoprotein gene, partial cds
+>MH028396.1 Mammarenavirus lassaense strain Odo-akaba 13 glycoprotein gene, partial cds
+>MT001770.1 Mammarenavirus lassaense strain NIG-EKP-1984 nucleoprotein gene, partial cds
+>MT001769.1 Mammarenavirus lassaense strain NIG-EKP-1969 nucleoprotein gene, partial cds
+>MT001768.1 Mammarenavirus lassaense strain NIG-EKP-1960 nucleoprotein gene, partial cds
+>MT001767.1 Mammarenavirus lassaense strain NIG-EKP-1951 nucleoprotein gene, partial cds
+>MT001766.1 Mammarenavirus lassaense strain NIG-EKP-1908 nucleoprotein gene, partial cds
+>MT001765.1 Mammarenavirus lassaense strain NIG-EKP-1526 nucleoprotein gene, partial cds
+>MT001764.1 Mammarenavirus lassaense strain NIG-EKP-1441 nucleoprotein gene, partial cds
+>MT001763.1 Mammarenavirus lassaense strain NIG-EKP-1429 nucleoprotein gene, partial cds
+>MT001762.1 Mammarenavirus lassaense strain NIG-EKP-1374 nucleoprotein gene, partial cds
+>MT001761.1 Mammarenavirus lassaense strain NIG-EKP-1363 nucleoprotein gene, partial cds
+>MT001760.1 Mammarenavirus lassaense strain NIG-EKP-1350 nucleoprotein gene, partial cds
+>MT001759.1 Mammarenavirus lassaense strain NIG-EKP-1215 nucleoprotein gene, partial cds
+>MT001758.1 Mammarenavirus lassaense strain NIG-EKP-1187 nucleoprotein gene, partial cds
+>MT001757.1 Mammarenavirus lassaense strain NIG-EKP-1984 glycoprotein gene, partial cds
+>MT001756.1 Mammarenavirus lassaense strain NIG-EKP-1969 glycoprotein gene, partial cds
+>MT001755.1 Mammarenavirus lassaense strain NIG-EKP-1960 glycoprotein gene, partial cds
+>MT001754.1 Mammarenavirus lassaense strain NIG-EKP-1951 glycoprotein gene, partial cds
+>MT001753.1 Mammarenavirus lassaense strain NIG-EKP-1908 glycoprotein gene, partial cds
+>MT001752.1 Mammarenavirus lassaense strain NIG-EKP-1526 glycoprotein gene, partial cds
+>MT001751.1 Mammarenavirus lassaense strain NIG-EKP-1441 glycoprotein gene, partial cds
+>MT001750.1 Mammarenavirus lassaense strain NIG-EKP-1429 glycoprotein gene, partial cds
+>MT001749.1 Mammarenavirus lassaense strain NIG-EKP-1374 glycoprotein gene, partial cds
+>MT001748.1 Mammarenavirus lassaense strain NIG-EKP-1363 glycoprotein gene, partial cds
+>MT001747.1 Mammarenavirus lassaense strain NIG-EKP-1350 glycoprotein gene, partial cds
+>MT001746.1 Mammarenavirus lassaense strain NIG-EKP-1215 glycoprotein gene, partial cds
+>MT001745.1 Mammarenavirus lassaense strain NIG-EKP-1187 glycoprotein gene, partial cds
+>MN123709.1 Mammarenavirus lassaense strain EKP-601 nucleoprotein gene, partial cds
+>MN123708.1 Mammarenavirus lassaense strain EKP-555 nucleoprotein gene, partial cds
+>MN123707.1 Mammarenavirus lassaense strain EKP-549 nucleoprotein gene, partial cds
+>MN123706.1 Mammarenavirus lassaense strain EKP-539 nucleoprotein gene, partial cds
+>MN123705.1 Mammarenavirus lassaense strain EKP-521 nucleoprotein gene, partial cds
+>MN123704.1 Mammarenavirus lassaense strain EKP-518 nucleoprotein gene, partial cds
+>MN123703.1 Mammarenavirus lassaense strain EKP-512 nucleoprotein gene, partial cds
+>MN123702.1 Mammarenavirus lassaense strain EKP-508 nucleoprotein gene, partial cds
+>MN123701.1 Mammarenavirus lassaense strain EKP-447 nucleoprotein gene, partial cds
+>MN123700.1 Mammarenavirus lassaense strain EGU-88 nucleoprotein gene, partial cds
+>MN123699.1 Mammarenavirus lassaense strain EGU-271 nucleoprotein gene, partial cds
+>MN123698.1 Mammarenavirus lassaense strain EGU-240 nucleoprotein gene, partial cds
+>MN123697.1 Mammarenavirus lassaense strain EGU-106 nucleoprotein gene, partial cds
+>MN123696.1 Mammarenavirus lassaense strain Yar46 glycoprotein gene, partial cds
+>MN123695.1 Mammarenavirus lassaense strain Yar36 glycoprotein gene, partial cds
+>MN123694.1 Mammarenavirus lassaense strain Yar24 glycoprotein gene, partial cds
+>MN123693.1 Mammarenavirus lassaense strain Yar20 glycoprotein gene, partial cds
+>MN123692.1 Mammarenavirus lassaense strain Yar14 glycoprotein gene, partial cds
+>MN123691.1 Mammarenavirus lassaense strain Son109 glycoprotein gene, partial cds
+>MN123690.1 Mammarenavirus lassaense strain Son85 glycoprotein gene, partial cds
+>MN123689.1 Mammarenavirus lassaense strain Sok75 glycoprotein gene, partial cds
+>MN123688.1 Mammarenavirus lassaense strain Sok61 glycoprotein gene, partial cds
+>MN123687.1 Mammarenavirus lassaense strain Sok51 glycoprotein gene, partial cds
+>MN123686.1 Mammarenavirus lassaense strain Sok44 glycoprotein gene, partial cds
+>MN123685.1 Mammarenavirus lassaense strain Sok40 glycoprotein gene, partial cds
+>MN123684.1 Mammarenavirus lassaense strain Sok32 glycoprotein gene, partial cds
+>MN123683.1 Mammarenavirus lassaense strain Sok21 glycoprotein gene, partial cds
+>MN123682.1 Mammarenavirus lassaense strain Sok18 glycoprotein gene, partial cds
+>MN123681.1 Mammarenavirus lassaense strain Sok10 glycoprotein gene, partial cds
+>MN123680.1 Mammarenavirus lassaense strain Sok07 glycoprotein gene, partial cds
+>MN123679.1 Mammarenavirus lassaense strain Sil03 glycoprotein gene, partial cds
+>MN123678.1 Mammarenavirus lassaense strain Saf01 glycoprotein gene, partial cds
+>MN123677.1 Mammarenavirus lassaense strain Kho30 glycoprotein gene, partial cds
+>MN123676.1 Mammarenavirus lassaense strain Kho29 glycoprotein gene, partial cds
+>MN123675.1 Mammarenavirus lassaense strain Kho10 glycoprotein gene, partial cds
+>MN123674.1 Mammarenavirus lassaense strain Dam95 glycoprotein gene, partial cds
+>MN123673.1 Mammarenavirus lassaense strain Dam90 glycoprotein gene, partial cds
+>MN123672.1 Mammarenavirus lassaense strain Dam72 glycoprotein gene, partial cds
+>MN123671.1 Mammarenavirus lassaense strain Dam71 glycoprotein gene, partial cds
+>MN123670.1 Mammarenavirus lassaense strain Dam49 glycoprotein gene, partial cds
+>MN123669.1 Mammarenavirus lassaense strain Dam38 glycoprotein gene, partial cds
+>MN123668.1 Mammarenavirus lassaense strain Dam20 glycoprotein gene, partial cds
+>MN123667.1 Mammarenavirus lassaense strain Dam15 glycoprotein gene, partial cds
+>MN123666.1 Mammarenavirus lassaense strain Dam05 glycoprotein gene, partial cds
+>MN123665.1 Mammarenavirus lassaense strain Dam03 glycoprotein gene, partial cds
+>MN123664.1 Mammarenavirus lassaense strain Dal53 glycoprotein gene, partial cds
+>MN123663.1 Mammarenavirus lassaense strain Dal25 glycoprotein gene, partial cds
+>MN123662.1 Mammarenavirus lassaense strain Dal17 glycoprotein gene, partial cds
+>MN123661.1 Mammarenavirus lassaense strain Dal11 glycoprotein gene, partial cds
+>MN123660.1 Mammarenavirus lassaense strain Dal04 glycoprotein gene, partial cds
+>MN123659.1 Mammarenavirus lassaense strain Dal02 glycoprotein gene, partial cds
+>MN123658.1 Mammarenavirus lassaense strain Bri39 glycoprotein gene, partial cds
+>MN123657.1 Mammarenavirus lassaense strain Bri08 glycoprotein gene, partial cds
+>MN123656.1 Mammarenavirus lassaense strain DGD-112 glycoprotein gene, partial cds
+>MN123655.1 Mammarenavirus lassaense strain DGD-104 glycoprotein gene, partial cds
+>MN123654.1 Mammarenavirus lassaense strain DGD-87 glycoprotein gene, partial cds
+>MN123653.1 Mammarenavirus lassaense strain DGD-35 glycoprotein gene, partial cds
+>MN123652.1 Mammarenavirus lassaense strain DGD-28 glycoprotein gene, partial cds
+>MN123651.1 Mammarenavirus lassaense strain DGD-4 glycoprotein gene, partial cds
+>MK978785.1 Mammarenavirus lassaense isolate Bangolo-CIV-2015 L polymerase (L) gene, partial cds
+>MK978784.1 Mammarenavirus lassaense isolate Bangolo-CIV-2015 glycoprotein precursor (GPC) gene, partial cds
+>MP226848.1 Sequence 9 from Patent WO2019145739
+>MP226847.1 Sequence 8 from Patent WO2019145739
+>MP226843.1 Sequence 4 from Patent WO2019145739
+>MP226842.1 Sequence 3 from Patent WO2019145739
+>MP226840.1 Sequence 1 from Patent WO2019145739
+>MH732640.1 Mammarenavirus lassaense isolate GUIN-1736-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732639.1 Mammarenavirus lassaense isolate GUIN-1751-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732638.1 Mammarenavirus lassaense isolate GUIN-1737-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732637.1 Mammarenavirus lassaense isolate GUIN-1733-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732636.1 Mammarenavirus lassaense isolate GUIN-1738-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732635.1 Mammarenavirus lassaense isolate GUIN-1749-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732634.1 Mammarenavirus lassaense isolate GUIN-1740-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732633.1 Mammarenavirus lassaense isolate GUIN-1735-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732632.1 Mammarenavirus lassaense isolate GUIN-1752-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732631.1 Mammarenavirus lassaense isolate GUIN-1747-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732630.1 Mammarenavirus lassaense isolate GUIN-1742-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732629.1 Mammarenavirus lassaense isolate GUIN-1741-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732628.1 Mammarenavirus lassaense isolate GUIN-1748-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732627.1 Mammarenavirus lassaense isolate GUIN-1743-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732626.1 Mammarenavirus lassaense isolate GUIN-1745-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732625.1 Mammarenavirus lassaense isolate GUIN-1744-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732624.1 Mammarenavirus lassaense isolate GUIN-1750-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MH732623.1 Mammarenavirus lassaense isolate GUIN-1739-Mn-2018 nucleoprotein (LASVsSgp1) gene, partial cds
+>MK044799.1 Mammarenavirus lassaense strain Bantou289 L protein gene, complete cds
+>KP339133.1 Lassa virus strain 1946 nucleoprotein gene, partial cds
+>KP339132.1 Lassa virus strain 1925 nucleoprotein gene, partial cds
+>KP339131.1 Lassa virus strain 1918 nucleoprotein gene, partial cds
+>KP339130.1 Lassa virus strain 1892 nucleoprotein gene, partial cds
+>KP339129.1 Lassa virus strain 1878 nucleoprotein gene, partial cds
+>KP339128.1 Lassa virus strain 1873 nucleoprotein gene, partial cds
+>KP339127.1 Lassa virus strain 1858 nucleoprotein gene, partial cds
+>KP339126.1 Lassa virus strain 1840 nucleoprotein gene, partial cds
+>KP339125.1 Lassa virus strain 1826 nucleoprotein gene, partial cds
+>KP339124.1 Lassa virus strain 1824 nucleoprotein gene, partial cds
+>KP339123.1 Lassa virus strain 1786 nucleoprotein gene, partial cds
+>KP339122.1 Lassa virus strain 1770 nucleoprotein gene, partial cds
+>KP339121.1 Lassa virus strain 1755 nucleoprotein gene, partial cds
+>KP339120.1 Lassa virus strain 1747 nucleoprotein gene, partial cds
+>KP339119.1 Lassa virus strain 1645 nucleoprotein gene, partial cds
+>KP339118.1 Lassa virus strain 1606 nucleoprotein gene, partial cds
+>KP339117.1 Lassa virus strain 1605 nucleoprotein gene, partial cds
+>KP339116.1 Lassa virus strain 1591 nucleoprotein gene, partial cds
+>KP339115.1 Lassa virus strain 1586 nucleoprotein gene, partial cds
+>KP339114.1 Lassa virus strain 1549 nucleoprotein gene, partial cds
+>KP339113.1 Lassa virus strain 1520 nucleoprotein gene, partial cds
+>KP339112.1 Lassa virus strain 1484 nucleoprotein gene, partial cds
+>KP339111.1 Lassa virus strain 1310 nucleoprotein gene, partial cds
+>KP339110.1 Lassa virus strain 1276 nucleoprotein gene, partial cds
+>KP339109.1 Lassa virus strain 1259 nucleoprotein gene, partial cds
+>KP339108.1 Lassa virus strain 1242 nucleoprotein gene, partial cds
+>KP339107.1 Lassa virus strain 1241 nucleoprotein gene, partial cds
+>KP339106.1 Lassa virus strain 1240 nucleoprotein gene, partial cds
+>KP339105.1 Lassa virus strain 1210 nucleoprotein gene, partial cds
+>KP339104.1 Lassa virus strain 1207 nucleoprotein gene, partial cds
+>KP339103.1 Lassa virus strain 1198 nucleoprotein gene, partial cds
+>KP339102.1 Lassa virus strain 1074 nucleoprotein gene, partial cds
+>KP339101.1 Lassa virus strain 1066 nucleoprotein gene, partial cds
+>KP339100.1 Lassa virus strain 1034 nucleoprotein gene, partial cds
+>KP339099.1 Lassa virus strain 1033 nucleoprotein gene, partial cds
+>KP339098.1 Lassa virus strain 1011 nucleoprotein gene, partial cds
+>KP339097.1 Lassa virus strain 1010 nucleoprotein gene, partial cds
+>KP339096.1 Lassa virus strain 1008 nucleoprotein gene, partial cds
+>KP339095.1 Lassa virus strain 1007 nucleoprotein gene, partial cds
+>KP339094.1 Lassa virus strain 991 nucleoprotein gene, partial cds
+>KP339093.1 Lassa virus strain 987 nucleoprotein gene, partial cds
+>KP339092.1 Lassa virus strain 966 nucleoprotein gene, partial cds
+>KP339091.1 Lassa virus strain 959 nucleoprotein gene, partial cds
+>KP339090.1 Lassa virus strain 939 nucleoprotein gene, partial cds
+>KP339089.1 Lassa virus strain 936 nucleoprotein gene, partial cds
+>KP339088.1 Lassa virus strain 909 nucleoprotein gene, partial cds
+>KP339087.1 Lassa virus strain 903 nucleoprotein gene, partial cds
+>KP339086.1 Lassa virus strain 846 nucleoprotein gene, partial cds
+>KP339085.1 Lassa virus strain 820 nucleoprotein gene, partial cds
+>KP339084.1 Lassa virus strain 817 nucleoprotein gene, partial cds
+>KP339083.1 Lassa virus strain 813 nucleoprotein gene, partial cds
+>KP339082.1 Lassa virus strain 717 nucleoprotein gene, partial cds
+>KP339081.1 Lassa virus strain 686 nucleoprotein gene, partial cds
+>KP339080.1 Lassa virus strain 497 nucleoprotein gene, partial cds
+>KP339079.1 Lassa virus strain 491 nucleoprotein gene, partial cds
+>KP339078.1 Lassa virus strain 471 nucleoprotein gene, partial cds
+>KP339077.1 Lassa virus strain 464 nucleoprotein gene, partial cds
+>KP339076.1 Lassa virus strain 462 nucleoprotein gene, partial cds
+>KP339075.1 Lassa virus strain 444 nucleoprotein gene, partial cds
+>KP339074.1 Lassa virus strain 431 nucleoprotein gene, partial cds
+>KP339073.1 Lassa virus strain 425 nucleoprotein gene, partial cds
+>KP339072.1 Lassa virus strain 417 nucleoprotein gene, partial cds
+>KP339071.1 Lassa virus strain 416 nucleoprotein gene, partial cds
+>KP339070.1 Lassa virus strain 396 nucleoprotein gene, partial cds
+>KP339069.1 Lassa virus strain 390 nucleoprotein gene, partial cds
+>KP339068.1 Lassa virus strain 384 nucleoprotein gene, partial cds
+>KP339067.1 Lassa virus strain 382 nucleoprotein gene, partial cds
+>KP339066.1 Lassa virus strain 378 nucleoprotein gene, partial cds
+>KP339065.1 Lassa virus strain 377 nucleoprotein gene, partial cds
+>KP339064.1 Lassa virus strain 375 nucleoprotein gene, partial cds
+>KP339063.1 Lassa virus strain 366 nucleoprotein gene, partial cds
+>KP339062.1 Lassa virus strain 356 nucleoprotein gene, partial cds
+>KP339061.1 Lassa virus strain 354 nucleoprotein gene, partial cds
+>KP339060.1 Lassa virus strain 353 nucleoprotein gene, partial cds
+>KP339059.1 Lassa virus strain 350 nucleoprotein gene, partial cds
+>KP339058.1 Lassa virus strain 302 nucleoprotein gene, partial cds
+>KP339057.1 Lassa virus strain 289 nucleoprotein gene, partial cds
+>KP339056.1 Lassa virus strain 263 nucleoprotein gene, partial cds
+>KP339055.1 Lassa virus strain 185 nucleoprotein gene, partial cds
+>KP339054.1 Lassa virus strain 170 nucleoprotein gene, partial cds
+>KP339053.1 Lassa virus strain 153 nucleoprotein gene, partial cds
+>KP339052.1 Lassa virus strain 148 nucleoprotein gene, partial cds
+>KP339051.1 Lassa virus strain 132 nucleoprotein gene, partial cds
+>KP339050.1 Lassa virus strain 129 nucleoprotein gene, partial cds
+>MF317946.1 Mammarenavirus lassaense isolate Nig16-00201 glycoprotein precursor (GPC) gene, partial cds
+>MF317945.1 Mammarenavirus lassaense isolate Nig16-00101 glycoprotein precursor (GPC) gene, partial cds
+>MF317944.1 Mammarenavirus lassaense isolate Nig16-14101 glycoprotein precursor (GPC) gene, partial cds
+>MF317943.1 Mammarenavirus lassaense isolate Nig16-07301 glycoprotein precursor (GPC) gene, partial cds
+>MF317942.1 Mammarenavirus lassaense isolate Nig16-07201 glycoprotein precursor (GPC) gene, partial cds
+>MF317941.1 Mammarenavirus lassaense isolate Nig16-06001 glycoprotein precursor (GPC) gene, partial cds
+>MF317940.1 Mammarenavirus lassaense isolate Nig16-05701 glycoprotein precursor (GPC) gene, partial cds
+>MF317939.1 Mammarenavirus lassaense isolate Nig16-05601 glycoprotein precursor (GPC) gene, partial cds
+>MF317938.1 Mammarenavirus lassaense isolate Nig16-04301 glycoprotein precursor (GPC) gene, partial cds
+>MF317937.1 Mammarenavirus lassaense isolate Nig16-03601 glycoprotein precursor (GPC) gene, partial cds
+>MF317936.1 Mammarenavirus lassaense isolate Nig16-03501 glycoprotein precursor (GPC) gene, partial cds
+>MF317935.1 Mammarenavirus lassaense isolate Nig16-01501 glycoprotein precursor (GPC) gene, partial cds
+>MF317934.1 Mammarenavirus lassaense isolate Nig15-00412 glycoprotein precursor (GPC) gene, partial cds
+>MF317933.1 Mammarenavirus lassaense isolate Nig15-00312 glycoprotein precursor (GPC) gene, partial cds
+>MF317932.1 Mammarenavirus lassaense isolate Nig14-00711 glycoprotein precursor (GPC) gene, partial cds
+>LT601602.1 Lassa mammarenavirus isolate Alzey genome assembly, segment: II
+>LT601601.1 Lassa mammarenavirus isolate Alzey genome assembly, segment: I
+>MS811606.1 Sequence 28 from Patent WO2016189490
+>AY870334.1 Lassa virus strain Lib04-2739 polymerase (L) gene, partial cds
+>AY216508.1 Lassa virus polymerase gene, partial cds
+>FJ824031.1 Lassa virus isolate Soromba glycoprotein C (GPC) gene, partial cds
+>DQ832699.1 Lassa virus isolate DGD112 nucleoprotein (NP) gene, partial cds
+>DQ832698.1 Lassa virus isolate DGD104 nucleoprotein (NP) gene, partial cds
+>DQ832697.1 Lassa virus isolate DGD87 nucleoprotein (NP) gene, partial cds
+>DQ832696.1 Lassa virus isolate DGD43 nucleoprotein (NP) gene, partial cds
+>DQ832695.1 Lassa virus isolate DGD35 nucleoprotein (NP) gene, partial cds
+>DQ832694.1 Lassa virus isolate DGD28 nucleoprotein (NP) gene, partial cds
+>DQ832693.1 Lassa virus isolate DGD13 nucleoprotein (NP) gene, partial cds
+>DQ832692.1 Lassa virus isolate DGD4 nucleoprotein (NP) gene, partial cds
+>DQ832691.1 Lassa virus isolate TA846 nucleoprotein (NP) gene, partial cds
+>DQ832690.1 Lassa virus isolate TA820 nucleoprotein (NP) gene, partial cds
+>DQ832689.1 Lassa virus isolate TA817 nucleoprotein (NP) gene, partial cds
+>DQ832688.1 Lassa virus isolate TA491 nucleoprotein (NP) gene, partial cds
+>DQ832687.1 Lassa virus isolate TA471 nucleoprotein (NP) gene, partial cds
+>DQ832686.1 Lassa virus isolate TA464 nucleoprotein (NP) gene, partial cds
+>DQ832685.1 Lassa virus isolate TA462 nucleoprotein (NP) gene, partial cds
+>DQ832684.1 Lassa virus isolate TA444 nucleoprotein (NP) gene, partial cds
+>DQ832683.1 Lassa virus isolate TA341 nucleoprotein (NP) gene, partial cds
+>DQ832682.1 Lassa virus isolate TA416 nucleoprotein (NP) gene, partial cds
+>DQ832681.1 Lassa virus isolate BA686 nucleoprotein (NP) gene, partial cds
+>DQ832680.1 Lassa virus isolate BA384 nucleoprotein (NP) gene, partial cds
+>DQ832679.1 Lassa virus isolate BA382 nucleoprotein (NP) gene, partial cds
+>DQ832678.1 Lassa virus isolate BA378 nucleoprotein (NP) gene, partial cds
+>DQ832677.1 Lassa virus isolate BA377 nucleoprotein (NP) gene, partial cds
+>DQ832676.1 Lassa virus isolate BA375 nucleoprotein (NP) gene, partial cds
+>DQ832675.1 Lassa virus isolate BA366 nucleoprotein (NP) gene, partial cds
+>DQ832674.1 Lassa virus isolate BA356 nucleoprotein (NP) gene, partial cds
+>DQ832673.1 Lassa virus isolate BA354 nucleoprotein (NP) gene, partial cds
+>DQ832672.1 Lassa virus isolate BA350 nucleoprotein (NP) gene, partial cds
+>DQ832671.1 Lassa virus isolate BA302 nucleoprotein (NP) gene, partial cds
+>DQ832670.1 Lassa virus isolate BA289 nucleoprotein (NP) gene, partial cds
+>DQ832669.1 Lassa virus isolate BA263 nucleoprotein (NP) gene, partial cds
+>DQ832668.1 Lassa virus isolate GB132 nucleoprotein (NP) gene, partial cds
+>DQ832667.1 Lassa virus isolate BG129 nucleoprotein (NP) gene, partial cds
+>KT992434.1 Mammarenavirus lassaense strain ONM-700 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992433.1 Mammarenavirus lassaense strain ONM-314 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992432.1 Mammarenavirus lassaense strain ONM-299 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992424.1 Mammarenavirus lassaense strain ONM-700 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992423.1 Mammarenavirus lassaense strain ONM-314 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992422.1 Mammarenavirus lassaense strain ONM-299 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992443.1 Mammarenavirus lassaense strain OSPMH124 polymerase (L) gene, partial cds
+>KT992442.1 Mammarenavirus lassaense strain OSPMH123 polymerase (L) gene, partial cds
+>KT992441.1 Mammarenavirus lassaense strain OSPMH89 polymerase (L) gene, partial cds
+>KT992440.1 Mammarenavirus lassaense strain OSPMH86 polymerase (L) gene, partial cds
+>KT992439.1 Mammarenavirus lassaense strain OSPMH124 glycoprotein precursor (GPC) gene, partial cds
+>KT992438.1 Mammarenavirus lassaense strain OSPMH123 glycoprotein precursor (GPC) gene, partial cds
+>KT992437.1 Mammarenavirus lassaense strain OSPMH89 glycoprotein precursor (GPC) gene, partial cds
+>KT992436.1 Mammarenavirus lassaense strain OSPMH86 glycoprotein precursor (GPC) gene, partial cds
+>KT992435.1 Mammarenavirus lassaense strain KAK-428 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992431.1 Mammarenavirus lassaense strain Mad83 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992430.1 Mammarenavirus lassaense strain Mad69 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992429.1 Mammarenavirus lassaense strain Mad63 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992428.1 Mammarenavirus lassaense strain Mad62 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992427.1 Mammarenavirus lassaense strain Mad41 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992426.1 Mammarenavirus lassaense strain Mad39 polymerase (L) and matrix protein (Z) genes, complete cds
+>KT992425.1 Mammarenavirus lassaense strain KAK-428 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992421.1 Mammarenavirus lassaense strain Mad83 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992420.1 Mammarenavirus lassaense strain Mad69 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992419.1 Mammarenavirus lassaense strain Mad63 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992418.1 Mammarenavirus lassaense strain Mad62 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992417.1 Mammarenavirus lassaense strain Mad41 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KT992416.1 Mammarenavirus lassaense strain Mad39 glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>KP688335.1 Lassa virus strain Ekpoma 601 polymerase gene, partial cds
+>KP688334.1 Lassa virus strain Ekpoma 555 polymerase gene, partial cds
+>KP688333.1 Lassa virus strain Ekpoma 549 polymerase gene, partial cds
+>KP688332.1 Lassa virus strain Ekpoma 539 polymerase gene, partial cds
+>KP688331.1 Lassa virus strain Ekpoma 521 polymerase gene, partial cds
+>KP688330.1 Lassa virus strain Ekpoma 518 polymerase gene, partial cds
+>KP688329.1 Lassa virus strain Ekpoma 512 polymerase gene, partial cds
+>KP688328.1 Lassa virus strain Ekpoma 508 polymerase gene, partial cds
+>KP688327.1 Lassa virus strain Ekpoma 447 polymerase gene, partial cds
+>KP688326.1 Lassa virus strain Eguare-Egoro 271 polymerase gene, partial cds
+>KP688325.1 Lassa virus strain Eguare-Egoro 240 polymerase gene, partial cds
+>KP688324.1 Lassa virus strain Eguare-Egoro 109 polymerase gene, partial cds
+>KP688323.1 Lassa virus strain Eguare-Egoro 106 polymerase gene, partial cds
+>KP688322.1 Lassa virus strain Eguare-Egoro 97 polymerase gene, partial cds
+>KP688321.1 Lassa virus strain Eguare-Egoro 88 polymerase gene, partial cds
+>KP640576.1 Lassa virus strain Ekpoma 601 glycoprotein gene, partial cds
+>KP640575.1 Lassa virus strain Ekpoma 555 glycoprotein gene, partial cds
+>KP640574.1 Lassa virus strain Ekpoma 549 glycoprotein gene, partial cds
+>KP640573.1 Lassa virus strain Ekpoma 539 glycoprotein gene, partial cds
+>KP640572.1 Lassa virus strain Ekpoma 521 glycoprotein gene, partial cds
+>KP640571.1 Lassa virus strain Ekpoma 518 glycoprotein gene, partial cds
+>KP640570.1 Lassa virus strain Ekpoma 512 glycoprotein gene, partial cds
+>KP640569.1 Lassa virus strain Ekpoma 508 glycoprotein gene, partial cds
+>KP640568.1 Lassa virus strain Ekpoma 447 glycoprotein gene, partial cds
+>KP640567.1 Lassa virus strain Eguare-Egoro 271 glycoprotein gene, partial cds
+>KP640566.1 Lassa virus strain Eguare-Egoro 240 glycoprotein gene, partial cds
+>KP640565.1 Lassa virus strain Eguare-Egoro 109 glycoprotein gene, partial cds
+>KP640564.1 Lassa virus strain Eguare-Egoro 106 glycoprotein gene, partial cds
+>KP640563.1 Lassa virus strain Eguare-Egoro 97 glycoprotein gene, partial cds
+>KP640562.1 Lassa virus strain Eguare-Egoro 88 glycoprotein gene, partial cds
+>LP044168.1 Sequence 1 from Patent WO2015077714
+>KT833222.1 Mammarenavirus lassaense strain Dal53 nucleoprotein gene, partial cds
+>KT833221.1 Mammarenavirus lassaense strain Yar51 nucleoprotein gene, partial cds
+>KT833220.1 Mammarenavirus lassaense strain Son109 nucleoprotein gene, partial cds
+>KT833219.1 Mammarenavirus lassaense strain Son85 nucleoprotein gene, partial cds
+>KT833218.1 Mammarenavirus lassaense strain Sok77 nucleoprotein gene, partial cds
+>KT833217.1 Mammarenavirus lassaense strain Sok76 nucleoprotein gene, partial cds
+>KT833216.1 Mammarenavirus lassaense strain Sok75 nucleoprotein gene, partial cds
+>KT833215.1 Mammarenavirus lassaense strain Sok62 nucleoprotein gene, partial cds
+>KT833214.1 Mammarenavirus lassaense strain Sok61 nucleoprotein gene, partial cds
+>KT833213.1 Mammarenavirus lassaense strain Sok51 nucleoprotein gene, partial cds
+>KT833212.1 Mammarenavirus lassaense strain Sok44 nucleoprotein gene, partial cds
+>KT833211.1 Mammarenavirus lassaense strain Sok40 nucleoprotein gene, partial cds
+>KT833210.1 Mammarenavirus lassaense strain Dam95 nucleoprotein gene, partial cds
+>KT833209.1 Mammarenavirus lassaense strain Dam90 nucleoprotein gene, partial cds
+>KT833208.1 Mammarenavirus lassaense strain Dam72 nucleoprotein gene, partial cds
+>KT833207.1 Mammarenavirus lassaense strain Dam71 nucleoprotein gene, partial cds
+>KT833206.1 Mammarenavirus lassaense strain Bri39 nucleoprotein gene, partial cds
+>KT833205.1 Mammarenavirus lassaense strain Bri08 nucleoprotein gene, partial cds
+>KT833204.1 Mammarenavirus lassaense strain Sil03 nucleoprotein gene, partial cds
+>KT833203.1 Mammarenavirus lassaense strain Saf01 nucleoprotein gene, partial cds
+>KT833202.1 Mammarenavirus lassaense strain Dal31 nucleoprotein gene, partial cds
+>KT833201.1 Mammarenavirus lassaense strain Dal29 nucleoprotein gene, partial cds
+>KT833200.1 Mammarenavirus lassaense strain Dal25 nucleoprotein gene, partial cds
+>KT833199.1 Mammarenavirus lassaense strain Dal17 nucleoprotein gene, partial cds
+>KT833198.1 Mammarenavirus lassaense strain Dal11 nucleoprotein gene, partial cds
+>KT833197.1 Mammarenavirus lassaense strain Dal04 nucleoprotein gene, partial cds
+>KT833196.1 Mammarenavirus lassaense strain Dal02 nucleoprotein gene, partial cds
+>KT833195.1 Mammarenavirus lassaense strain Kho30 nucleoprotein gene, partial cds
+>KT833194.1 Mammarenavirus lassaense strain Kho29 nucleoprotein gene, partial cds
+>KT833193.1 Mammarenavirus lassaense strain Kho10 nucleoprotein gene, partial cds
+>KT833192.1 Mammarenavirus lassaense strain Yar46 nucleoprotein gene, partial cds
+>KT833191.1 Mammarenavirus lassaense strain Yar36 nucleoprotein gene, partial cds
+>KT833190.1 Mammarenavirus lassaense strain Yar24 nucleoprotein gene, partial cds
+>KT833189.1 Mammarenavirus lassaense strain Yar20 nucleoprotein gene, partial cds
+>KT833188.1 Mammarenavirus lassaense strain Yar14 nucleoprotein gene, partial cds
+>KT833187.1 Mammarenavirus lassaense strain Dam49 nucleoprotein gene, partial cds
+>KT833186.1 Mammarenavirus lassaense strain Dam38 nucleoprotein gene, partial cds
+>KT833185.1 Mammarenavirus lassaense strain Dam20 nucleoprotein gene, partial cds
+>KT833184.1 Mammarenavirus lassaense strain Dam15 nucleoprotein gene, partial cds
+>KT833183.1 Mammarenavirus lassaense strain Dam05 nucleoprotein gene, partial cds
+>KT833182.1 Mammarenavirus lassaense strain Dam03 nucleoprotein gene, partial cds
+>KT833181.1 Mammarenavirus lassaense strain Sok34 nucleoprotein gene, partial cds
+>KT833180.1 Mammarenavirus lassaense strain Sok32 nucleoprotein gene, partial cds
+>KT833179.1 Mammarenavirus lassaense strain Sok22 nucleoprotein gene, partial cds
+>KT833178.1 Mammarenavirus lassaense strain Sok21 nucleoprotein gene, partial cds
+>KT833177.1 Mammarenavirus lassaense strain Sok18 nucleoprotein gene, partial cds
+>KT833176.1 Mammarenavirus lassaense strain Sok10 nucleoprotein gene, partial cds
+>KT833175.1 Mammarenavirus lassaense strain Sok07 nucleoprotein gene, partial cds
+>LN823985.1 Lassa virus partial L gene for polymerase, strain 139
+>LN823984.1 Lassa virus partial L gene for polymerase, strain 132
+>LN823983.1 Lassa virus partial L gene for polymerase, strain 127
+>LN823982.1 Lassa virus partial L gene for polymerase, strain 124
+>KM406623.1 Lassa virus isolate Z0007 glycoprotein precursor (GPC) gene, partial cds
+>KM406622.1 Lassa virus isolate Z0005 glycoprotein precursor (GPC) gene, partial cds
+>KM406621.1 Lassa virus isolate LM0716 glycoprotein precursor (GPC) gene, partial cds
+>KM406620.1 Lassa virus isolate LM0714 glycoprotein precursor (GPC) gene, partial cds
+>KM406619.1 Lassa virus isolate LM0680 glycoprotein precursor (GPC) gene, partial cds
+>KM406618.1 Lassa virus isolate LM0678 glycoprotein precursor (GPC) gene, partial cds
+>KM406617.1 Lassa virus isolate LM0677 glycoprotein precursor (GPC) gene, partial cds
+>KM406616.1 Lassa virus isolate LM0676 glycoprotein precursor (GPC) gene, partial cds
+>KM406615.1 Lassa virus isolate LM0661 glycoprotein precursor (GPC) gene, partial cds
+>KM406614.1 Lassa virus isolate LM0660 glycoprotein precursor (GPC) gene, partial cds
+>KM406613.1 Lassa virus isolate LM0657 glycoprotein precursor (GPC) gene, partial cds
+>KM406612.1 Lassa virus isolate LM0645 glycoprotein precursor (GPC) gene, partial cds
+>KM406611.1 Lassa virus isolate LM0610 glycoprotein precursor (GPC) gene, partial cds
+>KM406610.1 Lassa virus isolate LM0582 glycoprotein precursor (GPC) gene, partial cds
+>KM406609.1 Lassa virus isolate LM0473 glycoprotein precursor (GPC) gene, partial cds
+>KM406608.1 Lassa virus isolate LM0434 glycoprotein precursor (GPC) gene, partial cds
+>KM406607.1 Lassa virus isolate LM0395 glycoprotein precursor (GPC) gene, partial cds
+>KM406606.1 Lassa virus isolate LM0273 glycoprotein precursor (GPC) gene, partial cds
+>KM406605.1 Lassa virus isolate LM0250 glycoprotein precursor (GPC) gene, partial cds
+>KM406604.1 Lassa virus isolate LM0224 glycoprotein precursor (GPC) gene, partial cds
+>KM406603.1 Lassa virus isolate LM0124 glycoprotein precursor (GPC) gene, partial cds
+>KM406602.1 Lassa virus isolate LM0123 glycoprotein precursor (GPC) gene, partial cds
+>KM406601.1 Lassa virus isolate LM0122 glycoprotein precursor (GPC) gene, partial cds
+>KM406600.1 Lassa virus isolate LM0111 glycoprotein precursor (GPC) gene, partial cds
+>KM406599.1 Lassa virus isolate LM0093 glycoprotein precursor (GPC) gene, partial cds
+>KM406598.1 Lassa virus isolate LM0092 glycoprotein precursor (GPC) gene, partial cds
+>KM406597.1 Lassa virus isolate LM0091 glycoprotein precursor (GPC) gene, partial cds
+>KM406596.1 Lassa virus isolate LM0068 glycoprotein precursor (GPC) gene, partial cds
+>KM406595.1 Lassa virus isolate LM0064 glycoprotein precursor (GPC) gene, partial cds
+>KM406594.1 Lassa virus isolate LM0058 glycoprotein precursor (GPC) gene, partial cds
+>KM406593.1 Lassa virus isolate LM0054 glycoprotein precursor (GPC) gene, partial cds
+>KM406592.1 Lassa virus isolate LM0047 glycoprotein precursor (GPC) gene, partial cds
+>KM406591.1 Lassa virus isolate LM0036 glycoprotein precursor (GPC) gene, partial cds
+>KM406590.1 Lassa virus isolate LM0034 glycoprotein precursor (GPC) gene, partial cds
+>KM406589.1 Lassa virus isolate Z0007 polymerase (L) gene, partial cds
+>KM406588.1 Lassa virus isolate Z0005 polymerase (L) gene, partial cds
+>KM406587.1 Lassa virus isolate LM0716 polymerase (L) gene, partial cds
+>KM406586.1 Lassa virus isolate LM0680 polymerase (L) gene, partial cds
+>KM406585.1 Lassa virus isolate LM0678 polymerase (L) gene, partial cds
+>KM406584.1 Lassa virus isolate LM0677 polymerase (L) gene, partial cds
+>KM406583.1 Lassa virus isolate LM0676 polymerase (L) gene, partial cds
+>KM406582.1 Lassa virus isolate LM0661 polymerase (L) gene, partial cds
+>KM406581.1 Lassa virus isolate LM0660 polymerase (L) gene, partial cds
+>KM406580.1 Lassa virus isolate LM0657 polymerase (L) gene, partial cds
+>KM406579.1 Lassa virus isolate LM0645 polymerase (L) gene, partial cds
+>KM406578.1 Lassa virus isolate LM0619 polymerase (L) gene, partial cds
+>KM406577.1 Lassa virus isolate LM0610 polymerase (L) gene, partial cds
+>KM406576.1 Lassa virus isolate LM0582 polymerase (L) gene, partial cds
+>KM406575.1 Lassa virus isolate LM0473 polymerase (L) gene, partial cds
+>KM406574.1 Lassa virus isolate LM0434 polymerase (L) gene, partial cds
+>KM406573.1 Lassa virus isolate LM0396 polymerase (L) gene, partial cds
+>KM406572.1 Lassa virus isolate LM0395 polymerase (L) gene, partial cds
+>KM406571.1 Lassa virus isolate LM0273 polymerase (L) gene, partial cds
+>KM406570.1 Lassa virus isolate LM0250 polymerase (L) gene, partial cds
+>KM406569.1 Lassa virus isolate LM0224 polymerase (L) gene, partial cds
+>KM406568.1 Lassa virus isolate LM0124 polymerase (L) gene, partial cds
+>KM406567.1 Lassa virus isolate LM0123 polymerase (L) gene, partial cds
+>KM406566.1 Lassa virus isolate LM0122 polymerase (L) gene, partial cds
+>KM406565.1 Lassa virus isolate LM0111 polymerase (L) gene, partial cds
+>KM406564.1 Lassa virus isolate LM0093 polymerase (L) gene, partial cds
+>KM406563.1 Lassa virus isolate LM0092 polymerase (L) gene, partial cds
+>KM406562.1 Lassa virus isolate LM0091 polymerase (L) gene, partial cds
+>KM406561.1 Lassa virus isolate LM0064 polymerase (L) gene, partial cds
+>KM406560.1 Lassa virus isolate LM0058 polymerase (L) gene, partial cds
+>KM406559.1 Lassa virus isolate LM0054 polymerase (L) gene, partial cds
+>KM406558.1 Lassa virus isolate LM0036 polymerase (L) gene, partial cds
+>KM406557.1 Lassa virus isolate LM0034 polymerase (L) gene, partial cds
+>KM406556.1 Lassa virus isolate Z0007 nucleoprotein (NP) gene, partial cds
+>KM406555.1 Lassa virus isolate Z0005 nucleoprotein (NP) gene, partial cds
+>KM406554.1 Lassa virus isolate LM0729 nucleoprotein (NP) gene, partial cds
+>KM406553.1 Lassa virus isolate LM0716 nucleoprotein (NP) gene, partial cds
+>KM406552.1 Lassa virus isolate LM0714 nucleoprotein (NP) gene, partial cds
+>KM406551.1 Lassa virus isolate LM0680 nucleoprotein (NP) gene, partial cds
+>KM406550.1 Lassa virus isolate LM0678 nucleoprotein (NP) gene, partial cds
+>KM406549.1 Lassa virus isolate LM0677 nucleoprotein (NP) gene, partial cds
+>KM406548.1 Lassa virus isolate LM0676 nucleoprotein (NP) gene, partial cds
+>KM406547.1 Lassa virus isolate LM0661 nucleoprotein (NP) gene, partial cds
+>KM406546.1 Lassa virus isolate LM0660 nucleoprotein (NP) gene, partial cds
+>KM406545.1 Lassa virus isolate LM0657 nucleoprotein (NP) gene, partial cds
+>KM406544.1 Lassa virus isolate LM0645 nucleoprotein (NP) gene, partial cds
+>KM406543.1 Lassa virus isolate LM0619 nucleoprotein (NP) gene, partial cds
+>KM406542.1 Lassa virus isolate LM0610 nucleoprotein (NP) gene, partial cds
+>KM406541.1 Lassa virus isolate LM0582 nucleoprotein (NP) gene, partial cds
+>KM406540.1 Lassa virus isolate LM0513 nucleoprotein (NP) gene, partial cds
+>KM406539.1 Lassa virus isolate LM0434 nucleoprotein (NP) gene, partial cds
+>KM406538.1 Lassa virus isolate LM0396 nucleoprotein (NP) gene, partial cds
+>KM406537.1 Lassa virus isolate LM0395 nucleoprotein (NP) gene, partial cds
+>KM406536.1 Lassa virus isolate LM0473 nucleoprotein (NP) gene, partial cds
+>KM406535.1 Lassa virus isolate LM0273 nucleoprotein (NP) gene, partial cds
+>KM406534.1 Lassa virus isolate LM0250 nucleoprotein (NP) gene, partial cds
+>KM406533.1 Lassa virus isolate LM0224 nucleoprotein (NP) gene, partial cds
+>KM406532.1 Lassa virus isolate LM0124 nucleoprotein (NP) gene, partial cds
+>KM406531.1 Lassa virus isolate LM0123 nucleoprotein (NP) gene, partial cds
+>KM406530.1 Lassa virus isolate LM0122 nucleoprotein (NP) gene, partial cds
+>KM406529.1 Lassa virus isolate LM0111 nucleoprotein (NP) gene, partial cds
+>KM406528.1 Lassa virus isolate LM0093 nucleoprotein (NP) gene, partial cds
+>KM406527.1 Lassa virus isolate LM0092 nucleoprotein (NP) gene, partial cds
+>KM406526.1 Lassa virus isolate LM0091 nucleoprotein (NP) gene, partial cds
+>KM406525.1 Lassa virus isolate LM0087 nucleoprotein (NP) gene, partial cds
+>KM406524.1 Lassa virus isolate LM0068 nucleoprotein (NP) gene, partial cds
+>KM406523.1 Lassa virus isolate LM0064 nucleoprotein (NP) gene, partial cds
+>KM406522.1 Lassa virus isolate LM0058 nucleoprotein (NP) gene, partial cds
+>KM406521.1 Lassa virus isolate LM0054 nucleoprotein (NP) gene, partial cds
+>KM406520.1 Lassa virus isolate LM0047 nucleoprotein (NP) gene, partial cds
+>KM406519.1 Lassa virus isolate LM0036 nucleoprotein (NP) gene, partial cds
+>KM406518.1 Lassa virus isolate LM0034 nucleoprotein (NP) gene, partial cds
+>JC241991.1 Sequence 137 from Patent EP2583974
+>KF425246.1 Lassa virus strain Macenta nonfunctional polymerase (L) gene, partial sequence
+>JX845171.1 Lassa virus isolate JIR76 glycoprotein precursor, gene, partial cds
+>JX845169.1 Lassa virus isolate JIR76 nucleoprotein gene, partial cds
+>JX845167.1 Lassa virus isolate JIR76 polymerase gene, partial cds
+>JB048543.1 Sequence 13 from Patent EP2478103
+>JB048540.1 Sequence 10 from Patent EP2478103
+>JB048532.1 Sequence 2 from Patent EP2478103
+>AF182272.1 Lassa virus strain las9608911 nucleoprotein gene, partial cds
+>AF182271.1 Lassa virus strain las803796 nucleoprotein gene, partial cds
+>AF182270.1 Lassa virus strain las808255 nucleoprotein gene, partial cds
+>AF182269.1 Lassa virus strain las807868 nucleoprotein gene, partial cds
+>AF182268.1 Lassa virus strain las807977 nucleoprotein gene, partial cds
+>AF182267.1 Lassa virus strain las807992 nucleoprotein gene, partial cds
+>AF182266.1 Lassa virus strain las803203 nucleoprotein gene, partial cds
+>AF182265.1 Lassa virus strain las807998 nucleoprotein gene, partial cds
+>AF182264.1 Lassa virus strain las806829 nucleoprotein gene, partial cds
+>AF182263.1 Lassa virus strain las803793 nucleoprotein gene, partial cds
+>AF182262.1 Lassa virus strain las803791 nucleoprotein gene, partial cds
+>AF182261.1 Lassa virus strain las806828 nucleoprotein gene, partial cds
+>AF182260.1 Lassa virus strain las803792 nucleoprotein gene, partial cds
+>AF182259.1 Lassa virus strain las803201 nucleoprotein gene, partial cds
+>AF182258.1 Lassa virus strain las803204 nucleoprotein gene, partial cds
+>AF182257.1 Lassa virus strain las807974 nucleoprotein gene, partial cds
+>AF182256.1 Lassa virus strain las803972 nucleoprotein gene, partial cds
+>AF182255.1 Lassa virus strain las9607302 nucleoprotein gene, partial cds
+>AF182254.1 Lassa virus strain las806843 nucleoprotein gene, partial cds
+>AF182253.1 Lassa virus strain las801100 nucleoprotein gene, partial cds
+>AF182252.1 Lassa virus strain las9607300 nucleoprotein gene, partial cds
+>AF182251.1 Lassa virus strain las801102 nucleoprotein gene, partial cds
+>AF182250.1 Lassa virus strain las803206 nucleoprotein gene, partial cds
+>AF182249.1 Lassa virus strain las801103 nucleoprotein gene, partial cds
+>AF182248.1 Lassa virus strain las801101 nucleoprotein gene, partial cds
+>AF182247.1 Lassa virus strain las803211 nucleoprotein gene, partial cds
+>AF182246.1 Lassa virus strain las807976 nucleoprotein gene, partial cds
+>AF182245.1 Lassa virus strain las807875 nucleoprotein gene, partial cds
+>AF182244.1 Lassa virus strain las801108 nucleoprotein gene, partial cds
+>AF182243.1 Lassa virus strain las801109 nucleoprotein gene, partial cds
+>AF182242.1 Lassa virus strain las801106 nucleoprotein gene, partial cds
+>AF182241.1 Lassa virus strain las801104 nucleoprotein gene, partial cds
+>AF182240.1 Lassa virus strain las801107 nucleoprotein gene, partial cds
+>AF182239.1 Lassa virus strain las801105 nucleoprotein gene, partial cds
+>AF182238.1 Lassa virus strain las806827 nucleoprotein gene, partial cds
+>AF182237.1 Lassa virus strain las9607290 nucleoprotein gene, partial cds
+>AF182236.1 Lassa virus strain las803209 nucleoprotein gene, partial cds
+>AF182235.1 Lassa virus strain las803205 nucleoprotein gene, partial cds
+>AF182234.1 Lassa virus strain las801618 nucleoprotein gene, partial cds
+>AF182233.1 Lassa virus strain las802662 nucleoprotein gene, partial cds
+>AF182232.1 Lassa virus strain las803208 nucleoprotein gene, partial cds
+>AF182231.1 Lassa virus strain las807975 nucleoprotein gene, partial cds
+>AF182230.1 Lassa virus strain las803212 nucleoprotein gene, partial cds
+>AF182229.1 Lassa virus strain las803210 nucleoprotein gene, partial cds
+>AF182228.1 Lassa virus strain las806791 nucleoprotein gene, partial cds
+>AF182227.1 Lassa virus strain las803787 nucleoprotein gene, partial cds
+>AF182226.1 Lassa virus strain las806322 nucleoprotein gene, partial cds
+>AF182225.1 Lassa virus strain las806321 nucleoprotein gene, partial cds
+>AF182224.1 Lassa virus strain las806319 nucleoprotein gene, partial cds
+>AF182223.1 Lassa virus strain las806320 nucleoprotein gene, partial cds
+>AF182222.1 Lassa virus strain las808031 nucleoprotein gene, partial cds
+>AF182221.1 Lassa virus strain las806316 nucleoprotein gene, partial cds
+>AF182220.1 Lassa virus strain las803214 nucleoprotein gene, partial cds
+>AF182219.1 Lassa virus strain las803213 nucleoprotein gene, partial cds
+>U80004.1 Lassa virus nucleocapsid protein gene, partial cds
+>HV540186.1 JP 2011204261-A/51: RESEQUENCING PATHOGEN MICROARRAY
+>FR832711.1 Lassa virus S segment, strain AV, genomic RNA
+>FR832710.1 Lassa virus L segment, strain AV, genomic RNA
+>U73035.2 Lassa virus ring-finger protein gene, complete cds
+>U73034.2 Lassa virus Z protein and L protein genes, complete cds
+>U63094.1 Lassa virus L protein gene, complete cds
+>J04324.1 Lassa virus S genome encoding the nucleoprotein and glycoprotein mRNAs, complete cds
+>K03362.1 Lassa virus (strain GA391) nucleocapsid gene, complete cds
+>M15076.1 Lassa virus glycoprotein gene, complete cds
+>FV537340.1 Modified Microbial Nucleic Acid
+>FV537339.1 Modified Microbial Nucleic Acid
+>FV537338.1 Modified Microbial Nucleic Acid
+>FV537337.1 Modified Microbial Nucleic Acid
+>FV537336.1 Modified Microbial Nucleic Acid
+>FV537335.1 Modified Microbial Nucleic Acid
+>FV537334.1 Modified Microbial Nucleic Acid
+>AF246121.2 Lassa virus strain AV glycoprotein precursor (GPC) and nucleoprotein (NP) genes, complete cds
+>AF333969.1 Lassa virus glycoprotein precursor (GP) and nucleoprotein (NP) genes, complete cds
+>AF181854.1 Lassa virus strain 803213 glycoprotein precursor and nucleoprotein genes, complete cds
+>AF181853.1 Lassa virus strain LP glycoprotein precursor and nucleoprotein genes, complete cds
+>GN354243.1 Sequence 4007 from Patent WO2007130519
+>GN354242.1 Sequence 4006 from Patent WO2007130519
+>GN354241.1 Sequence 4005 from Patent WO2007130519
+>GN354240.1 Sequence 4004 from Patent WO2007130519
+>GN354239.1 Sequence 4003 from Patent WO2007130519
+>GN354238.1 Sequence 4002 from Patent WO2007130519
+>GN354237.1 Sequence 4001 from Patent WO2007130519
+>GN354236.1 Sequence 4000 from Patent WO2007130519
+>GN354235.1 Sequence 3999 from Patent WO2007130519
+>GN354234.1 Sequence 3998 from Patent WO2007130519
+>DL143807.1 RESEQUENCING PATHOGEN MICROARRAY
+>DL138935.1 COMPOSITIONS FOR USE IN IDENTIFICATION OF VIRAL HEMORRHAGIC FEVER VIRUSES
+>DL138934.1 COMPOSITIONS FOR USE IN IDENTIFICATION OF VIRAL HEMORRHAGIC FEVER VIRUSES
+>DI160217.1 RESEQUENCING PATHOGEN MICROARRAY
+>CS805355.1 Sequence 1 from Patent WO2007093449
+>CS272332.1 Sequence 28 from Patent WO2006008074
+>AJ969409.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate PA
+>AJ969408.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate SA
+>AJ969407.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate LP
+>AJ969406.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate 523
+>AJ969405.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate PB1
+>AJ969404.1 Lassa virus partial GPC gene for envelope glycoprotein, genomic RNA, isolate 331
+>AJ310764.1 Lassa virus partial genomic RNA for putative glycoprotein precursor (gpc gene), isolate IJ531
+>X52400.1 Nigeria Lassa virus S (small) RNA for glycoprotein precursor (GPC) and nucleocapsid protein
