@@ -5,7 +5,7 @@ A simple tool to download and organize Lassa virus sequences from GenBank.
 ## Installation
 
 ```bash
-   pip install lassaseq
+pip install lassaseq
 ```
 
 ## Usage
