@@ -6,32 +6,45 @@ import os
 from datetime import datetime
 import calendar
 import time
+import sys
 
 def get_segment_type(record):
-    """Helper function to determine segment type from various GenBank fields"""
-    # First try official segment annotation
-    for feature in record.features:
-        if feature.type == "source":
-            if 'segment' in feature.qualifiers:
-                segment_value = feature.qualifiers['segment'][0].upper()
-                if segment_value in ['L', 'S']:
-                    return segment_value
-    
-    # Check description and features for protein information
+    """Determine if sequence is L or S segment based on proteins in header"""
     description = record.description.lower()
     
-    # Expanded protein lists
+    # First check for direct segment mentions
+    if 'segment l' in description or 'l segment' in description:
+        return 'L'
+    if 'segment s' in description or 's segment' in description:
+        return 'S'
+    
+    # S segment proteins - expanded list
     s_proteins = [
-        'nucleoprotein', 'glycoprotein', 'gpc', 'np', 'nuc', 
-        'nucleocapsid', 'g protein', 'g1', 'g2', 'gp1', 'gp2'
-    ]
-    l_proteins = [
-        'polymerase', 'z protein', 'l protein', 'rna-dependent', 
-        'rna dependent', 'rdrp', 'zinc-binding', 'zinc binding', 
-        'matrix protein', 'ring protein'
+        'nucleoprotein', 
+        'glycoprotein',
+        'nucleocapsid',
+        'gpc',
+        'np',
+        'gc',
+        'gn',
+        'g1',
+        'g2'
     ]
     
-    # Check description
+    # L segment proteins - expanded list
+    l_proteins = [
+        'polymerase',
+        'rna-dependent rna polymerase',
+        'rna dependent rna polymerase',
+        'rdrp',
+        'z protein',
+        'zinc finger protein',
+        'zinc-finger protein',
+        'matrix protein',
+        'l protein',
+        'large protein'
+    ]
+    
     for protein in s_proteins:
         if protein in description:
             return 'S'
@@ -39,25 +52,21 @@ def get_segment_type(record):
         if protein in description:
             return 'L'
     
-    # Check all features for protein information
-    for feature in record.features:
-        if feature.type in ['CDS', 'mat_peptide', 'gene']:
-            if 'product' in feature.qualifiers:
-                product = feature.qualifiers['product'][0].lower()
-                for protein in s_proteins:
-                    if protein in product:
-                        return 'S'
-                for protein in l_proteins:
-                    if protein in product:
-                        return 'L'
-            if 'gene' in feature.qualifiers:
-                gene = feature.qualifiers['gene'][0].lower()
-                for protein in s_proteins:
-                    if protein in gene:
-                        return 'S'
-                for protein in l_proteins:
-                    if protein in gene:
-                        return 'L'
+    # If no protein found in header, try original header stored during download
+    if hasattr(record, 'original_header'):
+        description = record.original_header.lower()
+        # Check for direct segment mentions in original header
+        if 'segment l' in description or 'l segment' in description:
+            return 'L'
+        if 'segment s' in description or 's segment' in description:
+            return 'S'
+        
+        for protein in s_proteins:
+            if protein in description:
+                return 'S'
+        for protein in l_proteins:
+            if protein in description:
+                return 'L'
     
     return None
 
@@ -156,7 +165,6 @@ def get_metadata(record):
                     collection_date = convert_date_to_decimal_year(date_str)
     
     return f"{accession}_{location}_{collection_date}"
-
 def fetch_sequences():
     Entrez.email = "anonymous@example.com"
     max_retries = 3
@@ -207,15 +215,16 @@ def fetch_sequences():
                 batch_records = SeqIO.parse(handle, "genbank")
                 
                 for record in batch_records:
-                    segment_type = get_segment_type(record)
                     # Store original header
-                    original_header = f"{record.description}"
-                    # Add sequence regardless of segment type
+                    original_header = record.description
+                    record.original_header = original_header
+                    
+                    segment_type = get_segment_type(record)
                     sequences.append({
                         'id': record.id,
                         'record': record,
-                        'segment': segment_type,  # This will be None for unknown segments
-                        'original_header': original_header  # Store original header
+                        'segment': segment_type,
+                        'original_header': original_header
                     })
                     
                     # Update counts
@@ -234,7 +243,6 @@ def fetch_sequences():
                     continue
                 print(f"\nRetry {attempt + 1} for batch starting at {start}...")
                 time.sleep(retry_delay)
-    
     return sequences, segment_counts, location_counts
 
 def get_segment_from_protein(description):
@@ -309,7 +317,7 @@ def process_sequences(sequences, segment_type):
                     
         return filtered_sequences
 
-def write_summary(outdir, initial_total, filtered_total, segment_counts, location_counts, requested_segment, written_counts, sequences, genome_choice, completeness=None):
+def write_summary(outdir, initial_total, filtered_total, initial_segment_counts, location_counts, requested_segment, written_counts, filtered_sequences, genome_choice, completeness=None, sequences=None):
     """Write summary report to a file"""
     summary_file = os.path.join(outdir, "summary_Lassa.txt")
     
@@ -324,35 +332,26 @@ def write_summary(outdir, initial_total, filtered_total, segment_counts, locatio
         elif genome_choice == '2':
             f.write(f"Sequences after filtering for completeness (>{completeness}%): {filtered_total}\n\n")
         else:
-            f.write(f"No completeness filtering applied: {filtered_total}\n\n")
+            f.write("No completeness filtering applied\n\n")
         
-        # Calculate total segments found after filtering
-        segment_counts = {'L': 0, 'S': 0, 'unknown': 0}
-        for seq in sequences:
-            segment = get_segment_type(seq['record'])
-            if segment == 'L':
-                segment_counts['L'] += 1
-            elif segment == 'S':
-                segment_counts['S'] += 1
-            else:
-                segment_counts['unknown'] += 1
+        f.write("Initial Segment Distribution:\n")
+        f.write("---------------------------\n")
+        f.write(f"L segments: {initial_segment_counts['L']}\n")
+        f.write(f"S segments: {initial_segment_counts['S']}\n")
+        f.write(f"Unknown segments: {initial_segment_counts['unknown']}\n\n")
         
-        f.write(f"Segments found after filtering:\n")
-        f.write(f"  L segments: {segment_counts['L']}\n")
-        f.write(f"  S segments: {segment_counts['S']}\n")
-        f.write(f"  Unknown/unspecified: {segment_counts['unknown']}\n\n")
-        
-        f.write("Geographical Distribution of Segments:\n")
-        f.write("-------------------------------------\n")
+        f.write("Geographical Distribution of Initial Sequences:\n")
+        f.write("--------------------------------------------\n")
         f.write("Country        L segments    S segments    Unknown         Total\n")
         f.write("-----------   -----------   -----------   ---------   ----------\n")
         
-        # Recalculate location counts after reclassification
-        location_counts = {'L': {}, 'S': {}, 'unknown': {}}
-        
-        for seq in sequences:
+        # Calculate initial location counts using original sequences
+        initial_locations = {'L': {}, 'S': {}, 'unknown': {}}
+        for seq in sequences:  # Use original sequences instead of filtered_sequences
             record = seq['record']
-            # Get location
+            segment = get_segment_type(record)
+            segment_type = 'unknown' if segment is None else segment
+            
             location = "UnknownLoc"
             for feature in record.features:
                 if feature.type == "source":
@@ -362,64 +361,91 @@ def write_summary(outdir, initial_total, filtered_total, segment_counts, locatio
                             location = geo_loc.split(':')[0].strip()
                             location = clean_country_name(location)
             
-            # Get segment type
-            segment = get_segment_type(record)
-            
-            # Update counts
-            if segment == 'L':
-                if location not in location_counts['L']:
-                    location_counts['L'][location] = 0
-                location_counts['L'][location] += 1
-            elif segment == 'S':
-                if location not in location_counts['S']:
-                    location_counts['S'][location] = 0
-                location_counts['S'][location] += 1
-            else:
-                if location not in location_counts['unknown']:
-                    location_counts['unknown'][location] = 0
-                location_counts['unknown'][location] += 1
+            if location not in initial_locations[segment_type]:
+                initial_locations[segment_type][location] = 0
+            initial_locations[segment_type][location] += 1
         
-        # Get all unique countries
+        # Write initial geographical distribution
         all_countries = set()
         for segment_type in ['L', 'S', 'unknown']:
-            all_countries.update(location_counts[segment_type].keys())
+            all_countries.update(initial_locations[segment_type].keys())
         
-        # Calculate and write counts for each country
         total_l = 0
         total_s = 0
         total_unknown = 0
         for country in sorted(all_countries):
-            l_count = location_counts['L'].get(country, 0)
-            s_count = location_counts['S'].get(country, 0)
-            unknown_count = location_counts['unknown'].get(country, 0)
+            l_count = initial_locations['L'].get(country, 0)
+            s_count = initial_locations['S'].get(country, 0)
+            unknown_count = initial_locations['unknown'].get(country, 0)
             country_total = l_count + s_count + unknown_count
             
-            if country_total > 0:  # Only write countries with sequences
+            if country_total > 0:
                 f.write(f"{country:<13} {l_count:>11}   {s_count:>11}   {unknown_count:>9}   {country_total:>10}\n")
             
             total_l += l_count
             total_s += s_count
             total_unknown += unknown_count
         
-        # Write totals
         f.write("-" * 60 + "\n")
         total_all = total_l + total_s + total_unknown
         f.write(f"{'Total':<13} {total_l:>11}   {total_s:>11}   {total_unknown:>9}   {total_all:>10}\n\n")
         
-        f.write("Sequences downloaded:\n")
-        if requested_segment.upper() == 'BOTH':
-            f.write(f"  L segments written: {written_counts['L']}\n")
-            f.write(f"  S segments written: {written_counts['S']}\n")
-            f.write(f"  Unknown segments written: {written_counts['unknown']}\n")
-            f.write(f"Output files:\n")
-            f.write(f"  L segments: lassa_l_segments.fasta\n")
-            f.write(f"  S segments: lassa_s_segments.fasta\n")
-            f.write(f"  Unknown segments: lassa_unknown_segments.fasta\n")
-        else:
-            # Use the correct key (L or S) based on requested segment
-            f.write(f"  {requested_segment.upper()} segments written: {written_counts[requested_segment.upper()]}\n")
-            f.write(f"Output files:\n")
-            f.write(f"  {requested_segment.upper()} segments: lassa_{requested_segment.lower()}_segments.fasta\n")
+        if genome_choice != '3':  # Only show filtered distribution if filtering was applied
+            f.write("Geographical Distribution After Filtering:\n")
+            f.write("---------------------------------------\n")
+            f.write("Country        L segments    S segments    Unknown         Total\n")
+            f.write("-----------   -----------   -----------   ---------   ----------\n")
+            
+            # Calculate filtered location counts
+            filtered_locations = {'L': {}, 'S': {}, 'unknown': {}}
+            for seq in filtered_sequences:
+                record = seq['record'] if isinstance(seq, dict) else seq
+                segment = get_segment_type(record)
+                segment_type = 'unknown' if segment is None else segment
+                
+                location = "UnknownLoc"
+                for feature in record.features:
+                    if feature.type == "source":
+                        if 'geo_loc_name' in feature.qualifiers:
+                            geo_loc = feature.qualifiers['geo_loc_name'][0]
+                            if 'missing' not in geo_loc.lower():
+                                location = geo_loc.split(':')[0].strip()
+                                location = clean_country_name(location)
+                
+                if location not in filtered_locations[segment_type]:
+                    filtered_locations[segment_type][location] = 0
+                filtered_locations[segment_type][location] += 1
+            
+            # Write filtered geographical distribution
+            all_countries = set()
+            for segment_type in ['L', 'S', 'unknown']:
+                all_countries.update(filtered_locations[segment_type].keys())
+            
+            total_l = 0
+            total_s = 0
+            total_unknown = 0
+            for country in sorted(all_countries):
+                l_count = filtered_locations['L'].get(country, 0)
+                s_count = filtered_locations['S'].get(country, 0)
+                unknown_count = filtered_locations['unknown'].get(country, 0)
+                country_total = l_count + s_count + unknown_count
+                
+                if country_total > 0:
+                    f.write(f"{country:<13} {l_count:>11}   {s_count:>11}   {unknown_count:>9}   {country_total:>10}\n")
+                
+                total_l += l_count
+                total_s += s_count
+                total_unknown += unknown_count
+            
+            f.write("-" * 60 + "\n")
+            total_all = total_l + total_s + total_unknown
+            f.write(f"{'Total':<13} {total_l:>11}   {total_s:>11}   {total_unknown:>9}   {total_all:>10}\n\n")
+        
+        # Write output files section
+        f.write("\nOutput files:\n")
+        f.write("  FASTA/L_segment/lassa_l_segments.fasta\n")
+        f.write("  FASTA/S_segment/lassa_s_segments.fasta\n")
+        f.write("  FASTA/unknown_segment/lassa_unknown_segments.fasta\n")
 
 def get_user_input(prompt, valid_options):
     """Helper function to get valid user input"""
@@ -481,109 +507,114 @@ def meets_minimum_completeness(record, min_completeness):
     return completeness >= min_completeness
 
 def cli_main():
-    parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
-    parser.add_argument('-o', '--outdir', required=True, help='Output directory for sequences')
-    parser.add_argument('-s', '--segment', required=True, choices=['L', 'S', 'both'], 
-                       help='Segment type to download (L, S, or both)')
-    
-    # Modified genome completeness options
-    parser.add_argument('--genome', choices=['1', '2'],
-                       help='Genome completeness: 1=Complete only (>99%), 2=Partial (requires --completeness)')
-    parser.add_argument('--completeness', type=float,
-                       help='Minimum sequence completeness (1-100), required when --genome=2')
-    
-    args = parser.parse_args()
-    
-    print(f"\nStarting Lassa virus sequence download for {args.segment} segment(s)")
-    print(f"Output directory: {args.outdir}")
-    
-    # Create FASTA directory
-    fasta_dir = os.path.join(args.outdir, "FASTA")
-    os.makedirs(fasta_dir, exist_ok=True)
-    
-    # Handle genome completeness options
-    if args.genome:
-        # Non-interactive mode
-        if args.genome == '2' and args.completeness is None:
-            parser.error("--completeness is required when --genome=2")
-        if args.genome == '2' and not (1 <= args.completeness <= 100):
-            parser.error("--completeness must be between 1 and 100")
-        genome_choice = args.genome
-        completeness = args.completeness if args.genome == '2' else None
-    else:
-        # Interactive mode
-        print("\nGenome completeness options:")
-        print("1. Complete genomes only (>99%)")
-        print("2. Partial genomes (specify minimum completeness)")
-        genome_choice = get_user_input("", ['1', '2'])
+    try:
+        parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
+        parser.add_argument('-o', '--outdir', required=True, help='Output directory for sequences')
         
-        completeness = None
-        if genome_choice == '2':
-            completeness = get_completeness()
-    
-    sequences, segment_counts, location_counts = fetch_sequences()
-    
-    # Store initial count
-    initial_total = len(sequences)
-    
-    # Filter sequences based on completeness criteria
-    filtered_sequences = []
-    for seq in sequences:
-        include_sequence = True
-        if genome_choice == '1':
-            if not is_complete_sequence(seq['record']):
-                include_sequence = False
-        elif genome_choice == '2':
-            if not meets_minimum_completeness(seq['record'], completeness):
-                include_sequence = False
+        # Modified genome completeness options
+        parser.add_argument('--genome', choices=['1', '2', '3'],
+                           help='Genome completeness: 1=Complete only (>99%), 2=Partial (requires --completeness), 3=No filter')
+        parser.add_argument('--completeness', type=float,
+                           help='Minimum sequence completeness (1-100), required when --genome=2')
         
-        if include_sequence:
-            filtered_sequences.append(seq)
-    
-    # Update sequences list with filtered sequences
-    sequences = filtered_sequences
-    
-    if args.segment.upper() == 'BOTH':
-        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(sequences, 'both')
+        args = parser.parse_args()
         
-        # Write L segments
-        l_output = os.path.join(fasta_dir, "lassa_l_segments.fasta")
+        print("\nStarting Lassa virus sequence download")
+        print(f"Output directory: {args.outdir}")
+        
+        # Create segment-specific directories
+        fasta_dir = os.path.join(args.outdir, "FASTA")
+        l_segment_dir = os.path.join(fasta_dir, "L_segment")
+        s_segment_dir = os.path.join(fasta_dir, "S_segment")
+        unknown_segment_dir = os.path.join(fasta_dir, "unknown_segment")
+        
+        # Create all directories
+        for directory in [fasta_dir, l_segment_dir, s_segment_dir, unknown_segment_dir]:
+            os.makedirs(directory, exist_ok=True)
+        
+        # Handle genome completeness options
+        if args.genome:
+            # Non-interactive mode
+            if args.genome == '2' and args.completeness is None:
+                parser.error("--completeness is required when --genome=2")
+            if args.genome == '2' and not (1 <= args.completeness <= 100):
+                parser.error("--completeness must be between 1 and 100")
+            genome_choice = args.genome
+            completeness = args.completeness if args.genome == '2' else None
+        else:
+            # Interactive mode
+            print("\nGenome completeness options:")
+            print("1. Complete genomes only (>99%)")
+            print("2. Partial genomes (specify minimum completeness)")
+            print("3. No filter")
+            genome_choice = get_user_input("", ['1', '2', '3'])
+            
+            completeness = None
+            if genome_choice == '2':
+                completeness = get_completeness()
+        
+        sequences, segment_counts, location_counts = fetch_sequences()
+        initial_total = len(sequences)
+        
+        # Get initial counts before filtering
+        initial_segment_counts = {'L': 0, 'S': 0, 'unknown': 0}
+        for seq in sequences:
+            segment_type = get_segment_type(seq['record'])
+            if segment_type:
+                initial_segment_counts[segment_type] += 1
+            else:
+                initial_segment_counts['unknown'] += 1
+        
+        # Filter sequences based on completeness criteria
+        filtered_sequences = []
+        for seq in sequences:
+            include_sequence = True
+            if genome_choice == '1':
+                if not is_complete_sequence(seq['record']):
+                    include_sequence = False
+            elif genome_choice == '2':
+                if not meets_minimum_completeness(seq['record'], completeness):
+                    include_sequence = False
+            
+            if include_sequence:
+                filtered_sequences.append(seq)
+        
+        # Process both segments
+        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(filtered_sequences, 'both')
+        
+        # Write sequences to their respective directories
+        l_output = os.path.join(l_segment_dir, "lassa_l_segments.fasta")
         SeqIO.write(l_sequences, l_output, "fasta")
         
-        # Write S segments
-        s_output = os.path.join(fasta_dir, "lassa_s_segments.fasta")
+        s_output = os.path.join(s_segment_dir, "lassa_s_segments.fasta")
         SeqIO.write(s_sequences, s_output, "fasta")
         
-        # Write unknown segments
-        unknown_output = os.path.join(fasta_dir, "lassa_unknown_segments.fasta")
+        unknown_output = os.path.join(unknown_segment_dir, "lassa_unknown_segments.fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
         written_counts = {
-            'L': len(l_sequences), 
+            'L': len(l_sequences),
             'S': len(s_sequences),
             'unknown': len(unknown_sequences)
         }
-        print(f"\nFound {len(l_sequences)} L segments, {len(s_sequences)} S segments, and {len(unknown_sequences)} unknown segments before filtering")
-        print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, and {written_counts['unknown']} unknown segments after filtering")
-    else:
-        filtered_sequences = process_sequences(sequences, args.segment)
-        output_file = os.path.join(fasta_dir, f"lassa_{args.segment.lower()}_segments.fasta")
-        SeqIO.write(filtered_sequences, output_file, "fasta")
         
-        written_counts = {
-            'L': len(filtered_sequences) if args.segment.upper() == 'L' else 0,
-            'S': len(filtered_sequences) if args.segment.upper() == 'S' else 0,
-            'unknown': 0
-        }
-        segment_type = args.segment.upper()
-        total_before = sum(1 for seq in sequences if get_segment_type(seq['record']) == segment_type)
-        print(f"\nFound {total_before} {segment_type} segments before filtering")
-        print(f"Wrote {len(filtered_sequences)} {segment_type} segments after filtering")
-    
-    # Write summary report
-    write_summary(args.outdir, initial_total, len(sequences), segment_counts, location_counts, 
-                 args.segment, written_counts, sequences, genome_choice, completeness)
-    print(f"Summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
+        print(f"\nFound {initial_segment_counts['L']} L segments, {initial_segment_counts['S']} S segments, "
+              f"and {initial_segment_counts['unknown']} unknown segments before filtering")
+        print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
+              f"and {written_counts['unknown']} unknown segments after filtering")
+        
+        # Update the summary file to reflect new directory structure
+        write_summary(args.outdir, initial_total, len(filtered_sequences), initial_segment_counts, 
+                     location_counts, 'both', written_counts, filtered_sequences, 
+                     genome_choice, completeness, sequences)
+        print(f"Summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
+        
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\nAn unexpected error occurred: {str(e)}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     cli_main() 
