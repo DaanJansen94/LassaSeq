@@ -12,3 +12,4 @@ title: "EbolaSeq: A Command-Line Tool for Downloading, Processing and Analyzing 
 version: v0.1.1
 url: github.com/DaanJansen94/LassaSeq
 date-released: 2025-02-26
+abstract: "A command-line tool for downloading and processing Lassa virus sequences from GenBank for phylogenetic analysis."
