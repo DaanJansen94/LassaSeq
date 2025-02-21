@@ -6,7 +6,6 @@ Lassa virus has a bi-segmented RNA genome consisting of:
 - **L segment**: (~7.2kb) Encodes the RNA-dependent RNA polymerase and Z protein
 - **S segment**: (~3.4kb) Encodes the nucleoprotein (NP) and glycoprotein precursor (GPC)
 
-
 ## Installation
 
 1. First, install conda if you haven't already:
@@ -27,6 +26,19 @@ Lassa virus has a bi-segmented RNA genome consisting of:
    cd LassaSeq
    pip install .
    ```
+
+## Re-installation
+When updates are pushed to GitHub, or when you want to use your own modifications to the code, you'll need to reinstall the package:
+
+```bash
+conda activate lassa_env  # Make sure you're in the right environment
+cd LassaSeq
+git pull  # Get the latest updates from GitHub
+pip uninstall LassaSeq
+pip install .
+```
+
+Note: Any time you modify the code or pull updates from GitHub, you need to reinstall the package using these commands for the changes to take effect.
 
 ## Usage
 
