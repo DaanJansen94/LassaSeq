@@ -1,12 +1,32 @@
 # LassaSeq
+LassaSeq is a command-line tool that simplifies the process of analyzing Lassa virus sequences. It automates the complete workflow from downloading sequences to creating phylogenetic trees, with special handling for Lassa's bi-segmented genome.
 
-A simple tool to download and organize Lassa virus sequences from GenBank.
+## Genome Segments
+Lassa virus has a bi-segmented RNA genome consisting of:
+- **L segment**: (~7.2kb) Encodes the RNA-dependent RNA polymerase and Z protein
+- **S segment**: (~3.4kb) Encodes the nucleoprotein (NP) and glycoprotein precursor (GPC)
+
 
 ## Installation
 
-```bash
-pip install lassaseq
-```
+1. First, install conda if you haven't already:
+   ```bash
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   bash Miniconda3-latest-Linux-x86_64.sh
+   ```
+
+2. Create and activate a new conda environment:
+   ```bash
+   conda create -n lassa_env -c bioconda python=3.9 mafft trimal iqtree
+   conda activate lassa_env
+   ```
+
+3. Install ebolaseq:
+   ```bash
+   git clone https://github.com/DaanJansen94/LassaSeq.git   
+   cd LassaSeq
+   pip install .
+   ```
 
 ## Usage
 
