@@ -516,11 +516,13 @@ def is_rodent_host(host):
         'natal multimammate',
         'multimammate rat',
         'multimammate mouse',
+        'hylomyscus pamfi',  # Added this species
         # Genera
         'mus',
         'rattus',
         'lophuromys',
         'praomys',
+        'hylomyscus',  # Added genus
         # Common names
         'rodent',
         'mouse',
@@ -585,6 +587,69 @@ def write_filtering_steps(f, sequences, genome_choice, completeness, host_choice
     f.write(f"L segments: {initial_counts['L']}\n")
     f.write(f"S segments: {initial_counts['S']}\n")
     f.write(f"Unknown segments: {initial_counts['unknown']}\n\n")
+    
+    # Add detailed host information
+    f.write("Initial Host Distribution\n")
+    f.write("----------------------\n")
+    host_counts = {}  # Dictionary to store counts for each unique host
+    host_details = {'human': set(), 'rodent': set(), 'other': set()}
+    no_host_count = 0
+    
+    for seq in sequences:
+        record = seq['record']
+        host_found = False
+        
+        for feature in record.features:
+            if feature.type == "source" and 'host' in feature.qualifiers:
+                host = feature.qualifiers['host'][0]
+                host_found = True
+                
+                # Update count for this specific host
+                if host not in host_counts:
+                    host_counts[host] = 0
+                host_counts[host] += 1
+                
+                if is_human_host(host):
+                    host_details['human'].add(host.lower())
+                elif is_rodent_host(host):
+                    host_details['rodent'].add(host.lower())
+                else:
+                    host_details['other'].add(host.lower())
+                break
+        
+        if not host_found:
+            no_host_count += 1
+    
+    # Calculate totals for each category
+    total_human = sum(host_counts[host] for host in host_counts if is_human_host(host))
+    total_rodent = sum(host_counts[host] for host in host_counts if is_rodent_host(host))
+    total_other = sum(host_counts[host] for host in host_counts 
+                     if not is_human_host(host) and not is_rodent_host(host))
+    
+    # Write human hosts with counts
+    f.write(f"\nHuman hosts found (Total: {total_human} sequences):\n")
+    for host in sorted(host_details['human']):
+        matching_hosts = [h for h in host_counts.keys() if h.lower() == host]
+        for matching_host in matching_hosts:
+            f.write(f"- {matching_host}: {host_counts[matching_host]} sequences\n")
+    
+    # Write rodent hosts with counts
+    f.write(f"\nRodent hosts found (Total: {total_rodent} sequences):\n")
+    for host in sorted(host_details['rodent']):
+        matching_hosts = [h for h in host_counts.keys() if h.lower() == host]
+        for matching_host in matching_hosts:
+            f.write(f"- {matching_host}: {host_counts[matching_host]} sequences\n")
+    
+    # Write other hosts with counts
+    if host_details['other']:
+        f.write(f"\nOther hosts found (Total: {total_other} sequences):\n")
+        for host in sorted(host_details['other']):
+            matching_hosts = [h for h in host_counts.keys() if h.lower() == host]
+            for matching_host in matching_hosts:
+                f.write(f"- {matching_host}: {host_counts[matching_host]} sequences\n")
+    
+    f.write(f"\nSequences with no host information: {no_host_count}\n\n")
+    
     write_geographical_distribution(f, initial_locations, "Initial Geographical Distribution")
     
     # Completeness filtering
