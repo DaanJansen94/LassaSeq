@@ -21,7 +21,7 @@ Lassa virus has a bi-segmented RNA genome consisting of:
    conda activate lassa_env
    ```
 
-3. Install ebolaseq:
+3. Install LassaSeq:
    ```bash
    git clone https://github.com/DaanJansen94/LassaSeq.git   
    cd LassaSeq
