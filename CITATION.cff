@@ -8,7 +8,7 @@ authors:
     given-names: Koen
     orcid: https://orcid.org/0000-0003-1472-9938
 doi: "XX.XXXX/zenodo.XXXXXXXX"
-title: "EbolaSeq: A Command-Line Tool for Downloading, Processing, and Analyzing Lassa Virus Sequences for Phylogenetic Analysis"
+title: "EbolaSeq: A Command-Line Tool for Downloading, Processing and Analyzing Lassa Virus Sequences for Phylogenetic Analysis"
 version: v0.1.1
 url: github.com/DaanJansen94/LassaSeq
 date-released: 2025-02-26
