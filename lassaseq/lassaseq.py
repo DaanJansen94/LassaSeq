@@ -348,137 +348,18 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
     with open(summary_file, 'w') as f:
         f.write("Lassa Virus Sequence Download Summary\n")
         f.write("====================================\n\n")
-        f.write(f"Total Lassa virus sequences found: {initial_total}\n")
         
-        # Host Distribution with categories
-        f.write("\nHost Distribution in Initial Sequences:\n")
-        f.write("-----------------------------------\n")
+        # Document filtering steps
+        write_filtering_steps(f, sequences, genome_choice, completeness, 
+                            host_choice, completeness_filtered, filtered_sequences)
         
-        # Initialize categorized host counts
-        human_hosts = {}
-        rodent_hosts = {}
-        other_hosts = {}
-        no_host_count = 0
-        
-        for seq in sequences:
-            record = seq['record']
-            host_found = False
-            
-            for feature in record.features:
-                if feature.type == "source":
-                    if 'host' in feature.qualifiers:
-                        host = feature.qualifiers['host'][0].lower()
-                        if is_human_host(host):
-                            if host not in human_hosts:
-                                human_hosts[host] = 0
-                            human_hosts[host] += 1
-                        elif is_rodent_host(host):
-                            if host not in rodent_hosts:
-                                rodent_hosts[host] = 0
-                            rodent_hosts[host] += 1
-                        else:
-                            if host not in other_hosts:
-                                other_hosts[host] = 0
-                            other_hosts[host] += 1
-                        host_found = True
-                        break
-            
-            if not host_found:
-                no_host_count += 1
-        
-        # Write Human Hosts
-        f.write("\nHuman Hosts:\n")
-        f.write("-----------\n")
-        total_human = 0
-        for host, count in sorted(human_hosts.items(), key=lambda x: (-x[1], x[0])):
-            f.write(f"{host}: {count} sequences\n")
-            total_human += count
-        f.write(f"Total human sequences: {total_human}\n")
-        
-        # Write Rodent Hosts (Natural Reservoirs)
-        f.write("\nRodent Hosts (Natural Reservoirs):\n")
-        f.write("--------------------------------\n")
-        total_rodent = 0
-        for host, count in sorted(rodent_hosts.items(), key=lambda x: (-x[1], x[0])):
-            f.write(f"{host}: {count} sequences\n")
-            total_rodent += count
-        f.write(f"Total rodent sequences: {total_rodent}\n")
-        
-        # Write Other Hosts
-        if other_hosts:
-            f.write("\nOther Hosts:\n")
-            f.write("-----------\n")
-            total_other = 0
-            for host, count in sorted(other_hosts.items(), key=lambda x: (-x[1], x[0])):
-                f.write(f"{host}: {count} sequences\n")
-                total_other += count
-            f.write(f"Total other host sequences: {total_other}\n")
-        
-        # Write No Host Information
-        if no_host_count > 0:
-            f.write(f"\nSequences with no host information: {no_host_count}\n")
-        
-        # Write total distribution
-        f.write("\nOverall Host Distribution:\n")
-        f.write("------------------------\n")
-        f.write(f"Human sequences: {total_human} ({(total_human/initial_total)*100:.1f}%)\n")
-        f.write(f"Rodent sequences: {total_rodent} ({(total_rodent/initial_total)*100:.1f}%)\n")
-        if other_hosts:
-            f.write(f"Other host sequences: {total_other} ({(total_other/initial_total)*100:.1f}%)\n")
-        f.write(f"Unknown host: {no_host_count} ({(no_host_count/initial_total)*100:.1f}%)\n")
-        
-        # Initial Segment Distribution
-        f.write("\nInitial Segment Distribution:\n")
-        f.write("---------------------------\n")
-        f.write(f"L segments: {initial_segment_counts['L']}\n")
-        f.write(f"S segments: {initial_segment_counts['S']}\n")
-        f.write(f"Unknown segments: {initial_segment_counts['unknown']}\n\n")
-        
-        # Initial Geographical Distribution
-        initial_locations = calculate_location_counts(sequences)
-        write_geographical_distribution(f, initial_locations, "Initial Geographical Distribution")
-        
-        # After completeness filtering
-        if genome_choice != '3':
-            f.write("\nAfter Completeness Filtering:\n")
-            f.write("--------------------------\n")
-            if genome_choice == '1':
-                f.write("Filtering for completeness (>99%)\n")
-            else:
-                f.write(f"Filtering for completeness (>{completeness}%)\n")
-            
-            completeness_counts = calculate_segment_counts(filtered_sequences)
-            f.write("\nSegment counts after completeness filtering:\n")
-            f.write(f"L segments: {completeness_counts['L']}\n")
-            f.write(f"S segments: {completeness_counts['S']}\n")
-            f.write(f"Unknown segments: {completeness_counts['unknown']}\n\n")
-            
-            completeness_locations = calculate_location_counts(filtered_sequences)
-            write_geographical_distribution(f, completeness_locations, "Geographical Distribution After Completeness Filtering")
-        
-        # Add host filtering section
-        if host_choice:
-            f.write("\nAfter Host Filtering:\n")
-            f.write("-------------------\n")
-            if host_choice == '1':
-                f.write("Filtering for human sequences\n")
-            elif host_choice == '2':
-                f.write("Filtering for non-human sequences\n")
-            
-            final_counts = calculate_segment_counts(filtered_sequences)
-            f.write(f"\nFinal segment counts:\n")
-            f.write(f"L segments: {final_counts['L']}\n")
-            f.write(f"S segments: {final_counts['S']}\n")
-            f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
-            
-            final_locations = calculate_location_counts(filtered_sequences)
-            write_geographical_distribution(f, final_locations, "Final Geographical Distribution")
-        
-        # Write output files section
-        f.write("\nOutput files:\n")
-        f.write("  FASTA/L_segment/lassa_l_segments.fasta\n")
-        f.write("  FASTA/S_segment/lassa_s_segments.fasta\n")
-        f.write("  FASTA/unknown_segment/lassa_unknown_segments.fasta\n")
+        # Output directories
+        f.write("\nOutput Files\n")
+        f.write("------------\n")
+        f.write(f"L segments: FASTA/L_segment/lassa_l_segments.fasta ({written_counts['L']} sequences)\n")
+        f.write(f"S segments: FASTA/S_segment/lassa_s_segments.fasta ({written_counts['S']} sequences)\n")
+        if written_counts['unknown'] > 0:
+            f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
 
 def write_geographical_distribution(f, locations, title):
     """Helper function to write geographical distribution tables"""
@@ -611,43 +492,138 @@ def analyze_hosts(sequences):
         print(f"\nSequences with no host information: {no_host_count}")
 
 def is_human_host(host):
-    """Check if host is human"""
-    human_terms = [
-        'homo sapiens',
+    """Check if the host is human"""
+    human_patterns = [
+        'homo sapiens', 
+        'human', 
         'homon sapiens',  # Common misspelling
-        'human',
         'h. sapiens',
-        'homo_sapiens'
+        'humans',
+        'homo sapien',    # Common misspelling
+        'h sapiens',
+        'human patient',
+        'patient',
+        'human isolate'
     ]
-    return any(term in host.lower() for term in human_terms)
+    return any(pattern in host.lower() for pattern in human_patterns)
 
 def is_rodent_host(host):
-    """Check if host is a rodent"""
-    rodent_terms = [
-        # Specific Mastomys species (primary reservoirs)
-        'mastomys natalensis',     # Natal multimammate mouse (primary host)
-        'mastomys erythroleucus',  # Guinea multimammate mouse
-        'mastomys huberti',        # Hubert's multimammate mouse
-        
-        # Other rodent genera/species
-        'praomys',                 # Soft-furred rats
-        'hylomyscus',             # African wood mice
-        'mus musculus',           # House mouse
-        'mus baoulei',            # African wood mouse
-        'lophuromys sikapusi',    # Rusty-bellied brush-furred rat
-        'rattus',                 # Rats
-        'cavia porcellus',        # Guinea pig
-        
-        # Generic terms
-        'mastomys',               # Catch other Mastomys species
+    """Check if the host is a rodent"""
+    rodent_patterns = [
+        # Specific species
+        'mastomys natalensis',
+        'mastomys',
+        'natal multimammate',
+        'multimammate rat',
+        'multimammate mouse',
+        # Genera
+        'mus',
+        'rattus',
+        'lophuromys',
+        'praomys',
+        # Common names
         'rodent',
-        'rodents',
         'mouse',
+        'mice',
         'rat',
+        # Scientific terms
         'natalensis',
-        'erythroleucus'
+        'murinae',
+        'muridae'
     ]
-    return any(term in host.lower() for term in rodent_terms)
+    return any(pattern in host.lower() for pattern in rodent_patterns)
+
+def write_host_distribution(f, sequences):
+    """Write host distribution to summary file"""
+    host_counts = {'human': 0, 'rodent': 0, 'other': 0, 'unknown': 0}
+    other_hosts = set()
+    
+    for seq in sequences:
+        record = seq['record']
+        host_found = False
+        
+        for feature in record.features:
+            if feature.type == "source" and 'host' in feature.qualifiers:
+                host = feature.qualifiers['host'][0].lower()
+                host_found = True
+                
+                if is_human_host(host):
+                    host_counts['human'] += 1
+                elif is_rodent_host(host):
+                    host_counts['rodent'] += 1
+                else:
+                    host_counts['other'] += 1
+                    other_hosts.add(host)
+                break
+        
+        if not host_found:
+            host_counts['unknown'] += 1
+    
+    f.write(f"Human hosts: {host_counts['human']}\n")
+    f.write(f"Rodent hosts: {host_counts['rodent']}\n")
+    f.write(f"Other hosts: {host_counts['other']}\n")
+    f.write(f"Unknown hosts: {host_counts['unknown']}\n")
+    
+    if other_hosts:
+        f.write("\nOther host types found:\n")
+        for host in sorted(other_hosts):
+            f.write(f"- {host}\n")
+    f.write("\n")
+
+def write_filtering_steps(f, sequences, genome_choice, completeness, host_choice, completeness_filtered, filtered_sequences):
+    """Document the filtering steps and their impact"""
+    f.write("\nFiltering Steps Summary\n")
+    f.write("=====================\n\n")
+    
+    # Initial counts
+    initial_counts = calculate_segment_counts(sequences)
+    initial_locations = calculate_location_counts(sequences)
+    
+    f.write("1. Initial Dataset\n")
+    f.write("----------------\n")
+    f.write(f"Total sequences: {len(sequences)}\n")
+    f.write(f"L segments: {initial_counts['L']}\n")
+    f.write(f"S segments: {initial_counts['S']}\n")
+    f.write(f"Unknown segments: {initial_counts['unknown']}\n\n")
+    write_geographical_distribution(f, initial_locations, "Initial Geographical Distribution")
+    
+    # Completeness filtering
+    if genome_choice != '3':
+        f.write("\n2. After Completeness Filtering\n")
+        f.write("----------------------------\n")
+        if genome_choice == '1':
+            f.write("Applied filter: Complete genomes only (>99%)\n")
+        else:
+            f.write(f"Applied filter: Minimum completeness {completeness}%\n")
+        
+        completeness_counts = calculate_segment_counts(completeness_filtered)
+        completeness_locations = calculate_location_counts(completeness_filtered)
+        
+        f.write(f"\nRemaining sequences: {len(completeness_filtered)}\n")
+        f.write(f"L segments: {completeness_counts['L']}\n")
+        f.write(f"S segments: {completeness_counts['S']}\n")
+        f.write(f"Unknown segments: {completeness_counts['unknown']}\n\n")
+        write_geographical_distribution(f, completeness_locations, "Geographical Distribution After Completeness Filter")
+    
+    # Host filtering
+    if host_choice != '4':
+        f.write("\n3. After Host Filtering\n")
+        f.write("---------------------\n")
+        host_type = {
+            '1': 'Human only',
+            '2': 'Rodent only',
+            '3': 'Human and Rodent'
+        }[host_choice]
+        f.write(f"Applied filter: {host_type}\n")
+        
+        final_counts = calculate_segment_counts(filtered_sequences)
+        final_locations = calculate_location_counts(filtered_sequences)
+        
+        f.write(f"\nFinal sequences: {len(filtered_sequences)}\n")
+        f.write(f"L segments: {final_counts['L']}\n")
+        f.write(f"S segments: {final_counts['S']}\n")
+        f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
+        write_geographical_distribution(f, final_locations, "Final Geographical Distribution")
 
 def filter_by_host(sequences, host_choice):
     """Filter sequences based on host"""
