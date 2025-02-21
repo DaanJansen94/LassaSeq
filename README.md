@@ -43,7 +43,7 @@ Note: Any time you modify the code or pull updates from GitHub, you need to rein
 ## Usage
 
 ```bash
-lassaseq -o output_directory
+lassaseq -o output_directory [options]
 ```
 
 ### Options
@@ -56,25 +56,50 @@ lassaseq -o output_directory
   - 3: No completeness filter
 - `--completeness`: Minimum sequence completeness (1-100), required when --genome=2
 - `--host`: Host filter
-  - 1: Human sequences
-  - 2: Non-human sequences
-  - 3: No host filter
+  - 1: Human sequences only
+  - 2: Rodent sequences only
+  - 3: Both human and rodent sequences
+  - 4: No host filter
 ```
 
-### Output
+### Output Structure
 
-- Organized FASTA files in separate directories for L and S segments
-- Summary file with:
-  - Host distribution
-  - Segment counts
-  - Geographical distribution
-  - Filtering results
+```
+output_directory/
+├── FASTA/
+│   ├── L_segment/
+│   │   └── lassa_l_segments.fasta
+│   ├── S_segment/
+│   │   └── lassa_s_segments.fasta
+│   └── unknown_segment/
+│       └── lassa_unknown_segments.fasta
+└── summary_Lassa.txt
+```
 
-## Example
+### Summary File Content
+The summary_Lassa.txt file provides detailed information about:
+- Initial dataset statistics
+- Detailed host distribution with sequence counts for:
+  - Human hosts (e.g., Homo sapiens, human patient)
+  - Rodent hosts (e.g., Mastomys natalensis, Hylomyscus pamfi)
+  - Other hosts
+  - Sequences with no host information
+- Geographical distribution at each filtering step
+- Impact of completeness filtering (if applied)
+- Impact of host filtering (if applied)
+- Final sequence counts for each segment
+
+## Example Commands
 
 ```bash
-lassaseq -o lassa_sequences --genome 1 --host 1 
-lassaseq -o lassa_sequences --genome 2 --completeness 80 --host 3 
+# Download complete genomes (>99%) from human hosts
+lassaseq -o lassa_sequences --genome 1 --host 1
+
+# Download sequences with ≥80% completeness from both human and rodent hosts
+lassaseq -o lassa_sequences --genome 2 --completeness 80 --host 3
+
+# Download all sequences without filtering
+lassaseq -o lassa_sequences --genome 3 --host 4
 ```
 
 ## Requirements
