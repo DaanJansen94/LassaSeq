@@ -72,7 +72,8 @@ options:
                         2 = Keep only sequences with known date
                         3 = Keep only sequences with both known location and date
                         4 = No metadata filter
-  --countries           Comma-separated list of countries to filter sequences
+  --countries           (Optional) Comma-separated list of countries to filter sequences
+                        If not specified, sequences from all countries will be included
                         Examples: "Sierra Leone, Guinea" or "Nigeria, Mali"
                         Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
                                  Ghana, Benin, Burkina Faso, Ivory Coast, Togo
