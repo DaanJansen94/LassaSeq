@@ -60,6 +60,11 @@ lassaseq -o output_directory [options]
   - 2: Rodent sequences only
   - 3: Both human and rodent sequences
   - 4: No host filter
+- `--metadata`: Metadata completeness filter
+  - 1: Keep only sequences with known location
+  - 2: Keep only sequences with known date
+  - 3: Keep only sequences with both known location and date
+  - 4: No metadata filter
 ```
 
 ### Output Structure
@@ -87,19 +92,20 @@ The summary_Lassa.txt file provides detailed information about:
 - Geographical distribution at each filtering step
 - Impact of completeness filtering (if applied)
 - Impact of host filtering (if applied)
+- Impact of metadata filtering (if applied)
 - Final sequence counts for each segment
 
 ## Example Commands
 
 ```bash
-# Download complete genomes (>99%) from human hosts
-lassaseq -o lassa_sequences --genome 1 --host 1
+# Download complete genomes (>99%) from human hosts with known location and date
+lassaseq -o lassa_sequences --genome 1 --host 1 --metadata 3
 
-# Download sequences with ≥80% completeness from both human and rodent hosts
-lassaseq -o lassa_sequences --genome 2 --completeness 80 --host 3
+# Download sequences with ≥80% completeness from both human and rodent hosts, requiring known location
+lassaseq -o lassa_sequences --genome 2 --completeness 80 --host 3 --metadata 1
 
-# Download all sequences without filtering
-lassaseq -o lassa_sequences --genome 3 --host 4
+# Download all sequences without any filtering
+lassaseq -o lassa_sequences --genome 3 --host 4 --metadata 4
 ```
 
 ## Requirements
