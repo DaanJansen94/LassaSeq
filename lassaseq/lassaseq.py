@@ -745,10 +745,19 @@ def filter_by_metadata(sequences, metadata_choice):
     
     return filtered_sequences
 
-def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences):
+def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences, metadata_choice):
     """Write metadata filtering summary to the report"""
     f.write("\n4. After Metadata Filtering\n")
     f.write("------------------------\n")
+    
+    # Add description of applied filter
+    filter_descriptions = {
+        '1': 'Applied filter: Known location only',
+        '2': 'Applied filter: Known date only',
+        '3': 'Applied filter: Both known location and date',
+        '4': 'Applied filter: No metadata filter'
+    }
+    f.write(f"{filter_descriptions[metadata_choice]}\n")
     
     # Count remaining sequences after filtering
     final_counts = calculate_segment_counts(metadata_filtered_sequences)
@@ -896,7 +905,7 @@ def cli_main():
         
         # Append metadata filtering results to summary file
         with open(os.path.join(args.outdir, 'summary_Lassa.txt'), 'a') as f:
-            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences)
+            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences, metadata_choice)
         
         print(f"\nFinal counts after all filtering:")
         print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
