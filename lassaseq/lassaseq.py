@@ -750,18 +750,6 @@ def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences):
     f.write("\n4. After Metadata Filtering\n")
     f.write("------------------------\n")
     
-    # Count metadata issues in original sequences
-    unknown_loc_count = sum(1 for seq in sequences if 'UnknownLoc' in get_metadata(seq['record']))
-    unknown_date_count = sum(1 for seq in sequences if 'UnknownDate' in get_metadata(seq['record']))
-    both_unknown_count = sum(1 for seq in sequences 
-                           if 'UnknownLoc' in get_metadata(seq['record']) 
-                           and 'UnknownDate' in get_metadata(seq['record']))
-    
-    f.write("\nBefore metadata filtering:\n")
-    f.write(f"Sequences with unknown location: {unknown_loc_count}\n")
-    f.write(f"Sequences with unknown date: {unknown_date_count}\n")
-    f.write(f"Sequences with both unknown: {both_unknown_count}\n")
-    
     # Count remaining sequences after filtering
     final_counts = calculate_segment_counts(metadata_filtered_sequences)
     final_locations = calculate_location_counts(metadata_filtered_sequences)
