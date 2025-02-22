@@ -354,13 +354,7 @@ def write_summary(outdir, initial_total, filtered_total, initial_segment_counts,
         write_filtering_steps(f, sequences, genome_choice, completeness, 
                             host_choice, completeness_filtered, filtered_sequences)
         
-        # Output directories
-        f.write("\nOutput Files\n")
-        f.write("------------\n")
-        f.write(f"L segments: FASTA/L_segment/lassa_l_segments.fasta ({written_counts['L']} sequences)\n")
-        f.write(f"S segments: FASTA/S_segment/lassa_s_segments.fasta ({written_counts['S']} sequences)\n")
-        if written_counts['unknown'] > 0:
-            f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
+        # Remove Output Files section from here - it will be written after metadata filtering
 
 def write_geographical_distribution(f, locations, title):
     """Helper function to write geographical distribution tables"""
@@ -745,31 +739,40 @@ def filter_by_metadata(sequences, metadata_choice):
     
     return filtered_sequences
 
-def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences, metadata_choice):
+def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences, metadata_choice, written_counts):
     """Write metadata filtering summary to the report"""
-    f.write("\n4. After Metadata Filtering\n")
-    f.write("------------------------\n")
-    
-    # Add description of applied filter
-    filter_descriptions = {
-        '1': 'Applied filter: Known location only',
-        '2': 'Applied filter: Known date only',
-        '3': 'Applied filter: Both known location and date',
-        '4': 'Applied filter: No metadata filter'
-    }
-    f.write(f"{filter_descriptions[metadata_choice]}\n")
-    
-    # Count remaining sequences after filtering
-    final_counts = calculate_segment_counts(metadata_filtered_sequences)
-    final_locations = calculate_location_counts(metadata_filtered_sequences)
-    
-    f.write(f"\nAfter metadata filtering:\n")
-    f.write(f"Final sequences: {len(metadata_filtered_sequences)}\n")
-    f.write(f"L segments: {final_counts['L']}\n")
-    f.write(f"S segments: {final_counts['S']}\n")
-    f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
-    
-    write_geographical_distribution(f, final_locations, "Final Geographical Distribution After Metadata Filter")
+    # Only write metadata filtering summary if actual filtering was applied
+    if metadata_choice != '4':
+        f.write("\n4. After Metadata Filtering\n")
+        f.write("------------------------\n")
+        
+        # Add description of applied filter
+        filter_descriptions = {
+            '1': 'Applied filter: Known location only',
+            '2': 'Applied filter: Known date only',
+            '3': 'Applied filter: Both known location and date'
+        }
+        f.write(f"{filter_descriptions[metadata_choice]}\n")
+        
+        # Count remaining sequences after filtering
+        final_counts = calculate_segment_counts(metadata_filtered_sequences)
+        final_locations = calculate_location_counts(metadata_filtered_sequences)
+        
+        f.write(f"\nAfter metadata filtering:\n")
+        f.write(f"Final sequences: {len(metadata_filtered_sequences)}\n")
+        f.write(f"L segments: {final_counts['L']}\n")
+        f.write(f"S segments: {final_counts['S']}\n")
+        f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
+        
+        write_geographical_distribution(f, final_locations, "Final Geographical Distribution After Metadata Filter")
+        
+        # Add Output Files section here, at the very end
+        f.write("\nOutput Files\n")
+        f.write("------------\n")
+        f.write(f"L segments: FASTA/L_segment/lassa_l_segments.fasta ({written_counts['L']} sequences)\n")
+        f.write(f"S segments: FASTA/S_segment/lassa_s_segments.fasta ({written_counts['S']} sequences)\n")
+        if written_counts['unknown'] > 0:
+            f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
 
 def cli_main():
     try:
@@ -905,7 +908,7 @@ def cli_main():
         
         # Append metadata filtering results to summary file
         with open(os.path.join(args.outdir, 'summary_Lassa.txt'), 'a') as f:
-            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences, metadata_choice)
+            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences, metadata_choice, written_counts)
         
         print(f"\nFinal counts after all filtering:")
         print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
