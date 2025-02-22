@@ -1,0 +1,101 @@
+Lassa Virus Sequence Download Summary
+====================================
+
+
+Filtering Steps Summary
+=====================
+
+1. Initial Dataset
+----------------
+Total sequences: 2800
+L segments: 874
+S segments: 1875
+Unknown segments: 51
+
+Initial Host Distribution
+----------------------
+
+Human hosts found (Total: 1525 sequences):
+- Homo sapiens: 1502 sequences
+- Homon sapiens: 23 sequences
+
+Rodent hosts found (Total: 1072 sequences):
+- Hylomyscus pamfi: 10 sequences
+- Lophuromys sikapusi: 4 sequences
+- Mastomys: 52 sequences
+- Mastomys erythroleucus: 40 sequences
+- Mastomys natalensis: 884 sequences
+- Mastomys sp: 1 sequences
+- Mastomys sp.: 2 sequences
+- Mus baoulei: 9 sequences
+- Rattus norvegicus: 1 sequences
+- rodent: 57 sequences
+- Rodents: 12 sequences
+
+Other hosts found (Total: 8 sequences):
+- Cavia porcellus (guinea pig): 2 sequences
+- dog: 1 sequences
+- goat: 3 sequences
+- lizard: 2 sequences
+
+Sequences with no host information: 195
+
+
+Initial Geographical Distribution:
+---------------------------------
+Country        L segments    S segments    Unknown         Total
+-----------   -----------   -----------   ---------   ----------
+Benin                  10            22           0           32
+China                   0             0           1            1
+Ghana                   2             2           0            4
+Guinea                 29           477           0          506
+IvoryCoast             31            27           0           58
+Liberia                31            52           0           83
+Mali                   12            15           0           27
+Nigeria               550           931           6         1487
+SierraLeone           155           254           0          409
+Togo                    3             3           0            6
+USA                     0             0           5            5
+UnknownLoc             51            92          39          182
+------------------------------------------------------------
+Total                 874          1875          51         2800
+
+
+Output Files
+------------
+L segments: FASTA/L_segment/lassa_l_segments.fasta (809 sequences)
+S segments: FASTA/S_segment/lassa_s_segments.fasta (1727 sequences)
+Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta (7 sequences)
+
+4. After Metadata Filtering
+------------------------
+
+Before metadata filtering:
+Sequences with unknown location: 182
+Sequences with unknown date: 221
+Sequences with both unknown: 146
+
+After metadata filtering:
+Final sequences: 2543
+L segments: 809
+S segments: 1727
+Unknown segments: 7
+
+
+Final Geographical Distribution After Metadata Filter:
+-----------------------------------------------------
+Country        L segments    S segments    Unknown         Total
+-----------   -----------   -----------   ---------   ----------
+Benin                  10            22           0           32
+China                   0             0           1            1
+Ghana                   2             2           0            4
+Guinea                 26           441           0          467
+IvoryCoast             31            27           0           58
+Liberia                29            50           0           79
+Mali                   12            15           0           27
+Nigeria               541           919           6         1466
+SierraLeone           155           248           0          403
+Togo                    3             3           0            6
+------------------------------------------------------------
+Total                 809          1727           7         2543
+

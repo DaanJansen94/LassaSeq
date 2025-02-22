@@ -165,6 +165,7 @@ def get_metadata(record):
                     collection_date = convert_date_to_decimal_year(date_str)
     
     return f"{accession}_{location}_{collection_date}"
+
 def fetch_sequences():
     Entrez.email = "anonymous@example.com"
     max_retries = 3
@@ -719,18 +720,72 @@ def filter_by_host(sequences, host_choice):
     
     return filtered_sequences
 
+def filter_by_metadata(sequences, metadata_choice):
+    """Filter sequences based on metadata completeness"""
+    filtered_sequences = []
+    
+    for seq in sequences:
+        record = seq['record']
+        metadata = get_metadata(record)  # This gives us accession_location_date
+        
+        include_sequence = True
+        if metadata_choice == '1':  # Known location only
+            if 'UnknownLoc' in metadata:
+                include_sequence = False
+        elif metadata_choice == '2':  # Known date only
+            if 'UnknownDate' in metadata:
+                include_sequence = False
+        elif metadata_choice == '3':  # Both known
+            if 'UnknownLoc' in metadata or 'UnknownDate' in metadata:
+                include_sequence = False
+        # metadata_choice == '4' means no filter, include all sequences
+        
+        if include_sequence:
+            filtered_sequences.append(seq)
+    
+    return filtered_sequences
+
+def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences):
+    """Write metadata filtering summary to the report"""
+    f.write("\n4. After Metadata Filtering\n")
+    f.write("------------------------\n")
+    
+    # Count metadata issues in original sequences
+    unknown_loc_count = sum(1 for seq in sequences if 'UnknownLoc' in get_metadata(seq['record']))
+    unknown_date_count = sum(1 for seq in sequences if 'UnknownDate' in get_metadata(seq['record']))
+    both_unknown_count = sum(1 for seq in sequences 
+                           if 'UnknownLoc' in get_metadata(seq['record']) 
+                           and 'UnknownDate' in get_metadata(seq['record']))
+    
+    f.write("\nBefore metadata filtering:\n")
+    f.write(f"Sequences with unknown location: {unknown_loc_count}\n")
+    f.write(f"Sequences with unknown date: {unknown_date_count}\n")
+    f.write(f"Sequences with both unknown: {both_unknown_count}\n")
+    
+    # Count remaining sequences after filtering
+    final_counts = calculate_segment_counts(metadata_filtered_sequences)
+    final_locations = calculate_location_counts(metadata_filtered_sequences)
+    
+    f.write(f"\nAfter metadata filtering:\n")
+    f.write(f"Final sequences: {len(metadata_filtered_sequences)}\n")
+    f.write(f"L segments: {final_counts['L']}\n")
+    f.write(f"S segments: {final_counts['S']}\n")
+    f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
+    
+    write_geographical_distribution(f, final_locations, "Final Geographical Distribution After Metadata Filter")
+
 def cli_main():
     try:
         parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
         parser.add_argument('-o', '--outdir', required=True, help='Output directory for sequences')
-        
-        # Modified genome completeness options
         parser.add_argument('--genome', choices=['1', '2', '3'],
                            help='Genome completeness: 1=Complete only (>99%), 2=Partial (requires --completeness), 3=No filter')
         parser.add_argument('--completeness', type=float,
                            help='Minimum sequence completeness (1-100), required when --genome=2')
         parser.add_argument('--host', choices=['1', '2', '3', '4'],
                            help='Host filter: 1=Human, 2=Rodent, 3=Human and Rodent, 4=No host filter')
+        parser.add_argument('--metadata', choices=['1', '2', '3', '4'],
+                           help='Metadata filter: 1=Known location only, 2=Known date only, 3=Both known, 4=No filter')
         
         args = parser.parse_args()
         
@@ -772,12 +827,20 @@ def cli_main():
             print("3. Both human and rodent sequences")
             print("4. No host filter")
             host_choice = get_user_input("", ['1', '2', '3', '4'])
+
+        # Handle metadata filtering options - MOVED HERE
+        if args.metadata:
+            metadata_choice = args.metadata
+        else:
+            print("\nMetadata filtering options:")
+            print("1. Keep only sequences with known location")
+            print("2. Keep only sequences with known date")
+            print("3. Keep only sequences with both known location and date")
+            print("4. No metadata filter")
+            metadata_choice = get_user_input("", ['1', '2', '3', '4'])
         
         sequences, segment_counts, location_counts = fetch_sequences()
         initial_total = len(sequences)
-        
-        # Remove terminal host analysis output
-        # analyze_hosts(sequences)  # Comment out or remove this line
         
         # Get initial counts before filtering
         initial_segment_counts = {'L': 0, 'S': 0, 'unknown': 0}
@@ -788,7 +851,7 @@ def cli_main():
             else:
                 initial_segment_counts['unknown'] += 1
         
-        # First apply completeness filter
+        # Apply completeness filter
         completeness_filtered = []
         if genome_choice != '3':  # If completeness filtering is requested
             for seq in sequences:
@@ -807,38 +870,14 @@ def cli_main():
         else:
             completeness_filtered = sequences  # If no completeness filter, use all sequences
         
-        # Then apply host filter to the completeness-filtered sequences
-        filtered_sequences = []
-        if host_choice != '3':  # If host filtering is requested
-            for seq in completeness_filtered:
-                include_sequence = True
-                record = seq['record']
-                
-                host_found = False
-                is_human = False
-                
-                for feature in record.features:
-                    if feature.type == "source":
-                        if 'host' in feature.qualifiers:
-                            host_found = True
-                            host = feature.qualifiers['host'][0].lower()
-                            is_human = 'homo sapiens' in host or 'human' in host
-                            break
-                
-                if host_choice == '1':  # Human
-                    if not (host_found and is_human):
-                        include_sequence = False
-                elif host_choice == '2':  # Non-human
-                    if not (host_found and not is_human):
-                        include_sequence = False
-                
-                if include_sequence:
-                    filtered_sequences.append(seq)
-        else:
-            filtered_sequences = completeness_filtered  # If no host filter, use completeness filtered sequences
+        # Apply host filter
+        filtered_sequences = filter_by_host(completeness_filtered, host_choice)
         
-        # Process both segments
-        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(filtered_sequences, 'both')
+        # Apply metadata filter
+        metadata_filtered_sequences = filter_by_metadata(filtered_sequences, metadata_choice)
+        
+        # Process both segments with metadata filtered sequences
+        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(metadata_filtered_sequences, 'both')
         
         # Write sequences to their respective directories
         l_output = os.path.join(l_segment_dir, "lassa_l_segments.fasta")
@@ -861,12 +900,20 @@ def cli_main():
         print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
               f"and {written_counts['unknown']} unknown segments after filtering")
         
-        # Update the summary file to reflect new directory structure
+        # Write initial summary before metadata filtering
         write_summary(args.outdir, initial_total, len(filtered_sequences), 
                      initial_segment_counts, location_counts, 'both', 
                      written_counts, filtered_sequences, genome_choice, 
                      completeness, sequences, host_choice, completeness_filtered)
-        print(f"Summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
+        
+        # Append metadata filtering results to summary file
+        with open(os.path.join(args.outdir, 'summary_Lassa.txt'), 'a') as f:
+            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences)
+        
+        print(f"\nFinal counts after all filtering:")
+        print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
+              f"and {written_counts['unknown']} unknown segments")
+        print(f"Updated summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
         
     except KeyboardInterrupt:
         print("\nOperation cancelled by user.")
