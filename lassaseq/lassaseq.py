@@ -115,26 +115,81 @@ def convert_date_to_decimal_year(date_str):
         print(f"Date conversion error for {date_str}: {str(e)}")
         return "UnknownDate"
 
-def clean_country_name(country):
-    """Clean country name to remove spaces and special characters"""
-    # Dictionary for specific country name fixes
-    country_fixes = {
+def get_standardized_country_name(country):
+    """Convert country name to standardized format"""
+    # Dictionary mapping various country name formats to standardized names
+    country_mappings = {
+        # Sierra Leone variations
+        'sierra leone': 'SierraLeone',
+        'sierra-leone': 'SierraLeone',
+        'sierraleone': 'SierraLeone',
         'Sierra Leone': 'SierraLeone',
+        'Sierra-Leone': 'SierraLeone',
+        'SIERRA LEONE': 'SierraLeone',
+        
+        # Nigeria variations
+        'nigeria': 'Nigeria',
+        'Nigeria': 'Nigeria',
+        'NIGERIA': 'Nigeria',
+        
+        # Liberia variations
+        'liberia': 'Liberia',
+        'Liberia': 'Liberia',
+        'LIBERIA': 'Liberia',
+        
+        # Guinea variations
+        'guinea': 'Guinea',
+        'Guinea': 'Guinea',
+        'GUINEA': 'Guinea',
+        
+        # Mali variations
+        'mali': 'Mali',
+        'Mali': 'Mali',
+        'MALI': 'Mali',
+        
+        # Ghana variations
+        'ghana': 'Ghana',
+        'Ghana': 'Ghana',
+        'GHANA': 'Ghana',
+        
+        # Benin variations
+        'benin': 'Benin',
+        'Benin': 'Benin',
+        'BENIN': 'Benin',
+        
+        # Burkina Faso variations
+        'burkina faso': 'BurkinaFaso',
         'Burkina Faso': 'BurkinaFaso',
-        'Costa Rica': 'CostaRica',
-        'South Africa': 'SouthAfrica',
+        'BURKINA FASO': 'BurkinaFaso',
+        'burkinafaso': 'BurkinaFaso',
+        'burkina-faso': 'BurkinaFaso',
+        'Burkina-Faso': 'BurkinaFaso',
+        
+        # Ivory Coast variations
+        "cote d'ivoire": 'IvoryCoast',
         "Cote d'Ivoire": 'IvoryCoast',
+        "COTE D'IVOIRE": 'IvoryCoast',
+        "côte d'ivoire": 'IvoryCoast',
         "Côte d'Ivoire": 'IvoryCoast',
-        'Ivory Coast': 'IvoryCoast'
-        # Add more multi-word countries as needed
+        'ivory coast': 'IvoryCoast',
+        'Ivory Coast': 'IvoryCoast',
+        'IVORY COAST': 'IvoryCoast',
+        'ivorycoast': 'IvoryCoast',
+        'ivory-coast': 'IvoryCoast',
+        'Ivory-Coast': 'IvoryCoast',
+        
+        # Togo variations
+        'togo': 'Togo',
+        'Togo': 'Togo',
+        'TOGO': 'Togo'
     }
     
-    # Check if country is in our fixes dictionary
-    if country in country_fixes:
-        return country_fixes[country]
+    # First try exact match
+    if country in country_mappings:
+        return country_mappings[country]
     
-    # Otherwise, remove spaces and special characters
-    return country.replace(' ', '').replace('-', '').replace(',', '')
+    # Then try lowercase match
+    return country_mappings.get(country.lower(), country)
 
 def get_metadata(record):
     """Extract metadata from record"""
@@ -156,7 +211,7 @@ def get_metadata(record):
                     # Extract country (part before the colon)
                     location = geo_loc.split(':')[0].strip()
                     # Clean up location string
-                    location = clean_country_name(location)
+                    location = get_standardized_country_name(location)
             
             # Get collection date
             if 'collection_date' in feature.qualifiers:
@@ -334,7 +389,7 @@ def calculate_location_counts(sequences):
                     geo_loc = feature.qualifiers['geo_loc_name'][0]
                     if 'missing' not in geo_loc.lower():
                         location = geo_loc.split(':')[0].strip()
-                        location = clean_country_name(location)
+                        location = get_standardized_country_name(location)
         
         if location not in locations[segment_type]:
             locations[segment_type][location] = 0
@@ -739,6 +794,34 @@ def filter_by_metadata(sequences, metadata_choice):
     
     return filtered_sequences
 
+def filter_by_country(sequences, countries):
+    """Filter sequences based on specified countries"""
+    if not countries:  # If no countries specified, return all sequences
+        return sequences
+        
+    filtered_sequences = []
+    # Convert input countries to standardized format
+    standardized_countries = [get_standardized_country_name(c) for c in countries]
+    
+    for seq in sequences:
+        record = seq['record']
+        include_sequence = False
+        
+        for feature in record.features:
+            if feature.type == "source" and 'geo_loc_name' in feature.qualifiers:
+                location = feature.qualifiers['geo_loc_name'][0]
+                if 'missing' not in location.lower():
+                    country = location.split(':')[0].strip()
+                    standardized_country = get_standardized_country_name(country)
+                    if standardized_country in standardized_countries:
+                        include_sequence = True
+                        break
+        
+        if include_sequence:
+            filtered_sequences.append(seq)
+    
+    return filtered_sequences
+
 def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences, metadata_choice, written_counts):
     """Write metadata filtering summary to the report"""
     # Only write metadata filtering summary if actual filtering was applied
@@ -765,128 +848,172 @@ def write_metadata_filtering_summary(f, sequences, metadata_filtered_sequences, 
         f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
         
         write_geographical_distribution(f, final_locations, "Final Geographical Distribution After Metadata Filter")
+
+def write_country_filtering_summary(f, sequences, country_filtered_sequences, countries, written_counts):
+    """Write country filtering summary and final output files section"""
+    if countries:  # Only write if country filtering was applied
+        f.write("\n5. After Country Filtering\n")
+        f.write("----------------------\n")
+        f.write(f"Applied filter: Selected countries: {countries}\n")
         
-        # Add Output Files section here, at the very end
-        f.write("\nOutput Files\n")
-        f.write("------------\n")
-        f.write(f"L segments: FASTA/L_segment/lassa_l_segments.fasta ({written_counts['L']} sequences)\n")
-        f.write(f"S segments: FASTA/S_segment/lassa_s_segments.fasta ({written_counts['S']} sequences)\n")
-        if written_counts['unknown'] > 0:
-            f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
+        final_counts = calculate_segment_counts(country_filtered_sequences)
+        final_locations = calculate_location_counts(country_filtered_sequences)
+        
+        f.write(f"\nAfter country filtering:\n")
+        f.write(f"Final sequences: {len(country_filtered_sequences)}\n")
+        f.write(f"L segments: {final_counts['L']}\n")
+        f.write(f"S segments: {final_counts['S']}\n")
+        f.write(f"Unknown segments: {final_counts['unknown']}\n\n")
+        
+        write_geographical_distribution(f, final_locations, "Final Geographical Distribution After Country Filter")
+    
+    # Always write the Output Files section at the very end
+    f.write("\nOutput Files\n")
+    f.write("------------\n")
+    f.write(f"L segments: FASTA/L_segment/lassa_l_segments.fasta ({written_counts['L']} sequences)\n")
+    f.write(f"S segments: FASTA/S_segment/lassa_s_segments.fasta ({written_counts['S']} sequences)\n")
+    if written_counts['unknown'] > 0:
+        f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
 
 def cli_main():
     try:
-        parser = argparse.ArgumentParser(description='Download Lassa virus sequences')
-        parser.add_argument('-o', '--outdir', required=True, help='Output directory for sequences')
+        class CustomFormatter(argparse.RawDescriptionHelpFormatter):
+            def _split_lines(self, text, width):
+                if text.startswith('Output directory') or \
+                   text.startswith('Minimum sequence') or \
+                   text.startswith('Genome completeness') or \
+                   text.startswith('Host filter') or \
+                   text.startswith('Metadata completeness') or \
+                   text.startswith('Comma-separated list'):
+                    return text.splitlines()
+                return argparse.RawDescriptionHelpFormatter._split_lines(self, text, width)
+
+        parser = argparse.ArgumentParser(
+            description='Download and filter Lassa virus sequences',
+            epilog='''example:
+  # Download complete genomes from human hosts with known location and date from multiple countries:
+  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"''',
+            formatter_class=CustomFormatter)
+        
+        parser.add_argument('-o', '--outdir', required=True, metavar='',
+                          help='''Output directory for sequences''')
+        
         parser.add_argument('--genome', choices=['1', '2', '3'],
-                           help='Genome completeness: 1=Complete only (>99%), 2=Partial (requires --completeness), 3=No filter')
-        parser.add_argument('--completeness', type=float,
-                           help='Minimum sequence completeness (1-100), required when --genome=2')
+                          help='''Genome completeness filter:
+1 = Complete genomes only (>99 percent of reference length)
+2 = Partial genomes (specify minimum percent with --completeness)
+3 = No completeness filter''')
+        
+        parser.add_argument('--completeness', type=float, metavar='',
+                          help='''Minimum sequence completeness (1-100 percent)
+Required when --genome=2''')
+        
         parser.add_argument('--host', choices=['1', '2', '3', '4'],
-                           help='Host filter: 1=Human, 2=Rodent, 3=Human and Rodent, 4=No host filter')
+                          help='''Host filter:
+1 = Human sequences only
+2 = Rodent sequences only
+3 = Both human and rodent sequences
+4 = No host filter''')
+        
         parser.add_argument('--metadata', choices=['1', '2', '3', '4'],
-                           help='Metadata filter: 1=Known location only, 2=Known date only, 3=Both known, 4=No filter')
+                          help='''Metadata completeness filter:
+1 = Keep only sequences with known location
+2 = Keep only sequences with known date
+3 = Keep only sequences with both known location and date
+4 = No metadata filter''')
+        
+        parser.add_argument('--countries', type=str, metavar='',
+                          help='''Comma-separated list of countries to filter sequences
+Examples: "Sierra Leone, Guinea" or "Nigeria, Mali"
+Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
+          Ghana, Benin, Burkina Faso, Ivory Coast, Togo''')
         
         args = parser.parse_args()
         
+        # Initialize countries as None if not provided
+        countries = None
+        if args.countries:
+            countries = [country.strip() for country in args.countries.split(',')]
+        
+        # Interactive mode if optional arguments are not provided
+        if not args.genome:
+            args.genome = get_user_input(
+                "\nSelect genome completeness filter:\n"
+                "1 = Complete genomes only (>99 percent)\n"
+                "2 = Partial genomes (specify minimum percent)\n"
+                "3 = No completeness filter",
+                ['1', '2', '3'])
+            
+            if args.genome == '2' and not args.completeness:
+                args.completeness = get_completeness()
+        
+        if not args.host:
+            args.host = get_user_input(
+                "\nSelect host filter:\n"
+                "1 = Human sequences only\n"
+                "2 = Rodent sequences only\n"
+                "3 = Both human and rodent sequences\n"
+                "4 = No host filter",
+                ['1', '2', '3', '4'])
+        
+        if not args.metadata:
+            args.metadata = get_user_input(
+                "\nSelect metadata completeness filter:\n"
+                "1 = Keep only sequences with known location\n"
+                "2 = Keep only sequences with known date\n"
+                "3 = Keep only sequences with both known location and date\n"
+                "4 = No metadata filter",
+                ['1', '2', '3', '4'])
+        
+        # Continue with the rest of the code...
         print("\nStarting Lassa virus sequence download")
         print(f"Output directory: {args.outdir}")
         
-        # Create segment-specific directories
+        # Create output directories
         fasta_dir = os.path.join(args.outdir, "FASTA")
         l_segment_dir = os.path.join(fasta_dir, "L_segment")
         s_segment_dir = os.path.join(fasta_dir, "S_segment")
         unknown_segment_dir = os.path.join(fasta_dir, "unknown_segment")
         
-        # Create all directories
         for directory in [fasta_dir, l_segment_dir, s_segment_dir, unknown_segment_dir]:
             os.makedirs(directory, exist_ok=True)
-        
-        # Handle genome completeness options
-        if args.genome:
-            genome_choice = args.genome
-            completeness = args.completeness if args.genome == '2' else None
-        else:
-            print("\nGenome completeness options:")
-            print("1. Complete genomes only (>99%)")
-            print("2. Partial genomes (specify minimum completeness)")
-            print("3. No completeness filter")
-            genome_choice = get_user_input("", ['1', '2', '3'])
-            
-            completeness = None
-            if genome_choice == '2':
-                completeness = get_completeness()
-        
-        # Handle host filtering options
-        if args.host:
-            host_choice = args.host
-        else:
-            print("\nHost filtering options:")
-            print("1. Human sequences")
-            print("2. Rodent sequences")
-            print("3. Both human and rodent sequences")
-            print("4. No host filter")
-            host_choice = get_user_input("", ['1', '2', '3', '4'])
 
-        # Handle metadata filtering options - MOVED HERE
-        if args.metadata:
-            metadata_choice = args.metadata
-        else:
-            print("\nMetadata filtering options:")
-            print("1. Keep only sequences with known location")
-            print("2. Keep only sequences with known date")
-            print("3. Keep only sequences with both known location and date")
-            print("4. No metadata filter")
-            metadata_choice = get_user_input("", ['1', '2', '3', '4'])
-        
+        # Download sequences
         sequences, segment_counts, location_counts = fetch_sequences()
         initial_total = len(sequences)
-        
-        # Get initial counts before filtering
-        initial_segment_counts = {'L': 0, 'S': 0, 'unknown': 0}
-        for seq in sequences:
-            segment_type = get_segment_type(seq['record'])
-            if segment_type:
-                initial_segment_counts[segment_type] += 1
-            else:
-                initial_segment_counts['unknown'] += 1
-        
-        # Apply completeness filter
-        completeness_filtered = []
-        if genome_choice != '3':  # If completeness filtering is requested
+        initial_segment_counts = calculate_segment_counts(sequences)
+
+        # Apply all filters in sequence
+        if args.genome != '3':  # Apply completeness filter if requested
+            completeness_filtered = []
             for seq in sequences:
-                include_sequence = True
-                record = seq['record']
-                
-                if genome_choice == '1':
-                    if not is_complete_sequence(record):  # >99%
-                        include_sequence = False
-                elif genome_choice == '2':
-                    if not meets_minimum_completeness(record, completeness):  # >X%
-                        include_sequence = False
-                
-                if include_sequence:
+                if args.genome == '1' and is_complete_sequence(seq['record']):
+                    completeness_filtered.append(seq)
+                elif args.genome == '2' and meets_minimum_completeness(seq['record'], args.completeness):
                     completeness_filtered.append(seq)
         else:
-            completeness_filtered = sequences  # If no completeness filter, use all sequences
+            completeness_filtered = sequences
+
+        # Apply remaining filters
+        host_filtered = filter_by_host(completeness_filtered, args.host)
+        metadata_filtered = filter_by_metadata(host_filtered, args.metadata)
         
-        # Apply host filter
-        filtered_sequences = filter_by_host(completeness_filtered, host_choice)
+        # Process country filtering
+        if countries:
+            final_filtered = filter_by_country(metadata_filtered, countries)
+        else:
+            final_filtered = metadata_filtered
+
+        # Process final filtered sequences and write FASTA files
+        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(final_filtered, 'both')
         
-        # Apply metadata filter
-        metadata_filtered_sequences = filter_by_metadata(filtered_sequences, metadata_choice)
-        
-        # Process both segments with metadata filtered sequences
-        l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(metadata_filtered_sequences, 'both')
-        
-        # Write sequences to their respective directories
+        # Write FASTA files with final filtered sequences
         l_output = os.path.join(l_segment_dir, "lassa_l_segments.fasta")
-        SeqIO.write(l_sequences, l_output, "fasta")
-        
         s_output = os.path.join(s_segment_dir, "lassa_s_segments.fasta")
-        SeqIO.write(s_sequences, s_output, "fasta")
-        
         unknown_output = os.path.join(unknown_segment_dir, "lassa_unknown_segments.fasta")
+        
+        SeqIO.write(l_sequences, l_output, "fasta")
+        SeqIO.write(s_sequences, s_output, "fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
         written_counts = {
@@ -894,27 +1021,23 @@ def cli_main():
             'S': len(s_sequences),
             'unknown': len(unknown_sequences)
         }
-        
-        print(f"\nFound {initial_segment_counts['L']} L segments, {initial_segment_counts['S']} S segments, "
-              f"and {initial_segment_counts['unknown']} unknown segments before filtering")
-        print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
-              f"and {written_counts['unknown']} unknown segments after filtering")
-        
-        # Write initial summary before metadata filtering
-        write_summary(args.outdir, initial_total, len(filtered_sequences), 
+
+        # Write summary file
+        write_summary(args.outdir, initial_total, len(host_filtered), 
                      initial_segment_counts, location_counts, 'both', 
-                     written_counts, filtered_sequences, genome_choice, 
-                     completeness, sequences, host_choice, completeness_filtered)
+                     written_counts, host_filtered, args.genome, 
+                     args.completeness, sequences, args.host, completeness_filtered)
         
-        # Append metadata filtering results to summary file
+        # Append metadata and country filtering results
         with open(os.path.join(args.outdir, 'summary_Lassa.txt'), 'a') as f:
-            write_metadata_filtering_summary(f, filtered_sequences, metadata_filtered_sequences, metadata_choice, written_counts)
-        
+            write_metadata_filtering_summary(f, host_filtered, metadata_filtered, args.metadata, written_counts)
+            write_country_filtering_summary(f, metadata_filtered, final_filtered, countries, written_counts)
+
         print(f"\nFinal counts after all filtering:")
         print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
               f"and {written_counts['unknown']} unknown segments")
         print(f"Updated summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
-        
+
     except KeyboardInterrupt:
         print("\nOperation cancelled by user.")
         sys.exit(1)
