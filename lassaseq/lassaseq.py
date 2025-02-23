@@ -1096,6 +1096,9 @@ def perform_msa_with_reference(phylogeny_dir, segment):
     
     reference = reference_sequences[0]
     
+    # Keep track of aligned files
+    aligned_files = []
+    
     # Extract coding regions from reference
     for gene, coords in REFERENCE_COORDS[segment].items():
         if gene == 'id':  # Skip the id field
@@ -1121,24 +1124,23 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             SeqIO.write(sequences_to_align, f, "fasta")
         
         # Align each sequence against reference using MAFFT
-        # Parameters adjusted for high divergence (up to 30%)
+        # Optimized for large datasets of highly divergent Lassa sequences
         mafft_cmd = [
             "mafft",
-            "--add", temp_seqs_file,    # Sequences to add (must come right after --add)
-            "--reorder",                # Output aligned sequences in input order
-            "--genafpair",             # For highly divergent sequences
-            "--maxiterate", "1000",
-            "--ep", "0.123",
-            "--op", "1.53",            # Reduced gap opening penalty for divergent sequences
-            "--lop", "-2.00",          # Offset for gap opening penalty at local alignment
-            "--keeplength",  
-            "--preservecase",                   # Maintain reference length
-            coding_output              # Reference sequence file (must come last)
+            "--add", temp_seqs_file,    
+            "--keeplength",            # Maintain reference length
+            "--reorder",               # Output aligned sequences in input order
+            "--retree", "2",           # Reduce guide tree iterations for speed
+            "--maxiterate", "20",      # Minimal iterations for speed
+            "--localpair",             # Local alignment, better for divergent sequences
+            "--thread", "-1",          # Use all available cores
+            "--ep", "0.2",             # Increased gap extension penalty for divergent seqs
+            "--op", "2",               # Increased gap opening penalty
+            coding_output              
         ]
         
         try:
-            print(f"Aligning {gene} sequences using MAFFT (this may take a while)...")
-            # Run MAFFT and show progress in real-time
+            print(f"Aligning {gene} sequences using MAFFT (optimized for large, divergent datasets)...")
             process = subprocess.Popen(
                 mafft_cmd,
                 stdout=subprocess.PIPE,
@@ -1146,10 +1148,8 @@ def perform_msa_with_reference(phylogeny_dir, segment):
                 text=True
             )
             
-            # Collect output
             stdout, stderr = process.communicate()
             
-            # Check for errors
             if process.returncode != 0:
                 print(f"MAFFT Error: {stderr}")
                 raise subprocess.CalledProcessError(process.returncode, mafft_cmd)
@@ -1158,6 +1158,9 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             with open(aligned_output, 'w') as outfile:
                 outfile.write(stdout)
             
+            # Add to list of aligned files
+            aligned_files.append(aligned_output)
+            
             # Verify alignment
             alignment = AlignIO.read(aligned_output, "fasta")
             print(f"\nAlignment completed for {gene}:")
@@ -1165,15 +1168,8 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             print(f"Alignment length: {alignment.get_alignment_length()} bp")
             print(f"Number of sequences: {len(alignment)} sequences")
             
-            # Verify all sequences have same length
-            if not all(len(record.seq) == ref_length for record in alignment):
-                print("Warning: Not all sequences have reference length!")
-            
             # Clean up temporary file
             os.remove(temp_seqs_file)
-            
-            # After all coding regions are aligned, concatenate them
-            concatenate_aligned_coding_regions(msa_dir, segment)
             
         except subprocess.CalledProcessError as e:
             if e.stderr:
@@ -1184,6 +1180,17 @@ def perform_msa_with_reference(phylogeny_dir, segment):
         except Exception as e:
             print(f"An unexpected error occurred: {str(e)}")
             raise
+    
+    # Only attempt concatenation if we have all required alignments
+    expected_genes = len([k for k in REFERENCE_COORDS[segment].keys() if k != 'id'])
+    if len(aligned_files) == expected_genes:
+        try:
+            concatenate_aligned_coding_regions(msa_dir, segment)
+        except Exception as e:
+            print(f"Warning: Could not concatenate aligned sequences: {str(e)}")
+    else:
+        print(f"\nWarning: Not all coding regions were aligned successfully for {segment} segment")
+        print(f"Expected {expected_genes} alignments, got {len(aligned_files)}")
 
 def cli_main():
     try:
