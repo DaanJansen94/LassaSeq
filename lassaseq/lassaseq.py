@@ -1126,15 +1126,16 @@ def perform_msa_with_reference(phylogeny_dir, segment):
         # Align each sequence against reference using MAFFT
         mafft_cmd = [
             "mafft",
-            "--add", temp_seqs_file,    
+            "--add", temp_seqs_file,  
             "--reorder",                
-            "--6merpair",             
-            "--maxiterate", "16",
-            "--retree", "1",
-            "--ep", "0.123",
-            "--op", "1.53",            
-            "--lop", "-2.00",          
-            "--keeplength",            
+            "--localpair",             
+            "--maxiterate", "32",
+            "--retree", "2",
+            "--ep", "0.1",
+            "--op", "1.8",            
+            "--lop", "-1.5",          
+            "--keeplength",  
+            "--thread", "-1",   
             coding_output              
         ]
         
