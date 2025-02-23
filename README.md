@@ -115,13 +115,13 @@ lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt
 output_directory/
 ├── FASTA/
 │   ├── L_segment/
-│   │   ├── lassa_l_segments.fasta  
-│   │   ├── reference.fasta         
-│   │   └── outgroup.fasta         
+│   │   ├── lassa_l_segments.fasta  (downloaded sequences)
+│   │   ├── reference.fasta         (reference sequence NC_004297.1)
+│   │   └── outgroup.fasta          (Pinneo strain KM822127.1, Nigeria 1969)
 │   ├── S_segment/
-│   │   ├── lassa_s_segments.fasta  
-│   │   ├── reference.fasta       
-│   │   └── outgroup.fasta        
+│   │   ├── lassa_s_segments.fasta  (downloaded sequences)
+│   │   ├── reference.fasta         (reference sequence NC_004296.1)
+│   │   └── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
 │   └── unknown_segment/
 │       └── lassa_unknown_segments.fasta
 └── summary_Lassa.txt
