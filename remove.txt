@@ -1,0 +1,2 @@
+# Accession numbers to remove (one per line)
+NC_004297.1
