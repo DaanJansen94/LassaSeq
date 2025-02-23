@@ -7,6 +7,38 @@ from datetime import datetime
 import calendar
 import time
 import sys
+from io import StringIO
+
+# Add these constants at the top of the file
+REFERENCE_SEQUENCES = {
+    'L': {
+        'id': 'NC_004297.1',
+        'description': 'Lassa virus segment L, complete sequence',
+        'location': 'Reference',
+        'date': 'NA'
+    },
+    'S': {
+        'id': 'NC_004296.1',
+        'description': 'Lassa virus segment S, complete sequence',
+        'location': 'Reference',
+        'date': 'NA'
+    }
+}
+
+PINNEO_SEQUENCES = {
+    'L': {
+        'id': 'KM822127.1',
+        'description': 'Lassa virus strain Pinneo segment L, complete sequence',
+        'location': 'Nigeria',
+        'date': '1969.000'
+    },
+    'S': {
+        'id': 'KM822128.1',
+        'description': 'Lassa virus strain Pinneo segment S, complete sequence',
+        'location': 'Nigeria',
+        'date': '1969.000'
+    }
+}
 
 def get_segment_type(record):
     """Determine if sequence is L or S segment based on proteins in header"""
@@ -875,6 +907,46 @@ def write_country_filtering_summary(f, sequences, country_filtered_sequences, co
     if written_counts['unknown'] > 0:
         f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
 
+def download_and_write_special_sequences(output_dir):
+    """Download reference and outgroup sequences and write to appropriate files"""
+    from Bio import Entrez
+    from Bio import SeqIO
+    from io import StringIO
+    Entrez.email = "your.email@example.com"
+    
+    for segment in ['L', 'S']:
+        segment_dir = os.path.join(output_dir, "FASTA", f"{segment}_segment")
+        
+        # Download and format reference sequence
+        ref_handle = Entrez.efetch(db="nucleotide", 
+                                 id=REFERENCE_SEQUENCES[segment]['id'], 
+                                 rettype="fasta", 
+                                 retmode="text")
+        
+        # Parse and format reference sequence header
+        ref_record = SeqIO.read(StringIO(ref_handle.read()), "fasta")
+        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Reference_NA"  # Removed redundant "_reference"
+        ref_record.description = ""
+        
+        # Write reference sequence with formatted header
+        with open(os.path.join(segment_dir, "reference.fasta"), "w") as f:
+            SeqIO.write(ref_record, f, "fasta")
+        
+        # Download and format outgroup sequence
+        out_handle = Entrez.efetch(db="nucleotide", 
+                                 id=PINNEO_SEQUENCES[segment]['id'], 
+                                 rettype="fasta", 
+                                 retmode="text")
+        
+        # Parse and format outgroup sequence header
+        out_record = SeqIO.read(StringIO(out_handle.read()), "fasta")
+        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_{PINNEO_SEQUENCES[segment]['date']}_outgroup"
+        out_record.description = ""
+        
+        # Write outgroup sequence with formatted header
+        with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
+            SeqIO.write(out_record, f, "fasta")
+
 def cli_main():
     try:
         class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -983,6 +1055,9 @@ One accession number per line, lines starting with # are ignored''')
         for directory in [fasta_dir, l_segment_dir, s_segment_dir, unknown_segment_dir]:
             os.makedirs(directory, exist_ok=True)
 
+        # Download reference and outgroup sequences first
+        download_and_write_special_sequences(args.outdir)
+
         # Download sequences
         sequences, segment_counts, location_counts = fetch_sequences()
         initial_total = len(sequences)
@@ -1027,7 +1102,7 @@ One accession number per line, lines starting with # are ignored''')
         # Process final filtered sequences and write FASTA files
         l_sequences, s_sequences, unknown_sequences, unknown_headers = process_sequences(final_filtered, 'both')
         
-        # Write FASTA files with final filtered sequences
+        # Write main sequence files
         l_output = os.path.join(l_segment_dir, "lassa_l_segments.fasta")
         s_output = os.path.join(s_segment_dir, "lassa_s_segments.fasta")
         unknown_output = os.path.join(unknown_segment_dir, "lassa_unknown_segments.fasta")
@@ -1036,6 +1111,7 @@ One accession number per line, lines starting with # are ignored''')
         SeqIO.write(s_sequences, s_output, "fasta")
         SeqIO.write(unknown_sequences, unknown_output, "fasta")
         
+        # Update the output structure in summary
         written_counts = {
             'L': len(l_sequences),
             'S': len(s_sequences),
