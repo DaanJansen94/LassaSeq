@@ -1021,6 +1021,38 @@ def download_and_write_special_sequences(output_dir):
         with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
             SeqIO.write(out_record, f, "fasta")
 
+def concatenate_aligned_coding_regions(msa_dir, segment):
+    """Concatenate aligned coding regions in the correct order for each segment"""
+    from Bio import SeqIO
+    from collections import defaultdict
+    
+    # Define order of genes for each segment
+    segment_order = {
+        'L': ['l_protein', 'z_protein'],
+        'S': ['np', 'gpc']
+    }
+    
+    # Dictionary to store sequences
+    concatenated_seqs = defaultdict(str)
+    
+    # Read aligned sequences in correct order
+    for gene in segment_order[segment]:
+        aligned_file = os.path.join(msa_dir, f"{gene}_aligned.fasta")
+        
+        for record in SeqIO.parse(aligned_file, "fasta"):
+            concatenated_seqs[record.id] += str(record.seq)
+    
+    # Write concatenated sequences
+    output_file = os.path.join(msa_dir, f"{segment.lower()}_coding_aligned.fasta")
+    with open(output_file, 'w') as f:
+        for seq_id, seq in concatenated_seqs.items():
+            f.write(f">{seq_id}\n{seq}\n")
+    
+    print(f"\nConcatenated aligned coding sequences for {segment} segment:")
+    print(f"Number of sequences: {len(concatenated_seqs)}")
+    print(f"Total length: {len(list(concatenated_seqs.values())[0])} bp")
+    print(f"Output written to: {output_file}")
+
 def perform_msa_with_reference(phylogeny_dir, segment):
     """Align sequences using reference-based approach"""
     from Bio import SeqIO, AlignIO
@@ -1099,7 +1131,8 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             "--ep", "0.123",
             "--op", "1.53",            # Reduced gap opening penalty for divergent sequences
             "--lop", "-2.00",          # Offset for gap opening penalty at local alignment
-            "--keeplength",            # Maintain reference length
+            "--keeplength",  
+            "--preservecase",                   # Maintain reference length
             coding_output              # Reference sequence file (must come last)
         ]
         
@@ -1138,6 +1171,9 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             
             # Clean up temporary file
             os.remove(temp_seqs_file)
+            
+            # After all coding regions are aligned, concatenate them
+            concatenate_aligned_coding_regions(msa_dir, segment)
             
         except subprocess.CalledProcessError as e:
             if e.stderr:
