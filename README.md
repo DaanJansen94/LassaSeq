@@ -104,6 +104,9 @@ lassaseq -o lassa_output --genome 3 --host 4 --metadata 4
 
 # Download sequences from specific countries
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"
+
+# Download sequences excluding specific accession numbers
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt
 ```
 
 ### Output Structure
@@ -112,9 +115,13 @@ lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Le
 output_directory/
 ├── FASTA/
 │   ├── L_segment/
-│   │   └── lassa_l_segments.fasta
+│   │   ├── lassa_l_segments.fasta  
+│   │   ├── reference.fasta         
+│   │   └── outgroup.fasta         
 │   ├── S_segment/
-│   │   └── lassa_s_segments.fasta
+│   │   ├── lassa_s_segments.fasta  
+│   │   ├── reference.fasta       
+│   │   └── outgroup.fasta        
 │   └── unknown_segment/
 │       └── lassa_unknown_segments.fasta
 └── summary_Lassa.txt
