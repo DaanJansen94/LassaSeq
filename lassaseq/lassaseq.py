@@ -884,7 +884,8 @@ def cli_main():
                    text.startswith('Genome completeness') or \
                    text.startswith('Host filter') or \
                    text.startswith('Metadata completeness') or \
-                   text.startswith('Comma-separated list'):
+                   text.startswith('Comma-separated list') or \
+                   text.startswith('(Optional) File'):
                     return text.splitlines()
                 return argparse.RawDescriptionHelpFormatter._split_lines(self, text, width)
 
@@ -927,6 +928,10 @@ Required when --genome=2''')
 Examples: "Sierra Leone, Guinea" or "Nigeria, Mali"
 Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
           Ghana, Benin, Burkina Faso, Ivory Coast, Togo''')
+        
+        parser.add_argument('--remove', type=str, metavar='',
+                          help='''(Optional) File containing accession numbers to remove
+One accession number per line, lines starting with # are ignored''')
         
         args = parser.parse_args()
         
@@ -982,6 +987,21 @@ Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
         sequences, segment_counts, location_counts = fetch_sequences()
         initial_total = len(sequences)
         initial_segment_counts = calculate_segment_counts(sequences)
+
+        # After downloading sequences but before filtering, remove specified sequences
+        if args.remove and os.path.exists(args.remove):
+            with open(args.remove) as f:
+                # Read accessions to remove, skip comments and empty lines
+                remove_accessions = {line.strip() for line in f 
+                                  if line.strip() and not line.startswith('#')}
+                
+            # Filter out sequences with matching accessions
+            original_count = len(sequences)
+            sequences = [seq for seq in sequences 
+                       if seq['record'].id not in remove_accessions]
+            removed_count = original_count - len(sequences)
+            
+            print(f"\nRemoved {removed_count} sequences based on remove.txt")
 
         # Apply all filters in sequence
         if args.genome != '3':  # Apply completeness filter if requested

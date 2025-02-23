@@ -49,7 +49,7 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries (country1, country2) ]
+usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove]
 
 Download and filter Lassa virus sequences
 
@@ -75,8 +75,9 @@ options:
   --countries           (Optional) Comma-separated list of countries to filter sequences
                         If not specified, sequences from all countries will be included
                         Examples: "Sierra Leone, Guinea" or "Nigeria, Mali"
-                        Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
-                        Ghana, Benin, Burkina Faso, Ivory Coast, Togo
+                        Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali, Ghana, Benin, Burkina Faso, Ivory Coast, Togo
+  --remove              (Optional) File containing accession numbers to remove
+                        One accession number per line, lines starting with # are ignored
 
 example:
   # Download complete genomes from human hosts with known location and date from multiple countries:
