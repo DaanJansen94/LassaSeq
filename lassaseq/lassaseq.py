@@ -1124,25 +1124,22 @@ def perform_msa_with_reference(phylogeny_dir, segment):
             SeqIO.write(sequences_to_align, f, "fasta")
         
         # Align each sequence against reference using MAFFT
-        # Memory-efficient parameters for large Lassa sequences
         mafft_cmd = [
             "mafft",
             "--add", temp_seqs_file,    
-            "--keeplength",            # Maintain reference length
-            "--reorder",               # Output aligned sequences in input order
-            "--retree", "1",           # Minimal guide tree for memory efficiency
-            "--maxiterate", "10",      # Reduced iterations
-            "--localpair",             # Local alignment strategy
-            "--thread", "8",           # Limit threads to reduce memory usage
-            "--memsave",              # Enable memory saving mode
-            "--partsize", "100",      # Process sequences in smaller chunks
-            "--ep", "0.2",            
-            "--op", "2",              
+            "--reorder",                
+            "--6merpair",             
+            "--maxiterate", "16",
+            "--retree", "1",
+            "--ep", "0.123",
+            "--op", "1.53",            
+            "--lop", "-2.00",          
+            "--keeplength",            
             coding_output              
         ]
         
         try:
-            print(f"Aligning {gene} sequences using MAFFT (memory-efficient mode)...")
+            print(f"Aligning {gene} sequences using MAFFT (this may take a while)...")
             process = subprocess.Popen(
                 mafft_cmd,
                 stdout=subprocess.PIPE,
