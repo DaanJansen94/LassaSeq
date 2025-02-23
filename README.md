@@ -124,6 +124,14 @@ output_directory/
 │   │   └── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
 │   └── unknown_segment/
 │       └── lassa_unknown_segments.fasta
+├── Phylogeny/
+│   ├── FASTA/
+│   │   ├── all_l_segments.fasta    (concatenated, deduplicated sequences)
+│   │   └── all_s_segments.fasta    (concatenated, deduplicated sequences)
+│   ├── MSA/                        (directory for multiple sequence alignments)
+│   ├── Recombination/              (directory for recombination analysis)
+│   ├── TrimAl/                     (directory for alignment trimming)
+│   └── Tree/                       (directory for phylogenetic trees)
 └── summary_Lassa.txt
 ```
 

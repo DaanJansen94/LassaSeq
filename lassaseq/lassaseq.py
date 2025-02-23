@@ -8,6 +8,8 @@ import calendar
 import time
 import sys
 from io import StringIO
+from collections import defaultdict
+import subprocess
 
 # Add these constants at the top of the file
 REFERENCE_SEQUENCES = {
@@ -37,6 +39,20 @@ PINNEO_SEQUENCES = {
         'description': 'Lassa virus strain Pinneo segment S, complete sequence',
         'location': 'Nigeria',
         'date': '1969.000'
+    }
+}
+
+# Add reference coordinates for coding regions
+REFERENCE_COORDS = {
+    'L': {
+        'id': 'NC_004297.1',
+        'L_protein': {'start': 1, 'end': 6639},
+        'Z_protein': {'start': 6906, 'end': 7279}
+    },
+    'S': {
+        'id': 'NC_004296.1',
+        'NP': {'start': 1, 'end': 1707},
+        'GPC': {'start': 1839, 'end': 3402}
     }
 }
 
@@ -907,6 +923,64 @@ def write_country_filtering_summary(f, sequences, country_filtered_sequences, co
     if written_counts['unknown'] > 0:
         f.write(f"Unknown segments: FASTA/unknown_segment/lassa_unknown_segments.fasta ({written_counts['unknown']} sequences)\n")
 
+def create_phylogeny_directories(output_dir):
+    """Create all necessary directories for phylogenetic analysis"""
+    phylogeny_dir = os.path.join(output_dir, "Phylogeny")
+    
+    # Create main phylogeny subdirectories
+    subdirs = ["FASTA", "MSA", "Recombination", "TrimAl", "Tree"]
+    for subdir in subdirs:
+        # Create L and S segment subdirectories in each main directory
+        l_dir = os.path.join(phylogeny_dir, subdir, "L_segment")
+        s_dir = os.path.join(phylogeny_dir, subdir, "S_segment")
+        os.makedirs(l_dir, exist_ok=True)
+        os.makedirs(s_dir, exist_ok=True)
+    
+    return phylogeny_dir
+
+def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
+    """Concatenate all FASTA files in a segment directory and remove duplicates"""
+    from Bio import SeqIO
+    from collections import defaultdict
+    
+    # Initialize dictionaries to store sequences and track duplicates
+    sequences = {}
+    duplicate_count = 0
+    duplicate_headers = defaultdict(list)
+    
+    # Read from the original FASTA directory
+    segment_dir = os.path.join(input_dir, "FASTA", f"{segment}_segment")
+    
+    # Read all FASTA files in the directory
+    for fasta_file in ["lassa_" + segment.lower() + "_segments.fasta", 
+                      "reference.fasta", "outgroup.fasta"]:
+        file_path = os.path.join(segment_dir, fasta_file)
+        if os.path.exists(file_path):
+            for record in SeqIO.parse(file_path, "fasta"):
+                # Check if this header already exists
+                if record.id in sequences:
+                    duplicate_count += 1
+                    duplicate_headers[record.id].append(fasta_file)
+                else:
+                    sequences[record.id] = record
+    
+    # Write only to the segment subdirectory in FASTA
+    segment_output_dir = os.path.join(phylogeny_dir, "FASTA", f"{segment}_segment")
+    os.makedirs(segment_output_dir, exist_ok=True)
+    
+    # Write concatenated sequences to new file
+    output_file = os.path.join(segment_output_dir, f"all_{segment.lower()}_segments.fasta")
+    with open(output_file, "w") as f:
+        SeqIO.write(sequences.values(), f, "fasta")
+    
+    # Print duplicate information if any were found
+    if duplicate_count > 0:
+        print(f"\nFound {duplicate_count} duplicate sequence headers for {segment} segment:")
+        for header, files in duplicate_headers.items():
+            print(f"  {header} found in: {', '.join(files)}")
+    
+    return len(sequences)
+
 def download_and_write_special_sequences(output_dir):
     """Download reference and outgroup sequences and write to appropriate files"""
     from Bio import Entrez
@@ -947,6 +1021,134 @@ def download_and_write_special_sequences(output_dir):
         with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
             SeqIO.write(out_record, f, "fasta")
 
+def perform_msa_with_reference(phylogeny_dir, segment):
+    """Align sequences using reference-based approach"""
+    from Bio import SeqIO, AlignIO
+    from collections import defaultdict
+    
+    # Setup directories
+    fasta_dir = os.path.join(phylogeny_dir, "FASTA", f"{segment}_segment")
+    msa_dir = os.path.join(phylogeny_dir, "MSA", f"{segment}_segment")
+    os.makedirs(msa_dir, exist_ok=True)
+    
+    input_fasta = os.path.join(fasta_dir, f"all_{segment.lower()}_segments.fasta")
+    
+    # Track duplicates
+    sequences = defaultdict(list)
+    duplicate_count = 0
+    
+    # First extract reference sequence and check for duplicates
+    reference_sequences = []
+    sequences_to_align = []
+    
+    for record in SeqIO.parse(input_fasta, "fasta"):
+        # Check for duplicates
+        if record.id in sequences:
+            duplicate_count += 1
+            print(f"Warning: Duplicate sequence found: {record.id}")
+            continue
+            
+        sequences[record.id] = record
+        
+        # Separate reference from other sequences
+        if REFERENCE_COORDS[segment]['id'] in record.id:
+            reference_sequences.append(record)
+        else:
+            sequences_to_align.append(record)
+    
+    if duplicate_count > 0:
+        print(f"\nFound and removed {duplicate_count} duplicate sequences")
+    
+    if not reference_sequences:
+        raise ValueError(f"Reference sequence {REFERENCE_COORDS[segment]['id']} not found!")
+    
+    reference = reference_sequences[0]
+    
+    # Extract coding regions from reference
+    for gene, coords in REFERENCE_COORDS[segment].items():
+        if gene == 'id':  # Skip the id field
+            continue
+            
+        print(f"\nProcessing {gene} for {segment} segment...")
+        
+        # Extract reference coding region
+        ref_coding = reference[coords['start']-1:coords['end']]
+        ref_length = len(ref_coding)
+        
+        # Create output files
+        coding_output = os.path.join(msa_dir, f"{gene.lower()}_sequences.fasta")
+        aligned_output = os.path.join(msa_dir, f"{gene.lower()}_aligned.fasta")
+        
+        # Write reference sequence first
+        with open(coding_output, 'w') as f:
+            SeqIO.write(ref_coding, f, "fasta")
+        
+        # Write sequences to align to temporary file
+        temp_seqs_file = os.path.join(msa_dir, f"temp_{gene.lower()}_to_align.fasta")
+        with open(temp_seqs_file, 'w') as f:
+            SeqIO.write(sequences_to_align, f, "fasta")
+        
+        # Align each sequence against reference using MAFFT
+        # Parameters adjusted for high divergence (up to 30%)
+        mafft_cmd = [
+            "mafft",
+            "--add", temp_seqs_file,    # Sequences to add (must come right after --add)
+            "--reorder",                # Output aligned sequences in input order
+            "--genafpair",             # For highly divergent sequences
+            "--maxiterate", "1000",
+            "--ep", "0.123",
+            "--op", "1.53",            # Reduced gap opening penalty for divergent sequences
+            "--lop", "-2.00",          # Offset for gap opening penalty at local alignment
+            "--keeplength",            # Maintain reference length
+            coding_output              # Reference sequence file (must come last)
+        ]
+        
+        try:
+            print(f"Aligning {gene} sequences using MAFFT (this may take a while)...")
+            # Run MAFFT and show progress in real-time
+            process = subprocess.Popen(
+                mafft_cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            
+            # Collect output
+            stdout, stderr = process.communicate()
+            
+            # Check for errors
+            if process.returncode != 0:
+                print(f"MAFFT Error: {stderr}")
+                raise subprocess.CalledProcessError(process.returncode, mafft_cmd)
+            
+            # Write the alignment
+            with open(aligned_output, 'w') as outfile:
+                outfile.write(stdout)
+            
+            # Verify alignment
+            alignment = AlignIO.read(aligned_output, "fasta")
+            print(f"\nAlignment completed for {gene}:")
+            print(f"Reference length: {ref_length} bp")
+            print(f"Alignment length: {alignment.get_alignment_length()} bp")
+            print(f"Number of sequences: {len(alignment)} sequences")
+            
+            # Verify all sequences have same length
+            if not all(len(record.seq) == ref_length for record in alignment):
+                print("Warning: Not all sequences have reference length!")
+            
+            # Clean up temporary file
+            os.remove(temp_seqs_file)
+            
+        except subprocess.CalledProcessError as e:
+            if e.stderr:
+                print(f"Error running MAFFT: {e.stderr}")
+            else:
+                print(f"Error running MAFFT with return code: {e.returncode}")
+            raise
+        except Exception as e:
+            print(f"An unexpected error occurred: {str(e)}")
+            raise
+
 def cli_main():
     try:
         class CustomFormatter(argparse.RawDescriptionHelpFormatter):
@@ -957,7 +1159,8 @@ def cli_main():
                    text.startswith('Host filter') or \
                    text.startswith('Metadata completeness') or \
                    text.startswith('Comma-separated list') or \
-                   text.startswith('(Optional) File'):
+                   text.startswith('(Optional) File') or \
+                   text.startswith('(Optional) Create'):
                     return text.splitlines()
                 return argparse.RawDescriptionHelpFormatter._split_lines(self, text, width)
 
@@ -1004,6 +1207,10 @@ Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
         parser.add_argument('--remove', type=str, metavar='',
                           help='''(Optional) File containing accession numbers to remove
 One accession number per line, lines starting with # are ignored''')
+        
+        parser.add_argument('--phylogeny', action='store_true',
+                          help='''(Optional) Create concatenated FASTA files for phylogenetic analysis
+Creates directories for MSA, recombination detection, and tree building''')
         
         args = parser.parse_args()
         
@@ -1133,6 +1340,29 @@ One accession number per line, lines starting with # are ignored''')
         print(f"Wrote {written_counts['L']} L segments, {written_counts['S']} S segments, "
               f"and {written_counts['unknown']} unknown segments")
         print(f"Updated summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
+
+        # After all sequences are written, handle phylogeny if requested
+        if args.phylogeny:
+            print("\nCreating concatenated FASTA files for phylogenetic analysis...")
+            
+            # Create all phylogeny directories
+            phylogeny_dir = create_phylogeny_directories(args.outdir)
+            
+            # Concatenate files and remove duplicates
+            l_count = concatenate_fasta_files(args.outdir, phylogeny_dir, "L")
+            s_count = concatenate_fasta_files(args.outdir, phylogeny_dir, "S")
+            
+            print(f"\nCreated concatenated FASTA files:")
+            print(f"L segment: {l_count} unique sequences")
+            print(f"S segment: {s_count} unique sequences")
+            print(f"Files written to:")
+            print(f"  {phylogeny_dir}/FASTA/L_segment/all_l_segments.fasta")
+            print(f"  {phylogeny_dir}/FASTA/S_segment/all_s_segments.fasta")
+
+            # Perform MSA with reference-based approach
+            print("\nStarting reference-based Multiple Sequence Alignment...")
+            perform_msa_with_reference(phylogeny_dir, "L")
+            perform_msa_with_reference(phylogeny_dir, "S")
 
     except KeyboardInterrupt:
         print("\nOperation cancelled by user.")
