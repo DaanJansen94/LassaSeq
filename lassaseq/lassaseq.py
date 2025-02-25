@@ -244,11 +244,12 @@ def get_metadata(record):
     # Get accession
     accession = record.id
     
-    # Initialize location and date
+    # Initialize location, date, and host
     location = "UnknownLoc"
     collection_date = "UnknownDate"
+    host_type = "UnknownHost"
     
-    # Look for location and date in source features
+    # Look for location, date, and host in source features
     for feature in record.features:
         if feature.type == "source":
             # Get location from geo_loc_name
@@ -261,13 +262,23 @@ def get_metadata(record):
                     # Clean up location string
                     location = get_standardized_country_name(location)
             
+            # Get host information
+            if 'host' in feature.qualifiers:
+                host = feature.qualifiers['host'][0].lower()
+                if is_human_host(host):
+                    host_type = "Human"
+                elif is_rodent_host(host):
+                    host_type = "Rodent"
+                else:
+                    host_type = "Other"
+            
             # Get collection date
             if 'collection_date' in feature.qualifiers:
                 date_str = feature.qualifiers['collection_date'][0]
                 if date_str.lower() != 'missing':
                     collection_date = convert_date_to_decimal_year(date_str)
     
-    return f"{accession}_{location}_{collection_date}"
+    return f"{accession}_{location}_{host_type}_{collection_date}"
 
 def fetch_sequences():
     Entrez.email = "anonymous@example.com"
@@ -999,7 +1010,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format reference sequence header
         ref_record = SeqIO.read(StringIO(ref_handle.read()), "fasta")
-        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Reference_NA"  # Removed redundant "_reference"
+        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference"  # Updated format
         ref_record.description = ""
         
         # Write reference sequence with formatted header
@@ -1014,7 +1025,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format outgroup sequence header
         out_record = SeqIO.read(StringIO(out_handle.read()), "fasta")
-        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_{PINNEO_SEQUENCES[segment]['date']}_outgroup"
+        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_Rodent_{PINNEO_SEQUENCES[segment]['date']}_outgroup"  # Add host type
         out_record.description = ""
         
         # Write outgroup sequence with formatted header
