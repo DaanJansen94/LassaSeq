@@ -938,8 +938,8 @@ def create_phylogeny_directories(output_dir):
     """Create all necessary directories for phylogenetic analysis"""
     phylogeny_dir = os.path.join(output_dir, "Phylogeny")
     
-    # Create main phylogeny subdirectories
-    subdirs = ["FASTA", "MSA", "Recombination", "TrimAl", "Tree"]
+    # Create main phylogeny subdirectories (removed Recombination)
+    subdirs = ["FASTA", "MSA", "TrimAl", "Tree"]
     for subdir in subdirs:
         # Create L and S segment subdirectories in each main directory
         l_dir = os.path.join(phylogeny_dir, subdir, "L_segment")
@@ -1032,176 +1032,129 @@ def download_and_write_special_sequences(output_dir):
         with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
             SeqIO.write(out_record, f, "fasta")
 
-def concatenate_aligned_coding_regions(msa_dir, segment):
-    """Concatenate aligned coding regions in the correct order for each segment"""
-    from Bio import SeqIO
-    from collections import defaultdict
-    
-    # Define order of genes for each segment
-    segment_order = {
-        'L': ['l_protein', 'z_protein'],
-        'S': ['np', 'gpc']
-    }
-    
-    # Dictionary to store sequences
-    concatenated_seqs = defaultdict(str)
-    
-    # Read aligned sequences in correct order
-    for gene in segment_order[segment]:
-        aligned_file = os.path.join(msa_dir, f"{gene}_aligned.fasta")
-        
-        for record in SeqIO.parse(aligned_file, "fasta"):
-            concatenated_seqs[record.id] += str(record.seq)
-    
-    # Write concatenated sequences
-    output_file = os.path.join(msa_dir, f"{segment.lower()}_coding_aligned.fasta")
-    with open(output_file, 'w') as f:
-        for seq_id, seq in concatenated_seqs.items():
-            f.write(f">{seq_id}\n{seq}\n")
-    
-    print(f"\nConcatenated aligned coding sequences for {segment} segment:")
-    print(f"Number of sequences: {len(concatenated_seqs)}")
-    print(f"Total length: {len(list(concatenated_seqs.values())[0])} bp")
-    print(f"Output written to: {output_file}")
-
-def perform_msa_with_reference(phylogeny_dir, segment):
-    """Align sequences using reference-based approach"""
-    from Bio import SeqIO, AlignIO
-    from collections import defaultdict
+def perform_phylogenetic_analysis(phylogeny_dir, segment):
+    """Perform alignment, trimming and tree building for a segment"""
+    import shutil
+    import os
     
     # Setup directories
     fasta_dir = os.path.join(phylogeny_dir, "FASTA", f"{segment}_segment")
     msa_dir = os.path.join(phylogeny_dir, "MSA", f"{segment}_segment")
-    os.makedirs(msa_dir, exist_ok=True)
+    trimal_dir = os.path.join(phylogeny_dir, "TrimAl", f"{segment}_segment")
+    tree_dir = os.path.join(phylogeny_dir, "Tree", f"{segment}_segment")
     
     input_fasta = os.path.join(fasta_dir, f"all_{segment.lower()}_segments.fasta")
     
-    # Track duplicates
-    sequences = defaultdict(list)
-    duplicate_count = 0
+    # Copy concatenated FASTA to MSA directory
+    msa_input = os.path.join(msa_dir, f"{segment.lower()}_sequences.fasta")
+    aligned_output = os.path.join(msa_dir, f"{segment.lower()}_aligned.fasta")
+    shutil.copy2(input_fasta, msa_input)
     
-    # First extract reference sequence and check for duplicates
-    reference_sequences = []
-    sequences_to_align = []
+    # Perform MAFFT alignment
+    print(f"\nAligning {segment} segment sequences using MAFFT...")
     
-    for record in SeqIO.parse(input_fasta, "fasta"):
-        # Check for duplicates
-        if record.id in sequences:
-            duplicate_count += 1
-            print(f"Warning: Duplicate sequence found: {record.id}")
-            continue
-            
-        sequences[record.id] = record
-        
-        # Separate reference from other sequences
-        if REFERENCE_COORDS[segment]['id'] in record.id:
-            reference_sequences.append(record)
-        else:
-            sequences_to_align.append(record)
+    mafft_cmd = [
+        "mafft",
+        "--localpair",
+        "--maxiterate", "1000",
+        "--ep", "0.123",
+        "--op", "1.53",
+        "--reorder",
+        "--adjustdirection",
+        "--thread", "-1",
+        msa_input
+    ]
     
-    if duplicate_count > 0:
-        print(f"\nFound and removed {duplicate_count} duplicate sequences")
-    
-    if not reference_sequences:
-        raise ValueError(f"Reference sequence {REFERENCE_COORDS[segment]['id']} not found!")
-    
-    reference = reference_sequences[0]
-    
-    # Keep track of aligned files
-    aligned_files = []
-    
-    # Extract coding regions from reference
-    for gene, coords in REFERENCE_COORDS[segment].items():
-        if gene == 'id':  # Skip the id field
-            continue
-            
-        print(f"\nProcessing {gene} for {segment} segment...")
-        
-        # Extract reference coding region
-        ref_coding = reference[coords['start']-1:coords['end']]
-        ref_length = len(ref_coding)
-        
-        # Create output files
-        coding_output = os.path.join(msa_dir, f"{gene.lower()}_sequences.fasta")
-        aligned_output = os.path.join(msa_dir, f"{gene.lower()}_aligned.fasta")
-        
-        # Write reference sequence first
-        with open(coding_output, 'w') as f:
-            SeqIO.write(ref_coding, f, "fasta")
-        
-        # Write sequences to align to temporary file
-        temp_seqs_file = os.path.join(msa_dir, f"temp_{gene.lower()}_to_align.fasta")
-        with open(temp_seqs_file, 'w') as f:
-            SeqIO.write(sequences_to_align, f, "fasta")
-        
-        # Align each sequence against reference using MAFFT
-        mafft_cmd = [
-            "mafft",
-            "--add", temp_seqs_file,  
-            "--reorder",                
-            "--localpair",             
-            "--maxiterate", "32",
-            "--retree", "2",
-            "--ep", "0.1",
-            "--op", "1.8",            
-            "--lop", "-1.5",          
-            "--keeplength",  
-            "--thread", "-1",   
-            coding_output              
-        ]
-        
-        try:
-            print(f"Aligning {gene} sequences using MAFFT (this may take a while)...")
+    try:
+        with open(aligned_output, 'w') as outfile:
             process = subprocess.Popen(
                 mafft_cmd,
-                stdout=subprocess.PIPE,
+                stdout=outfile,
                 stderr=subprocess.PIPE,
                 text=True
             )
-            
-            stdout, stderr = process.communicate()
+            _, stderr = process.communicate()
             
             if process.returncode != 0:
                 print(f"MAFFT Error: {stderr}")
                 raise subprocess.CalledProcessError(process.returncode, mafft_cmd)
+        
+        print(f"MAFFT alignment completed for {segment} segment")
+        
+        # Remove input sequence file, keeping only the alignment
+        os.remove(msa_input)
+        
+        # Copy aligned file to TrimAl directory and perform trimming
+        trimal_input = os.path.join(trimal_dir, f"{segment.lower()}_aligned.fasta")
+        trimal_output = os.path.join(trimal_dir, f"{segment.lower()}_trimmed.fasta")
+        shutil.copy2(aligned_output, trimal_input)
+        
+        print(f"\nTrimming {segment} segment alignment using TrimAl...")
+        
+        trimal_cmd = [
+            "trimal",
+            "-in", trimal_input,
+            "-out", trimal_output,
+            "-automated1"
+        ]
+        
+        process = subprocess.run(trimal_cmd, capture_output=True, text=True)
+        if process.returncode != 0:
+            print(f"TrimAl Error: {process.stderr}")
+            raise subprocess.CalledProcessError(process.returncode, trimal_cmd)
             
-            # Write the alignment
-            with open(aligned_output, 'w') as outfile:
-                outfile.write(stdout)
-            
-            # Add to list of aligned files
-            aligned_files.append(aligned_output)
-            
-            # Verify alignment
-            alignment = AlignIO.read(aligned_output, "fasta")
-            print(f"\nAlignment completed for {gene}:")
-            print(f"Reference length: {ref_length} bp")
-            print(f"Alignment length: {alignment.get_alignment_length()} bp")
-            print(f"Number of sequences: {len(alignment)} sequences")
-            
-            # Clean up temporary file
-            os.remove(temp_seqs_file)
-            
-        except subprocess.CalledProcessError as e:
-            if e.stderr:
-                print(f"Error running MAFFT: {e.stderr}")
-            else:
-                print(f"Error running MAFFT with return code: {e.returncode}")
-            raise
-        except Exception as e:
-            print(f"An unexpected error occurred: {str(e)}")
-            raise
-    
-    # Only attempt concatenation if we have all required alignments
-    expected_genes = len([k for k in REFERENCE_COORDS[segment].keys() if k != 'id'])
-    if len(aligned_files) == expected_genes:
+        print(f"TrimAl trimming completed for {segment} segment")
+        
+        # Remove input alignment file, keeping only trimmed output
+        os.remove(trimal_input)
+        
+        # Copy trimmed alignment to Tree directory and build tree
+        tree_input = os.path.join(tree_dir, f"{segment.lower()}_trimmed.fasta")
+        shutil.copy2(trimal_output, tree_input)
+        
+        print(f"\nBuilding phylogenetic tree for {segment} segment using IQ-TREE...")
+        
+        # Change to tree directory before running IQ-TREE
+        current_dir = os.getcwd()
+        os.chdir(tree_dir)
+        
         try:
-            concatenate_aligned_coding_regions(msa_dir, segment)
-        except Exception as e:
-            print(f"Warning: Could not concatenate aligned sequences: {str(e)}")
-    else:
-        print(f"\nWarning: Not all coding regions were aligned successfully for {segment} segment")
-        print(f"Expected {expected_genes} alignments, got {len(aligned_files)}")
+            # Run IQ-TREE with just the filename since we're in the correct directory
+            iqtree_cmd = [
+                "iqtree2",
+                "-s", f"{segment.lower()}_trimmed.fasta",
+                "-nt", "AUTO",
+                "-bb", "10000",
+                "-m", "TEST"
+            ]
+            
+            process = subprocess.run(iqtree_cmd, capture_output=True, text=True)
+            if process.returncode != 0:
+                print(f"IQ-TREE Error: {process.stderr}")
+                raise subprocess.CalledProcessError(process.returncode, iqtree_cmd)
+                
+            print(f"IQ-TREE analysis completed for {segment} segment")
+            
+            # Clean up intermediate files, keeping only essential outputs
+            # Only attempt cleanup if we're still in the tree directory
+            if os.path.exists(tree_dir):
+                for file in os.listdir('.'):  # Use '.' since we're already in tree_dir
+                    if file.endswith(('.bionj', '.ckp.gz', '.mldist', '.log')):
+                        try:
+                            os.remove(file)
+                        except OSError as e:
+                            print(f"Warning: Could not remove {file}: {e}")
+                    
+        finally:
+            # Always return to the original directory
+            os.chdir(current_dir)
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error running command: {str(e)}")
+        raise
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
+        raise
 
 def cli_main():
     try:
@@ -1388,7 +1341,7 @@ Creates directories for MSA, recombination detection, and tree building''')
 
         # After all sequences are written, handle phylogeny if requested
         if args.phylogeny:
-            print("\nCreating concatenated FASTA files for phylogenetic analysis...")
+            print("\nCreating files for phylogenetic analysis...")
             
             # Create all phylogeny directories
             phylogeny_dir = create_phylogeny_directories(args.outdir)
@@ -1400,14 +1353,15 @@ Creates directories for MSA, recombination detection, and tree building''')
             print(f"\nCreated concatenated FASTA files:")
             print(f"L segment: {l_count} unique sequences")
             print(f"S segment: {s_count} unique sequences")
-            print(f"Files written to:")
-            print(f"  {phylogeny_dir}/FASTA/L_segment/all_l_segments.fasta")
-            print(f"  {phylogeny_dir}/FASTA/S_segment/all_s_segments.fasta")
-
-            # Perform MSA with reference-based approach
-            print("\nStarting reference-based Multiple Sequence Alignment...")
-            perform_msa_with_reference(phylogeny_dir, "L")
-            perform_msa_with_reference(phylogeny_dir, "S")
+            
+            # Perform phylogenetic analysis for each segment
+            perform_phylogenetic_analysis(phylogeny_dir, "L")
+            perform_phylogenetic_analysis(phylogeny_dir, "S")
+            
+            print("\nPhylogenetic analysis completed. Output files are in the following directories:")
+            print(f"Alignments: {os.path.join(phylogeny_dir, 'MSA')}")
+            print(f"Trimmed alignments: {os.path.join(phylogeny_dir, 'TrimAl')}")
+            print(f"Tree files: {os.path.join(phylogeny_dir, 'Tree')}")
 
     except Exception as e:
         print(f"\nAn unexpected error occurred: {str(e)}", file=sys.stderr)

@@ -49,7 +49,7 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove]
+usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny]
 
 Download and filter Lassa virus sequences
 
@@ -78,6 +78,8 @@ options:
                         Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali, Ghana, Benin, Burkina Faso, Ivory Coast, Togo
   --remove              (Optional) File containing accession numbers to remove
                         One accession number per line, lines starting with # are ignored
+  --phylogeny          (Optional) Create concatenated FASTA files and perform phylogenetic analysis
+                        Includes sequence alignment, trimming, and tree building
 
 example:
   # Download complete genomes from human hosts with known location and date from multiple countries:
@@ -107,6 +109,9 @@ lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Le
 
 # Download sequences excluding specific accession numbers
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt
+
+# Download sequences and perform phylogenetic analysis
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny
 ```
 
 ### Output Structure
@@ -126,12 +131,29 @@ output_directory/
 │       └── lassa_unknown_segments.fasta
 ├── Phylogeny/
 │   ├── FASTA/
-│   │   ├── all_l_segments.fasta    (concatenated, deduplicated sequences)
-│   │   └── all_s_segments.fasta    (concatenated, deduplicated sequences)
-│   ├── MSA/                        (directory for multiple sequence alignments)
-│   ├── Recombination/              (directory for recombination analysis)
-│   ├── TrimAl/                     (directory for alignment trimming)
-│   └── Tree/                       (directory for phylogenetic trees)
+│   │   ├── L_segment/
+│   │   │   └── all_l_segments.fasta    (concatenated, deduplicated sequences)
+│   │   └── S_segment/
+│   │       └── all_s_segments.fasta    (concatenated, deduplicated sequences)
+│   ├── MSA/                        (MAFFT alignments)
+│   │   ├── L_segment/
+│   │   │   └── l_aligned.fasta
+│   │   └── S_segment/
+│   │       └── s_aligned.fasta
+│   ├── TrimAl/                     (Trimmed alignments)
+│   │   ├── L_segment/
+│   │   │   └── l_trimmed.fasta
+│   │   └── S_segment/
+│   │       └── s_trimmed.fasta
+│   └── Tree/                       (IQ-TREE output)
+│       ├── L_segment/
+│       │   ├── l_trimmed.fasta.treefile
+│       │   ├── l_trimmed.fasta.contree
+│       │   └── l_trimmed.fasta.iqtree
+│       └── S_segment/
+│           ├── s_trimmed.fasta.treefile
+│           ├── s_trimmed.fasta.contree
+│           └── s_trimmed.fasta.iqtree
 └── summary_Lassa.txt
 ```
 
@@ -150,7 +172,26 @@ The summary_Lassa.txt file provides detailed information about:
 - Impact of country filtering (if applied)
 - Final sequence counts for each segment
 
+### Phylogenetic Analysis
+When the `--phylogeny` flag is used, LassaSeq performs the following steps:
+1. **Sequence Concatenation**: Combines downloaded sequences with reference and outgroup sequences, removing duplicates.
+2. **Multiple Sequence Alignment**: Uses MAFFT with optimized parameters:
+   - `--localpair`: For accurate alignment
+   - `--maxiterate 1000`: Maximum number of iterative refinement cycles
+   - `--ep 0.123`: Gap extension penalty
+   - `--op 1.53`: Gap opening penalty
+   - `--reorder`: Output order aligned with input order
+   - `--adjustdirection`: Adjust sequence directions
+3. **Alignment Trimming**: Uses TrimAl with `-automated1` for automated trimming
+4. **Tree Building**: Uses IQ-TREE2 with:
+   - `-nt AUTO`: Automatic thread optimization
+   - `-bb 10000`: Ultra-fast bootstrap with 10,000 replicates
+   - `-m TEST`: Automatic model selection
+
 ## Requirements
 - Python ≥ 3.6
 - Biopython
 - requests
+- MAFFT
+- TrimAl
+- IQ-TREE2
