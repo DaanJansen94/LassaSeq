@@ -1194,28 +1194,14 @@ def perform_msa_with_reference(phylogeny_dir, segment):
 
 def cli_main():
     try:
-        class CustomFormatter(argparse.RawDescriptionHelpFormatter):
-            def _split_lines(self, text, width):
-                if text.startswith('Output directory') or \
-                   text.startswith('Minimum sequence') or \
-                   text.startswith('Genome completeness') or \
-                   text.startswith('Host filter') or \
-                   text.startswith('Metadata completeness') or \
-                   text.startswith('Comma-separated list') or \
-                   text.startswith('(Optional) File') or \
-                   text.startswith('(Optional) Create'):
-                    return text.splitlines()
-                return argparse.RawDescriptionHelpFormatter._split_lines(self, text, width)
-
         parser = argparse.ArgumentParser(
             description='Download and filter Lassa virus sequences',
             epilog='''example:
   # Download complete genomes from human hosts with known location and date from multiple countries:
-  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"''',
-            formatter_class=CustomFormatter)
+  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"''')
         
-        parser.add_argument('-o', '--outdir', required=True, metavar='',
-                          help='''Output directory for sequences''')
+        parser.add_argument('-o', '--outdir', required=True,
+                          help='Output directory for sequences')
         
         parser.add_argument('--genome', choices=['1', '2', '3'],
                           help='''Genome completeness filter:
@@ -1223,7 +1209,7 @@ def cli_main():
 2 = Partial genomes (specify minimum percent with --completeness)
 3 = No completeness filter''')
         
-        parser.add_argument('--completeness', type=float, metavar='',
+        parser.add_argument('--completeness', type=float,
                           help='''Minimum sequence completeness (1-100 percent)
 Required when --genome=2''')
         
@@ -1241,13 +1227,13 @@ Required when --genome=2''')
 3 = Keep only sequences with both known location and date
 4 = No metadata filter''')
         
-        parser.add_argument('--countries', type=str, metavar='',
+        parser.add_argument('--countries', type=str,
                           help='''Comma-separated list of countries to filter sequences
 Examples: "Sierra Leone, Guinea" or "Nigeria, Mali"
 Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
           Ghana, Benin, Burkina Faso, Ivory Coast, Togo''')
         
-        parser.add_argument('--remove', type=str, metavar='',
+        parser.add_argument('--remove', type=str,
                           help='''(Optional) File containing accession numbers to remove
 One accession number per line, lines starting with # are ignored''')
         
@@ -1255,6 +1241,11 @@ One accession number per line, lines starting with # are ignored''')
                           help='''(Optional) Create concatenated FASTA files for phylogenetic analysis
 Creates directories for MSA, recombination detection, and tree building''')
         
+        # Parse arguments and show help if no arguments provided
+        if len(sys.argv) == 1:
+            parser.print_help()
+            sys.exit(0)
+            
         args = parser.parse_args()
         
         # Initialize countries as None if not provided
@@ -1407,11 +1398,10 @@ Creates directories for MSA, recombination detection, and tree building''')
             perform_msa_with_reference(phylogeny_dir, "L")
             perform_msa_with_reference(phylogeny_dir, "S")
 
-    except KeyboardInterrupt:
-        print("\nOperation cancelled by user.")
-        sys.exit(1)
     except Exception as e:
-        print(f"\nAn unexpected error occurred: {str(e)}")
+        print(f"\nAn unexpected error occurred: {str(e)}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 if __name__ == "__main__":
