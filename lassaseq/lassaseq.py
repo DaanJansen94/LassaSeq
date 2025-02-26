@@ -1118,6 +1118,7 @@ def download_and_write_special_sequences(output_dir):
 
 def create_figtree_metadata(trimmed_fasta, output_file):
     """Create metadata file for FigTree visualization from trimmed alignment headers.
+    Skips consensus sequences as they can have different header formats.
     
     Args:
         trimmed_fasta (str): Path to trimmed alignment FASTA file
@@ -1141,13 +1142,13 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             if record.id in processed_sequences:
                 continue
                 
+            # Skip consensus sequences (identified by _segment suffix)
+            if record.id.endswith('_segment'):
+                continue
+                
             # Split the header into parts
             parts = record.id.split('_')
             
-            # Skip incorrect reference sequence format and consensus sequences
-            if (record.id.startswith('NC_') and 'Reference' not in parts) or 'Consensus' in parts:
-                continue
-                
             processed_sequences.add(record.id)
             
             # Handle reference sequences specially
