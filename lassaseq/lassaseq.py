@@ -996,7 +996,13 @@ def create_phylogeny_directories(output_dir):
     return phylogeny_dir
 
 def copy_consensus_sequence(consensus_file, segment, output_dir):
-    """Copy consensus sequence to the appropriate directory and format its header"""
+    """Copy consensus sequence(s) to the appropriate directory and format their headers.
+    
+    Args:
+        consensus_file (str): Path to consensus sequence file in FASTA format
+        segment (str): Segment type ('L' or 'S')
+        output_dir (str): Output directory path
+    """
     from Bio import SeqIO
     import shutil
     
@@ -1007,19 +1013,20 @@ def copy_consensus_sequence(consensus_file, segment, output_dir):
     segment_dir = os.path.join(output_dir, "FASTA", f"{segment}_segment")
     os.makedirs(segment_dir, exist_ok=True)
     
-    # Read the consensus sequence
-    record = next(SeqIO.parse(consensus_file, "fasta"))
+    # Read all sequences from the consensus file
+    records = []
+    for record in SeqIO.parse(consensus_file, "fasta"):
+        # Format the header: OriginalID_L_segment or OriginalID_S_segment
+        record.id = f"{record.id}_{segment}_segment"
+        record.description = ""
+        records.append(record)
     
-    # Format the header: Accession_Location_City_Host_Date
-    record.id = f"{record.id}_Consensus_{segment}_Human_Unknown"
-    record.description = ""
-    
-    # Write to consensus.fasta in the segment directory
+    # Write all sequences to consensus.fasta in the segment directory
     output_file = os.path.join(segment_dir, "consensus.fasta")
     with open(output_file, "w") as f:
-        SeqIO.write(record, f, "fasta")
+        SeqIO.write(records, f, "fasta")
     
-    print(f"Added consensus sequence for {segment} segment")
+    print(f"Added {len(records)} consensus sequence(s) for {segment} segment")
 
 def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     """Concatenate all FASTA files in a segment directory and remove duplicates"""

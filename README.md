@@ -80,14 +80,12 @@ options:
                         One accession number per line, lines starting with # are ignored
   --phylogeny          (Optional) Create concatenated FASTA files and perform phylogenetic analysis
                         Includes sequence alignment, trimming, and tree building
-  --consensus_L         (Optional) Path to custom consensus sequence for L segment
-                        The sequence should be in FASTA format
-  --consensus_S         (Optional) Path to custom consensus sequence for S segment
-                        The sequence should be in FASTA format
+  --consensus_L         (Optional) Path to custom consensus sequences for L segment
+  --consensus_S         (Optional) Path to custom consensus sequences for S segment
 
 example:
-  # Download complete genomes from human hosts with known location and date from multiple countries:
-  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"
+  # Download complete genomes from human hosts with known location and date from multiple countries, including a custom consensus sequence:
+  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --consensus_L path/to/L_consensus.fasta
 ```
 
 ### Interactive Mode
@@ -130,12 +128,12 @@ output_directory/
 │   │   ├── lassa_l_segments.fasta  (downloaded sequences)
 │   │   ├── reference.fasta         (reference sequence NC_004297.1)
 │   │   ├── outgroup.fasta          (Pinneo strain KM822127.1, Nigeria 1969)
-│   │   └── consensus.fasta         (optional custom consensus sequence)
+│   │   └── consensus.fasta         (optional custom consensus sequence(s))
 │   ├── S_segment/
 │   │   ├── lassa_s_segments.fasta  (downloaded sequences)
 │   │   ├── reference.fasta         (reference sequence NC_004296.1)
 │   │   ├── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
-│   │   └── consensus.fasta         (optional custom consensus sequence)
+│   │   └── consensus.fasta         (optional custom consensus sequence(s))
 │   └── unknown_segment/
 │       └── lassa_unknown_segments.fasta
 ├── Phylogeny/
@@ -210,7 +208,7 @@ The metadata files (`l_metadata.txt` and `s_metadata.txt`) are formatted for use
 Special sequence types are formatted as follows:
 - Reference sequences: `Accession_SierraLeone_Unknown_Human_Unknown`
 - Outgroup sequences: `Accession_Nigeria_Lassa_Human_1969.000`
-- Consensus sequences: `Accession_Consensus_Segment_Human_Unknown`
+- Consensus sequences: `OriginalID_Consensus_Segment_Human_Unknown` (for each sequence in the consensus file)
 - Regular sequences: `Accession_Location_City_Host_Date`
 
 ## Requirements
