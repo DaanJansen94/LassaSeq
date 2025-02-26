@@ -241,8 +241,8 @@ def get_standardized_country_name(country):
 
 def get_metadata(record):
     """Extract metadata from record"""
-    # Get accession
-    accession = record.id
+    # Get accession - ensure no extra prefixes
+    accession = record.id.replace('_R_', '')  # Remove _R_ prefix if present
     
     # Initialize location, date, and host
     location = "UnknownLoc"
@@ -1032,10 +1032,44 @@ def download_and_write_special_sequences(output_dir):
         with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
             SeqIO.write(out_record, f, "fasta")
 
+def create_figtree_metadata(trimmed_fasta, output_file):
+    """Create metadata file for FigTree visualization from trimmed alignment headers.
+    
+    Args:
+        trimmed_fasta (str): Path to trimmed alignment FASTA file
+        output_file (str): Path to output metadata file
+    """
+    from Bio import SeqIO
+    
+    # Write header line first
+    with open(output_file, 'w') as f:
+        f.write("taxon\tLocation\tHost\n")
+        
+        # Parse FASTA file and extract metadata from headers
+        for record in SeqIO.parse(trimmed_fasta, "fasta"):
+            # Get the full header as taxon
+            taxon = record.id
+            
+            # Extract location and host from the header
+            # Headers are in format: Accession_Location_Host_[Additional]_Date
+            # or for special sequences: Accession_Location_Host_Reference_NA
+            # or Accession_Location_Host_Pinneo_outgroup_Date
+            parts = record.id.split('_')
+            
+            # Location is always the second element
+            location = parts[1] if len(parts) > 1 else "Unknown"
+            
+            # Host is always the third element
+            host = parts[2] if len(parts) > 2 else "Unknown"
+            
+            # Write the line to file
+            f.write(f"{taxon}\t{location}\t{host}\n")
+
 def perform_phylogenetic_analysis(phylogeny_dir, segment):
     """Perform alignment, trimming and tree building for a segment"""
     import shutil
     import os
+    from Bio import SeqIO
     
     # Setup directories
     fasta_dir = os.path.join(phylogeny_dir, "FASTA", f"{segment}_segment")
@@ -1048,7 +1082,13 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
     # Copy concatenated FASTA to MSA directory
     msa_input = os.path.join(msa_dir, f"{segment.lower()}_sequences.fasta")
     aligned_output = os.path.join(msa_dir, f"{segment.lower()}_aligned.fasta")
+    temp_aligned = os.path.join(msa_dir, "temp_aligned.fasta")
     shutil.copy2(input_fasta, msa_input)
+    
+    # Store original headers
+    original_headers = {}
+    for record in SeqIO.parse(msa_input, "fasta"):
+        original_headers[record.id] = record.id
     
     # Perform MAFFT alignment
     print(f"\nAligning {segment} segment sequences using MAFFT...")
@@ -1066,7 +1106,7 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
     ]
     
     try:
-        with open(aligned_output, 'w') as outfile:
+        with open(temp_aligned, 'w') as outfile:
             process = subprocess.Popen(
                 mafft_cmd,
                 stdout=outfile,
@@ -1079,10 +1119,18 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
                 print(f"MAFFT Error: {stderr}")
                 raise subprocess.CalledProcessError(process.returncode, mafft_cmd)
         
-        print(f"MAFFT alignment completed for {segment} segment")
+        # Restore original headers while keeping aligned sequences
+        with open(aligned_output, 'w') as outfile:
+            for record in SeqIO.parse(temp_aligned, "fasta"):
+                # Remove _R_ prefix if present and get original header
+                orig_id = original_headers[record.id.replace('_R_', '')]
+                outfile.write(f">{orig_id}\n{str(record.seq)}\n")
         
-        # Remove input sequence file, keeping only the alignment
+        # Remove temporary files
+        os.remove(temp_aligned)
         os.remove(msa_input)
+        
+        print(f"MAFFT alignment completed for {segment} segment")
         
         # Copy aligned file to TrimAl directory and perform trimming
         trimal_input = os.path.join(trimal_dir, f"{segment.lower()}_aligned.fasta")
@@ -1107,6 +1155,11 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
         
         # Remove input alignment file, keeping only trimmed output
         os.remove(trimal_input)
+        
+        # Create FigTree metadata file from trimmed alignment
+        metadata_output = os.path.join(tree_dir, f"{segment.lower()}_metadata.txt")
+        create_figtree_metadata(trimal_output, metadata_output)
+        print(f"Created FigTree metadata file: {metadata_output}")
         
         # Copy trimmed alignment to Tree directory and build tree
         tree_input = os.path.join(tree_dir, f"{segment.lower()}_trimmed.fasta")
@@ -1136,7 +1189,6 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
             print(f"IQ-TREE analysis completed for {segment} segment")
             
             # Clean up intermediate files, keeping only essential outputs
-            # Only attempt cleanup if we're still in the tree directory
             if os.path.exists(tree_dir):
                 for file in os.listdir('.'):  # Use '.' since we're already in tree_dir
                     if file.endswith(('.bionj', '.ckp.gz', '.mldist', '.log')):
