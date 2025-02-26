@@ -1010,7 +1010,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format reference sequence header
         ref_record = SeqIO.read(StringIO(ref_handle.read()), "fasta")
-        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference"  # Updated format
+        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference_NA"  # Moved date to end
         ref_record.description = ""
         
         # Write reference sequence with formatted header
@@ -1025,7 +1025,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format outgroup sequence header
         out_record = SeqIO.read(StringIO(out_handle.read()), "fasta")
-        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_Rodent_{PINNEO_SEQUENCES[segment]['date']}_outgroup"  # Add host type
+        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_Human_Pinneo_outgroup_{PINNEO_SEQUENCES[segment]['date']}"  # Added Pinneo and moved date to end
         out_record.description = ""
         
         # Write outgroup sequence with formatted header
