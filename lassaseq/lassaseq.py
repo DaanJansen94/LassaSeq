@@ -239,28 +239,70 @@ def get_standardized_country_name(country):
     # Then try lowercase match
     return country_mappings.get(country.lower(), country)
 
+def standardize_city_name(city):
+    """Standardize city/province names according to rules"""
+    if not city or city == "UnknownCity":
+        return "UnknownCity"
+        
+    # Remove any text after comma
+    city = city.split(',')[0].strip()
+    
+    # Special case replacements
+    city_replacements = {
+        "KGH": "Kenema",
+        "Kgh": "Kenema",
+        "kgh": "Kenema",
+        "N'Zerekore": "Nzerekore",
+        "N'Zérékoré": "Nzerekore",
+        "N'zerekore": "Nzerekore"
+    }
+    
+    for old, new in city_replacements.items():
+        if city == old:
+            return new
+    
+    # Remove common words to exclude
+    words_to_remove = [
+        "State", "Hospital", "Medical Center", 
+        "Medical Centre", "Clinic", "Health Center"
+    ]
+    for word in words_to_remove:
+        city = city.replace(word, "").strip()
+    
+    # Handle special cases of all caps
+    if city.isupper():
+        city = city.title()
+    
+    # Remove double spaces
+    city = " ".join(city.split())
+    
+    return city.strip()
+
 def get_metadata(record):
     """Extract metadata from record"""
     # Get accession - ensure no extra prefixes
     accession = record.id.replace('_R_', '')  # Remove _R_ prefix if present
     
-    # Initialize location, date, and host
+    # Initialize location, province, date, and host
     location = "UnknownLoc"
+    province = "UnknownCity"
     collection_date = "UnknownDate"
     host_type = "UnknownHost"
     
     # Look for location, date, and host in source features
     for feature in record.features:
         if feature.type == "source":
-            # Get location from geo_loc_name
+            # Get location and province from geo_loc_name
             if 'geo_loc_name' in feature.qualifiers:
                 geo_loc = feature.qualifiers['geo_loc_name'][0]
                 # Only use location if it's not 'missing'
                 if 'missing' not in geo_loc.lower():
-                    # Extract country (part before the colon)
-                    location = geo_loc.split(':')[0].strip()
-                    # Clean up location string
-                    location = get_standardized_country_name(location)
+                    # Split location into country and province
+                    parts = [part.strip() for part in geo_loc.split(':')]
+                    location = get_standardized_country_name(parts[0])
+                    # Get province if available
+                    if len(parts) > 1:
+                        province = standardize_city_name(parts[1])
             
             # Get host information
             if 'host' in feature.qualifiers:
@@ -278,7 +320,11 @@ def get_metadata(record):
                 if date_str.lower() != 'missing':
                     collection_date = convert_date_to_decimal_year(date_str)
     
-    return f"{accession}_{location}_{host_type}_{collection_date}"
+    # Format the metadata string
+    if location == "UnknownLoc":
+        return f"{accession}_{location}_{host_type}_{collection_date}"
+    else:
+        return f"{accession}_{location}_{province}_{host_type}_{collection_date}"
 
 def fetch_sequences():
     Entrez.email = "anonymous@example.com"
@@ -984,6 +1030,11 @@ def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     with open(output_file, "w") as f:
         SeqIO.write(sequences.values(), f, "fasta")
     
+    # Create metadata file in the same directory
+    metadata_output = os.path.join(segment_output_dir, f"{segment.lower()}_metadata.txt")
+    create_figtree_metadata(output_file, metadata_output)
+    print(f"Created FigTree metadata file: {metadata_output}")
+    
     # Print duplicate information if any were found
     if duplicate_count > 0:
         print(f"\nFound {duplicate_count} duplicate sequence headers for {segment} segment:")
@@ -1010,7 +1061,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format reference sequence header
         ref_record = SeqIO.read(StringIO(ref_handle.read()), "fasta")
-        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference_NA"  # Moved date to end
+        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference_Unknown"  # Moved date to end
         ref_record.description = ""
         
         # Write reference sequence with formatted header
@@ -1025,7 +1076,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format outgroup sequence header
         out_record = SeqIO.read(StringIO(out_handle.read()), "fasta")
-        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_{PINNEO_SEQUENCES[segment]['location']}_Human_Pinneo_outgroup_{PINNEO_SEQUENCES[segment]['date']}"  # Added Pinneo and moved date to end
+        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_Nigeria_Lassa_Human_Pinneo_outgroup_{PINNEO_SEQUENCES[segment]['date']}"  # Added Lassa as city
         out_record.description = ""
         
         # Write outgroup sequence with formatted header
@@ -1041,29 +1092,49 @@ def create_figtree_metadata(trimmed_fasta, output_file):
     """
     from Bio import SeqIO
     
+    # Keep track of processed sequences to avoid duplicates
+    processed_sequences = set()
+    
     # Write header line first
     with open(output_file, 'w') as f:
-        f.write("taxon\tLocation\tHost\n")
+        f.write("taxon\tLocation\tLocation2\tHost\tDate\n")
         
         # Parse FASTA file and extract metadata from headers
         for record in SeqIO.parse(trimmed_fasta, "fasta"):
             # Get the full header as taxon
             taxon = record.id
             
-            # Extract location and host from the header
-            # Headers are in format: Accession_Location_Host_[Additional]_Date
-            # or for special sequences: Accession_Location_Host_Reference_NA
-            # or Accession_Location_Host_Pinneo_outgroup_Date
+            # Skip if we've already processed this sequence
+            if record.id in processed_sequences:
+                continue
+                
+            # Split the header into parts
             parts = record.id.split('_')
             
-            # Location is always the second element
-            location = parts[1] if len(parts) > 1 else "Unknown"
+            # Skip incorrect reference sequence format
+            if record.id.startswith('NC_') and 'Reference' not in parts:
+                continue
+                
+            processed_sequences.add(record.id)
             
-            # Host is always the third element
-            host = parts[2] if len(parts) > 2 else "Unknown"
-            
-            # Write the line to file
-            f.write(f"{taxon}\t{location}\t{host}\n")
+            # Handle reference sequences specially
+            if "Reference" in parts:
+                # Format: Accession_Nigeria_UnknownCity_Human_Unknown
+                f.write(f"{taxon}\tNigeria\tUnknownCity\tHuman\tUnknown\n")
+            elif "outgroup" in parts:
+                # Outgroup sequence: Accession_Location_Lassa_Host_Pinneo_outgroup_Date
+                location = parts[1] if len(parts) > 1 else "Unknown"
+                location2 = parts[2] if len(parts) > 2 else "Unknown"
+                host = parts[3] if len(parts) > 3 else "Unknown"
+                date = parts[6] if len(parts) > 6 else "Unknown"
+                f.write(f"{taxon}\t{location}\t{location2}\t{host}\t{date}\n")
+            else:
+                # Regular sequence: Accession_Location_City_Host_Date
+                location = parts[1] if len(parts) > 1 else "Unknown"
+                location2 = parts[2] if len(parts) > 2 else "Unknown"
+                host = parts[3] if len(parts) > 3 else "Unknown"
+                date = parts[4] if len(parts) > 4 else "Unknown"
+                f.write(f"{taxon}\t{location}\t{location2}\t{host}\t{date}\n")
 
 def perform_phylogenetic_analysis(phylogeny_dir, segment):
     """Perform alignment, trimming and tree building for a segment"""
@@ -1156,14 +1227,15 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
         # Remove input alignment file, keeping only trimmed output
         os.remove(trimal_input)
         
-        # Create FigTree metadata file from trimmed alignment
-        metadata_output = os.path.join(tree_dir, f"{segment.lower()}_metadata.txt")
-        create_figtree_metadata(trimal_output, metadata_output)
-        print(f"Created FigTree metadata file: {metadata_output}")
-        
-        # Copy trimmed alignment to Tree directory and build tree
+        # Copy trimmed alignment to Tree directory
         tree_input = os.path.join(tree_dir, f"{segment.lower()}_trimmed.fasta")
         shutil.copy2(trimal_output, tree_input)
+        
+        # Copy metadata file from FASTA directory to Tree directory
+        fasta_metadata = os.path.join(fasta_dir, f"{segment.lower()}_metadata.txt")
+        tree_metadata = os.path.join(tree_dir, f"{segment.lower()}_metadata.txt")
+        shutil.copy2(fasta_metadata, tree_metadata)
+        print(f"Copied metadata file to Tree folder: {tree_metadata}")
         
         print(f"\nBuilding phylogenetic tree for {segment} segment using IQ-TREE...")
         
