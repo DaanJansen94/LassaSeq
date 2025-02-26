@@ -16,13 +16,13 @@ REFERENCE_SEQUENCES = {
     'L': {
         'id': 'NC_004297.1',
         'description': 'Lassa virus segment L, complete sequence',
-        'location': 'Reference',
+        'location': 'SierraLeone',
         'date': 'NA'
     },
     'S': {
         'id': 'NC_004296.1',
         'description': 'Lassa virus segment S, complete sequence',
-        'location': 'Reference',
+        'location': 'SierraLeone',
         'date': 'NA'
     }
 }
@@ -1061,7 +1061,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format reference sequence header
         ref_record = SeqIO.read(StringIO(ref_handle.read()), "fasta")
-        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_Nigeria_Human_Reference_Unknown"  # Moved date to end
+        ref_record.id = f"{REFERENCE_SEQUENCES[segment]['id']}_SierraLeone_Human_Reference_Unknown"  # Moved date to end
         ref_record.description = ""
         
         # Write reference sequence with formatted header
@@ -1076,7 +1076,7 @@ def download_and_write_special_sequences(output_dir):
         
         # Parse and format outgroup sequence header
         out_record = SeqIO.read(StringIO(out_handle.read()), "fasta")
-        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_Nigeria_Lassa_Human_Pinneo_outgroup_{PINNEO_SEQUENCES[segment]['date']}"  # Added Lassa as city
+        out_record.id = f"{PINNEO_SEQUENCES[segment]['id']}_Nigeria_Lassa_Human_Pinneo_outgroup_{PINNEO_SEQUENCES[segment]['date']}"  # Changed SierraLeone to Nigeria
         out_record.description = ""
         
         # Write outgroup sequence with formatted header
@@ -1097,7 +1097,7 @@ def create_figtree_metadata(trimmed_fasta, output_file):
     
     # Write header line first
     with open(output_file, 'w') as f:
-        f.write("taxon\tLocation\tLocation2\tHost\tDate\n")
+        f.write("Taxon\tLocation\tLocation2\tHost\tDate\n")
         
         # Parse FASTA file and extract metadata from headers
         for record in SeqIO.parse(trimmed_fasta, "fasta"):
@@ -1119,15 +1119,11 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             
             # Handle reference sequences specially
             if "Reference" in parts:
-                # Format: Accession_Nigeria_UnknownCity_Human_Unknown
-                f.write(f"{taxon}\tNigeria\tUnknownCity\tHuman\tUnknown\n")
+                # Format: Accession_SierraLeone_Unknown_Human_Unknown
+                f.write(f"{taxon}\tSierraLeone\tUnknown\tHuman\tUnknown\n")
             elif "outgroup" in parts:
-                # Outgroup sequence: Accession_Location_Lassa_Host_Pinneo_outgroup_Date
-                location = parts[1] if len(parts) > 1 else "Unknown"
-                location2 = parts[2] if len(parts) > 2 else "Unknown"
-                host = parts[3] if len(parts) > 3 else "Unknown"
-                date = parts[6] if len(parts) > 6 else "Unknown"
-                f.write(f"{taxon}\t{location}\t{location2}\t{host}\t{date}\n")
+                # Outgroup sequence: Accession_Nigeria_Lassa_Host_Pinneo_outgroup_Date
+                f.write(f"{taxon}\tNigeria\tLassa\tHuman\t1969.000\n")
             else:
                 # Regular sequence: Accession_Location_City_Host_Date
                 location = parts[1] if len(parts) > 1 else "Unknown"
