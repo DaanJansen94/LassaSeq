@@ -49,7 +49,7 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny]
+usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S]
 
 Download and filter Lassa virus sequences
 
@@ -80,6 +80,10 @@ options:
                         One accession number per line, lines starting with # are ignored
   --phylogeny          (Optional) Create concatenated FASTA files and perform phylogenetic analysis
                         Includes sequence alignment, trimming, and tree building
+  --consensus_L         (Optional) Path to custom consensus sequence for L segment
+                        The sequence should be in FASTA format
+  --consensus_S         (Optional) Path to custom consensus sequence for S segment
+                        The sequence should be in FASTA format
 
 example:
   # Download complete genomes from human hosts with known location and date from multiple countries:
@@ -112,6 +116,9 @@ lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt
 
 # Download sequences and perform phylogenetic analysis
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny
+
+# Download sequences with custom consensus sequences and perform phylogenetic analysis
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --consensus_L path/to/L_consensus.fasta --consensus_S path/to/S_consensus.fasta
 ```
 
 ### Output Structure
@@ -122,19 +129,23 @@ output_directory/
 │   ├── L_segment/
 │   │   ├── lassa_l_segments.fasta  (downloaded sequences)
 │   │   ├── reference.fasta         (reference sequence NC_004297.1)
-│   │   └── outgroup.fasta          (Pinneo strain KM822127.1, Nigeria 1969)
+│   │   ├── outgroup.fasta          (Pinneo strain KM822127.1, Nigeria 1969)
+│   │   └── consensus.fasta         (optional custom consensus sequence)
 │   ├── S_segment/
 │   │   ├── lassa_s_segments.fasta  (downloaded sequences)
 │   │   ├── reference.fasta         (reference sequence NC_004296.1)
-│   │   └── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
+│   │   ├── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
+│   │   └── consensus.fasta         (optional custom consensus sequence)
 │   └── unknown_segment/
 │       └── lassa_unknown_segments.fasta
 ├── Phylogeny/
 │   ├── FASTA/
 │   │   ├── L_segment/
-│   │   │   └── all_l_segments.fasta    (concatenated, deduplicated sequences)
+│   │   │   ├── all_l_segments.fasta    (concatenated, deduplicated sequences)
+│   │   │   └── l_metadata.txt          (metadata for FigTree visualization)
 │   │   └── S_segment/
-│   │       └── all_s_segments.fasta    (concatenated, deduplicated sequences)
+│   │       ├── all_s_segments.fasta    (concatenated, deduplicated sequences)
+│   │       └── s_metadata.txt          (metadata for FigTree visualization)
 │   ├── MSA/                        (MAFFT alignments)
 │   │   ├── L_segment/
 │   │   │   └── l_aligned.fasta
@@ -187,6 +198,20 @@ When the `--phylogeny` flag is used, LassaSeq performs the following steps:
    - `-nt AUTO`: Automatic thread optimization
    - `-bb 10000`: Ultra-fast bootstrap with 10,000 replicates
    - `-m TEST`: Automatic model selection
+
+### Metadata File Format
+The metadata files (`l_metadata.txt` and `s_metadata.txt`) are formatted for use with FigTree and contain the following columns:
+- **Taxon**: The sequence identifier
+- **Location**: Country of origin (e.g., SierraLeone, Nigeria)
+- **Location2**: City or specific location (e.g., Kenema, Lassa, Unknown)
+- **Host**: Host species (Human, Rodent, Other)
+- **Date**: Collection date in decimal format (e.g., 1969.000)
+
+Special sequence types are formatted as follows:
+- Reference sequences: `Accession_SierraLeone_Unknown_Human_Unknown`
+- Outgroup sequences: `Accession_Nigeria_Lassa_Human_1969.000`
+- Consensus sequences: `Accession_Consensus_Segment_Human_Unknown`
+- Regular sequences: `Accession_Location_City_Host_Date`
 
 ## Requirements
 - Python ≥ 3.6

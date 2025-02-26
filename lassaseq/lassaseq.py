@@ -995,6 +995,32 @@ def create_phylogeny_directories(output_dir):
     
     return phylogeny_dir
 
+def copy_consensus_sequence(consensus_file, segment, output_dir):
+    """Copy consensus sequence to the appropriate directory and format its header"""
+    from Bio import SeqIO
+    import shutil
+    
+    if not consensus_file:
+        return
+        
+    # Create consensus directory if it doesn't exist
+    segment_dir = os.path.join(output_dir, "FASTA", f"{segment}_segment")
+    os.makedirs(segment_dir, exist_ok=True)
+    
+    # Read the consensus sequence
+    record = next(SeqIO.parse(consensus_file, "fasta"))
+    
+    # Format the header: Accession_Location_City_Host_Date
+    record.id = f"{record.id}_Consensus_{segment}_Human_Unknown"
+    record.description = ""
+    
+    # Write to consensus.fasta in the segment directory
+    output_file = os.path.join(segment_dir, "consensus.fasta")
+    with open(output_file, "w") as f:
+        SeqIO.write(record, f, "fasta")
+    
+    print(f"Added consensus sequence for {segment} segment")
+
 def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     """Concatenate all FASTA files in a segment directory and remove duplicates"""
     from Bio import SeqIO
@@ -1010,7 +1036,7 @@ def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     
     # Read all FASTA files in the directory
     for fasta_file in ["lassa_" + segment.lower() + "_segments.fasta", 
-                      "reference.fasta", "outgroup.fasta"]:
+                      "reference.fasta", "outgroup.fasta", "consensus.fasta"]:  # Added consensus.fasta
         file_path = os.path.join(segment_dir, fasta_file)
         if os.path.exists(file_path):
             for record in SeqIO.parse(file_path, "fasta"):
@@ -1111,8 +1137,8 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             # Split the header into parts
             parts = record.id.split('_')
             
-            # Skip incorrect reference sequence format
-            if record.id.startswith('NC_') and 'Reference' not in parts:
+            # Skip incorrect reference sequence format and consensus sequences
+            if (record.id.startswith('NC_') and 'Reference' not in parts) or 'Consensus' in parts:
                 continue
                 
             processed_sequences.add(record.id)
@@ -1325,6 +1351,14 @@ One accession number per line, lines starting with # are ignored''')
                           help='''(Optional) Create concatenated FASTA files for phylogenetic analysis
 Creates directories for MSA, recombination detection, and tree building''')
         
+        parser.add_argument('--consensus_L', type=str,
+                          help='''(Optional) Path to custom consensus sequence for L segment
+The sequence should be in FASTA format''')
+        
+        parser.add_argument('--consensus_S', type=str,
+                          help='''(Optional) Path to custom consensus sequence for S segment
+The sequence should be in FASTA format''')
+        
         # Parse arguments and show help if no arguments provided
         if len(sys.argv) == 1:
             parser.print_help()
@@ -1379,6 +1413,12 @@ Creates directories for MSA, recombination detection, and tree building''')
         
         for directory in [fasta_dir, l_segment_dir, s_segment_dir, unknown_segment_dir]:
             os.makedirs(directory, exist_ok=True)
+
+        # Handle consensus sequences if provided
+        if args.consensus_L:
+            copy_consensus_sequence(args.consensus_L, "L", args.outdir)
+        if args.consensus_S:
+            copy_consensus_sequence(args.consensus_S, "S", args.outdir)
 
         # Download reference and outgroup sequences first
         download_and_write_special_sequences(args.outdir)
