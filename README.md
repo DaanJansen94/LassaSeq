@@ -201,20 +201,29 @@ When the `--phylogeny` flag is used, LassaSeq performs the following steps:
 The metadata files (`l_metadata.txt` and `s_metadata.txt`) are formatted for use with FigTree and contain the following columns:
 - **Taxon**: The sequence identifier
 - **Location**: Country of origin (e.g., SierraLeone, Nigeria)
-- **Location2**: City or specific location (e.g., Kenema, Lassa, Unknown)
+- **Location2**: City or specific location (e.g., Kenema, Nzerekore, Unknown)
 - **Host**: Host species (Human, Rodent, Other)
 - **Date**: Collection date in decimal format (e.g., 1969.000)
 
-Special sequence types are formatted as follows:
-- Reference sequences: `Accession_SierraLeone_Unknown_Human_Unknown`
-- Outgroup sequences: `Accession_Nigeria_Lassa_Human_1969.000`
-- Consensus sequences: `OriginalID_Consensus_Segment_Human_Unknown` (for each sequence in the consensus file)
-- Regular sequences: `Accession_Location_City_Host_Date`
+## Handling Recombination Events
+Before conducting phylogenetic analyses of Lassa virus sequences, it's crucial to identify and remove potential recombinant sequences, as these can interfere with accurate tree reconstruction. Here's the recommended workflow:
 
-## Requirements
-- Python ≥ 3.6
-- Biopython
-- requests
-- MAFFT
-- TrimAl
-- IQ-TREE2
+1. **Install HYPHY**:
+   ```bash
+   conda install bioconda::hyphy
+   ```
+
+2. **Recombination Analysis**:
+   - Before running LassaSeq's phylogenetic analysis, perform recombination detection using HYPHY GARD:
+   ```bash
+   hyphy gard --rv Gamma --mode faster --input trimmed_alignment.fasta --output gard_output.json
+   ```
+   
+3. **Remove Recombinant Sequences**:
+   - Once you've identified recombinant sequences, add their accession numbers to a `remove.txt` file
+   - Use this file with LassaSeq's `--remove` option to exclude these sequences from the analysis:
+   ```bash
+   lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt --phylogeny
+   ```
+
+This step is crucial for obtaining reliable phylogenetic trees, as recombinant sequences can lead to incorrect evolutionary relationships and branch patterns.
