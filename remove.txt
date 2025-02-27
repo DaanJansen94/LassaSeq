@@ -1,2 +1,13 @@
-# Accession numbers to remove (one per line)
-NC_004297.1
+# Accession numbers to remove (causing long branches/reassortment events)
+PQ421571.1
+OM735990.1
+OM735974.1
+MK107957.1
+MK118037.1
+MH053551.1
+MK107947.1
+MK107954.1
+MK107939.1
+KT992425.1
+MK107927.1
+MG812675.1
