@@ -42,6 +42,11 @@ Note: Any time you modify the code or pull updates from GitHub, you need to rein
 
 ## Usage
 
+**Important**: Always activate the conda environment before running any LassaSeq commands:
+```bash
+conda activate lassa_env
+```
+
 To see all available options:
 ```bash
 lassaseq --help
@@ -209,18 +214,16 @@ Due to the computationally intensive nature of recombination detection, this ana
    ```
 
 2. **Recombination Analysis**:
-   - Before running LassaSeq's phylogenetic analysis, perform recombination detection using HYPHY GARD as a separate step:
-
+Before running LassaSeq's phylogenetic analysis, perform recombination detection using HYPHY GARD as a separate step:
    ```bash
    hyphy gard --rv Gamma --mode faster --input trimmed_alignment.fasta --output gard_output.json
    ```
 
-   Note: This analysis can be time-consuming depending on your dataset size.
+Note: This analysis can be time-consuming depending on your dataset size.
    
 3. **Remove Recombinant Sequences**:
-   - Once you've identified recombinant sequences, add their accession numbers to a `remove.txt` file
-   - Use this file with LassaSeq's `--remove` option to exclude these sequences from the analysis:
-   
+Once you've identified recombinant sequences, add their accession numbers to a `remove.txt` file. Use this file with LassaSeq's `--remove` option to exclude these sequences from the analysis:
+
    ```bash
    lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt --phylogeny
    ```
