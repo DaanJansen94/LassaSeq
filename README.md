@@ -224,3 +224,32 @@ Due to the computationally intensive nature of recombination detection, this ana
    ```
 
 This optional but recommended step is crucial for obtaining reliable phylogenetic trees, as recombinant sequences can lead to incorrect evolutionary relationships and branch patterns.
+
+## Dependencies
+
+- Python ≥ 3.6
+- BioPython ≥ 1.79
+- NumPy ≥ 1.21.0
+- MAFFT
+- TrimAl
+- IQTree2
+
+## Citation
+
+If you use Lassaseq in your research, please cite:
+
+```
+Jansen, D., & Vercauteren, K. (2025). LassaSeq: A Command-Line Tool for Downloading, Processing and Analyzing Lassa Virus Sequences for Phylogenetic Analysis (Version v0.1.1) [Computer software]. https://doi.org/XX.XXXX/zenodo.XXXXXXXX
+```
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0) - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Support
+
+If you encounter any problems or have questions, please open an issue on GitHub.
