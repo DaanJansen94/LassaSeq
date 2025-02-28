@@ -88,19 +88,7 @@ options:
   --consensus_L         (Optional) Path to custom consensus sequences for L segment
   --consensus_S         (Optional) Path to custom consensus sequences for S segment
   --lineage             (Optional) Filter sequences by lineage
-  --sublineage          (Optional) Filter sequences by sublineage
-                        
-
-example: # Download complete genomes from human hosts with known location and date from multiple countries, filter for lineage IV and sublineage III: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV --sublineage III
-
-# Download sequences from a specific lineage:
-lassaseq -o lassa_output --genome 1 --lineage IV
-
-# Download sequences from a specific lineage and sublineage:
-lassaseq -o lassa_output --genome 1 --lineage IV --sublineage III
-
-# Combine lineage filtering with other options:
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV --phylogeny
+  --sublineage          (Optional) Filter sequences by sublineage                    
 ```
 
 ### Interactive Mode
@@ -122,7 +110,7 @@ lassaseq -o lassa_output --genome 2 --completeness 80 --host 3 --metadata 4
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV
 
 # Download sequences from specific lineage and sublineage
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --lineage IV --sublineage III
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV --sublineage III
 
 # Download sequences and perform phylogenetic analysis with lineage filtering
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV
