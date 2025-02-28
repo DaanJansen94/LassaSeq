@@ -1,2 +1,0 @@
-[console_scripts]
-lassaseq = lassaseq.lassaseq:cli_main
