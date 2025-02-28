@@ -83,18 +83,15 @@ options:
                         Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali, Ghana, Benin, Burkina Faso, Ivory Coast, Togo
   --remove              (Optional) File containing accession numbers to remove
                         One accession number per line, lines starting with # are ignored
-  --phylogeny          (Optional) Create concatenated FASTA files and perform phylogenetic analysis
+  --phylogeny           (Optional) Create concatenated FASTA files and perform phylogenetic analysis
                         Includes sequence alignment, trimming, and tree building
   --consensus_L         (Optional) Path to custom consensus sequences for L segment
   --consensus_S         (Optional) Path to custom consensus sequences for S segment
-  --lineage LINEAGE     (Optional) Filter sequences by lineage Example: --lineage IV
-  --sublineage SUBLINEAGE
-                        (Optional) Filter sequences by sublineage Example: --sublineage III
-                        Note: If --lineage is not specified, will match the sublineage across all lineages
+  --lineage             (Optional) Filter sequences by lineage
+  --sublineage          (Optional) Filter sequences by sublineage
+                        
 
-example: # Download complete genomes from human hosts with known location and date from multiple countries and filter for lineage IV: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV
-
-# For filtering by both lineage and sublineage: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --lineage IV --sublineage III
+example: # Download complete genomes from human hosts with known location and date from multiple countries, filter for lineage IV and sublineage III: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV --sublineage III
 
 # Download sequences from a specific lineage:
 lassaseq -o lassa_output --genome 1 --lineage IV

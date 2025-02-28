@@ -1363,6 +1363,53 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None):
         
     filtered_sequences = []
     
+    # Normalize target lineage to include "Lineage" prefix if not present
+    if target_lineage and not target_lineage.startswith("Lineage"):
+        target_lineage = f"Lineage{target_lineage}"
+    
+    # Normalize target sublineage to include "Sublineage" prefix if not present
+    if target_sublineage and not target_sublineage.startswith("Sublineage"):
+        target_sublineage = f"Sublineage{target_sublineage}"
+    
+    # Load all lineage information first
+    l_lineages = {}  # {accession: (lineage, sublineage)}
+    s_lineages = {}
+    
+    # Load L segment lineages
+    l_file = os.path.join('lineages', 'l_lineages.txt')
+    if os.path.exists(l_file):
+        with open(l_file) as f:
+            header = next(f).strip().split('\t')
+            acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
+            lin_idx = next((i for i, col in enumerate(header) if 'lin' in col.lower()), 1)
+            sub_idx = next((i for i, col in enumerate(header) if 'sub' in col.lower()), 2)
+            
+            for line in f:
+                parts = line.strip().split('\t')
+                if len(parts) >= 3:
+                    acc = parts[acc_idx].strip()
+                    lin = parts[lin_idx].strip()
+                    sub = parts[sub_idx].strip()
+                    l_lineages[acc] = (lin, sub)
+    
+    # Load S segment lineages
+    s_file = os.path.join('lineages', 's_lineages.txt')
+    if os.path.exists(s_file):
+        with open(s_file) as f:
+            header = next(f).strip().split('\t')
+            acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
+            lin_idx = next((i for i, col in enumerate(header) if 'lin' in col.lower()), 1)
+            sub_idx = next((i for i, col in enumerate(header) if 'sub' in col.lower()), 2)
+            
+            for line in f:
+                parts = line.strip().split('\t')
+                if len(parts) >= 3:
+                    acc = parts[acc_idx].strip()
+                    lin = parts[lin_idx].strip()
+                    sub = parts[sub_idx].strip()
+                    s_lineages[acc] = (lin, sub)
+    
+    # Now filter sequences using the loaded lineage information
     for seq in sequences:
         record = seq['record']
         accession = record.id.split('_')[0]  # Get accession from the first part
@@ -1373,32 +1420,18 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None):
         elif "outgroup" in record.id:
             accession = "KM822127.1" if 'L_segment' in str(seq['segment']) else "KM822128.1"
         
-        # Determine segment type for lineage file selection
-        segment = 'l' if 'L_segment' in str(seq['segment']) or seq['segment'] == 'L' else 's'
-        lineage_file = os.path.join('lineages', f'{segment}_lineages.txt')
+        # Get lineage info based on segment type
+        lineages = l_lineages if 'L_segment' in str(seq['segment']) or seq['segment'] == 'L' else s_lineages
         
-        # Read lineage information if file exists
-        if os.path.exists(lineage_file):
-            with open(lineage_file) as f:
-                header = next(f).strip().split('\t')
-                acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
-                lin_idx = next((i for i, col in enumerate(header) if 'lin' in col.lower()), 1)
-                sub_idx = next((i for i, col in enumerate(header) if 'sub' in col.lower()), 2)
-                
-                # Search for the sequence's lineage information
-                for line in f:
-                    parts = line.strip().split('\t')
-                    if len(parts) >= 3 and parts[acc_idx].strip() == accession:
-                        lineage = parts[lin_idx].strip()
-                        sublineage = parts[sub_idx].strip()
-                        
-                        # Check if sequence matches the target lineage/sublineage
-                        lineage_match = not target_lineage or lineage == target_lineage
-                        sublineage_match = not target_sublineage or sublineage == target_sublineage
-                        
-                        if lineage_match and sublineage_match:
-                            filtered_sequences.append(seq)
-                        break
+        if accession in lineages:
+            lineage, sublineage = lineages[accession]
+            
+            # Check if sequence matches the target lineage/sublineage
+            lineage_match = not target_lineage or lineage == target_lineage
+            sublineage_match = not target_sublineage or sublineage == target_sublineage
+            
+            if lineage_match and sublineage_match:
+                filtered_sequences.append(seq)
     
     return filtered_sequences
 
