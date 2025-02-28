@@ -54,7 +54,7 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S] [--lineage LINEAGE] [--sublineage SUBLINEAGE]
+usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S] [--lineage] [--sublineage] [--l_sublineage] [--s_sublineage]
 
 Download and filter Lassa virus sequences
 
@@ -88,7 +88,9 @@ options:
   --consensus_L         (Optional) Path to custom consensus sequences for L segment
   --consensus_S         (Optional) Path to custom consensus sequences for S segment
   --lineage             (Optional) Filter sequences by lineage
-  --sublineage          (Optional) Filter sequences by sublineage                    
+  --sublineage          (Optional) Filter sequences by sublineage for both segments
+  --l_sublineage        (Optional) Filter L segment sequences by sublineage
+  --s_sublineage        (Optional) Filter S segment sequences by sublineage                    
 ```
 
 ### Interactive Mode
@@ -109,11 +111,11 @@ lassaseq -o lassa_output --genome 2 --completeness 80 --host 3 --metadata 4
 # Download sequences from specific countries and lineage
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV
 
-# Download sequences from specific lineage and sublineage
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV --sublineage III
+# Filter for different sublineages in L and S segments
+lassaseq -o lassa_output --genome 1 --l_sublineage III --s_sublineage II
 
-# Download sequences and perform phylogenetic analysis with lineage filtering
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV
+# Download sequences and perform phylogenetic analysis with segment-specific sublineages
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV --l_sublineage III --s_sublineage II
 ```
 ### Output Structure
 
