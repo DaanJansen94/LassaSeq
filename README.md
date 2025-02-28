@@ -169,7 +169,9 @@ output_directory/
 │           ├── s_trimmed.fasta.contree
 │           └── s_trimmed.fasta.iqtree
 └── summary_Lassa.txt
-```
+
+### Lineage Information
+The tool includes lineage information for Lassa virus sequences in the `lineages` directory. The lineages are in line with current literature, and sublineages for lineage IV were determined using fastbaps software. Users can modify or update the lineage files (`l_lineages.txt` and `s_lineages.txt`) to include their own lineage assignments. Each file follows a tab-delimited format with columns for accession numbers, lineages, and sublineages.
 
 ### Summary File Content
 The summary_Lassa.txt file provides detailed information about:
