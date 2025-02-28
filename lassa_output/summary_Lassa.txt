@@ -1,0 +1,122 @@
+Lassa Virus Sequence Download Summary
+====================================
+
+
+Filtering Steps Summary
+=====================
+
+1. Initial Dataset
+----------------
+Total sequences: 2803
+L segments: 874
+S segments: 1875
+Unknown segments: 54
+
+Initial Host Distribution
+----------------------
+
+Human hosts found (Total: 1525 sequences):
+- Homo sapiens: 1502 sequences
+- Homon sapiens: 23 sequences
+
+Rodent hosts found (Total: 1075 sequences):
+- Hylomyscus pamfi: 10 sequences
+- Lophuromys sikapusi: 4 sequences
+- Mastomys: 52 sequences
+- Mastomys erythroleucus: 42 sequences
+- Mastomys natalensis: 884 sequences
+- Mastomys sp: 1 sequences
+- Mastomys sp.: 2 sequences
+- Mus baoulei: 9 sequences
+- Rattus norvegicus: 1 sequences
+- Rattus rattus: 1 sequences
+- rodent: 57 sequences
+- Rodents: 12 sequences
+
+Other hosts found (Total: 8 sequences):
+- Cavia porcellus (guinea pig): 2 sequences
+- dog: 1 sequences
+- goat: 3 sequences
+- lizard: 2 sequences
+
+Sequences with no host information: 195
+
+
+Initial Geographical Distribution:
+---------------------------------
+Country        L segments    S segments    Unknown         Total
+-----------   -----------   -----------   ---------   ----------
+Benin                  10            22           0           32
+China                   0             0           1            1
+Ghana                   2             2           0            4
+Guinea                 29           477           0          506
+IvoryCoast             31            27           0           58
+Liberia                31            52           0           83
+Mali                   12            15           0           27
+Nigeria               550           931           6         1487
+SierraLeone           155           254           3          412
+Togo                    3             3           0            6
+USA                     0             0           5            5
+UnknownLoc             51            92          39          182
+------------------------------------------------------------
+Total                 874          1875          54         2803
+
+
+2. After Completeness Filtering
+----------------------------
+Applied filter: Minimum completeness 80.0%
+
+Remaining sequences: 1548
+L segments: 740
+S segments: 808
+Unknown segments: 0
+
+
+Geographical Distribution After Completeness Filter:
+---------------------------------------------------
+Country        L segments    S segments    Unknown         Total
+-----------   -----------   -----------   ---------   ----------
+Benin                  10            12           0           22
+Guinea                 27            14           0           41
+IvoryCoast             13             0           0           13
+Liberia                25            25           0           50
+Mali                    6             6           0           12
+Nigeria               504           563           0         1067
+SierraLeone           119           150           0          269
+Togo                    3             3           0            6
+UnknownLoc             33            35           0           68
+------------------------------------------------------------
+Total                 740           808           0         1548
+
+
+3. After Host Filtering
+---------------------
+Applied filter: Human and Rodent
+
+Final sequences: 1511
+L segments: 723
+S segments: 788
+Unknown segments: 0
+
+
+Final Geographical Distribution:
+-------------------------------
+Country        L segments    S segments    Unknown         Total
+-----------   -----------   -----------   ---------   ----------
+Benin                  10            12           0           22
+Guinea                 27            14           0           41
+IvoryCoast             13             0           0           13
+Liberia                25            25           0           50
+Mali                    6             6           0           12
+Nigeria               503           562           0         1065
+SierraLeone           119           149           0          268
+Togo                    3             3           0            6
+UnknownLoc             17            17           0           34
+------------------------------------------------------------
+Total                 723           788           0         1511
+
+
+Output Files
+------------
+L segments: FASTA/L_segment/lassa_l_segments.fasta (176 sequences)
+S segments: FASTA/S_segment/lassa_s_segments.fasta (187 sequences)

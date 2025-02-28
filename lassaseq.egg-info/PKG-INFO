@@ -1,0 +1,17 @@
+Metadata-Version: 2.2
+Name: lassaseq
+Version: 0.1.0
+Summary: Tool for downloading Lassa virus sequences
+Home-page: https://github.com/yourusername/lassaseq
+Author: Your Name
+Author-email: your.email@example.com
+License-File: LICENSE
+Requires-Dist: biopython>=1.80
+Requires-Dist: numpy>=1.20.0
+Requires-Dist: requests>=2.25.0
+Requires-Dist: tqdm>=4.50.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary

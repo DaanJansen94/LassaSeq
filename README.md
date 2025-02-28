@@ -54,7 +54,7 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S]
+usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S] [--lineage LINEAGE] [--sublineage SUBLINEAGE]
 
 Download and filter Lassa virus sequences
 
@@ -87,10 +87,23 @@ options:
                         Includes sequence alignment, trimming, and tree building
   --consensus_L         (Optional) Path to custom consensus sequences for L segment
   --consensus_S         (Optional) Path to custom consensus sequences for S segment
+  --lineage LINEAGE     (Optional) Filter sequences by lineage Example: --lineage IV
+  --sublineage SUBLINEAGE
+                        (Optional) Filter sequences by sublineage Example: --sublineage III
+                        Note: If --lineage is not specified, will match the sublineage across all lineages
 
-example:
-  # Download complete genomes from human hosts with known location and date from multiple countries, including a custom consensus sequence:
-  lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --consensus_L path/to/L_consensus.fasta
+example: # Download complete genomes from human hosts with known location and date from multiple countries and filter for lineage IV: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV
+
+# For filtering by both lineage and sublineage: lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --lineage IV --sublineage III
+
+# Download sequences from a specific lineage:
+lassaseq -o lassa_output --genome 1 --lineage IV
+
+# Download sequences from a specific lineage and sublineage:
+lassaseq -o lassa_output --genome 1 --lineage IV --sublineage III
+
+# Combine lineage filtering with other options:
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV --phylogeny
 ```
 
 ### Interactive Mode
@@ -108,22 +121,15 @@ lassaseq -o lassa_output --genome 1 --host 1 --metadata 3
 # Download sequences with ≥80% completeness from both human and rodent hosts
 lassaseq -o lassa_output --genome 2 --completeness 80 --host 3 --metadata 4
 
-# Download all sequences without any filtering
-lassaseq -o lassa_output --genome 3 --host 4 --metadata 4
+# Download sequences from specific countries and lineage
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea" --lineage IV
 
-# Download sequences from specific countries
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --countries "Sierra Leone, Guinea"
+# Download sequences from specific lineage and sublineage
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --lineage IV --sublineage III
 
-# Download sequences excluding specific accession numbers
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --remove remove.txt
-
-# Download sequences and perform phylogenetic analysis
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny
-
-# Download sequences with custom consensus sequences and perform phylogenetic analysis
-lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --consensus_L path/to/L_consensus.fasta --consensus_S path/to/S_consensus.fasta
+# Download sequences and perform phylogenetic analysis with lineage filtering
+lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV
 ```
-
 ### Output Structure
 
 ```
