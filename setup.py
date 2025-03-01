@@ -4,6 +4,10 @@ setup(
     name="lassaseq",
     version="0.1.0",
     packages=find_packages(),
+    package_data={
+        'lassaseq': ['lineages/*'],
+    },
+    include_package_data=True,
     install_requires=[
         'biopython>=1.80',
         'numpy>=1.20.0',

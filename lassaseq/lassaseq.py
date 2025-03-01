@@ -10,6 +10,7 @@ import sys
 from io import StringIO
 from collections import defaultdict
 import subprocess
+import site
 
 # Add these constants at the top of the file
 REFERENCE_SEQUENCES = {
@@ -1116,14 +1117,66 @@ def download_and_write_special_sequences(output_dir):
         with open(os.path.join(segment_dir, "outgroup.fasta"), "w") as f:
             SeqIO.write(out_record, f, "fasta")
 
-def create_figtree_metadata(trimmed_fasta, output_file):
-    """Create metadata file for FigTree visualization from trimmed alignment headers.
-    Skips consensus sequences as they can have different header formats.
+def get_lineages_dir():
+    """Get the path to the lineages directory from the LassaSeq package installation"""
+    import os
+    import sys
+    import site
     
-    Args:
-        trimmed_fasta (str): Path to trimmed alignment FASTA file
-        output_file (str): Path to output metadata file
-    """
+    def find_lassaseq_root():
+        # First try: Look in the conda environment's site-packages
+        conda_prefix = os.environ.get('CONDA_PREFIX')
+        if conda_prefix:
+            python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+            site_packages = os.path.join(conda_prefix, 'lib', python_version, 'site-packages')
+            lassaseq_dir = os.path.join(site_packages, 'lassaseq')
+            if os.path.exists(os.path.join(lassaseq_dir, 'lineages')):
+                return lassaseq_dir
+        
+        # Second try: Look in site-packages
+        for site_dir in site.getsitepackages():
+            lassaseq_dir = os.path.join(site_dir, 'lassaseq')
+            if os.path.exists(os.path.join(lassaseq_dir, 'lineages')):
+                return lassaseq_dir
+        
+        # Third try: Check if we're in development mode
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        if os.path.exists(os.path.join(script_dir, 'lineages')):
+            return script_dir
+        
+        # Fourth try: Look in current directory
+        cwd = os.getcwd()
+        if os.path.exists(os.path.join(cwd, 'lineages')):
+            return cwd
+        
+        # Fifth try: Look in LassaSeq directory if we're in it
+        if os.path.basename(cwd) == 'LassaSeq':
+            lassaseq_dir = os.path.join(cwd, 'lassaseq')
+            if os.path.exists(os.path.join(lassaseq_dir, 'lineages')):
+                return lassaseq_dir
+        
+        return None
+    
+    # Find LassaSeq root directory
+    lassaseq_root = find_lassaseq_root()
+    if lassaseq_root is None:
+        print(f"Error: Could not find LassaSeq installation directory")
+        print("Please ensure you are running from within the LassaSeq directory or that LassaSeq is properly installed")
+        sys.exit(1)
+    
+    # Get the lineages directory path
+    lineages_dir = os.path.join(lassaseq_root, 'lineages')
+    
+    # Verify the lineages directory exists
+    if not os.path.exists(lineages_dir):
+        print(f"Error: Lineages directory not found at {lineages_dir}")
+        print("Please ensure the lineages directory is present in your LassaSeq installation")
+        sys.exit(1)
+    
+    return lineages_dir
+
+def create_figtree_metadata(trimmed_fasta, output_file):
+    """Create metadata file for FigTree visualization from trimmed alignment headers."""
     from Bio import SeqIO
     import os
     
@@ -1134,24 +1187,24 @@ def create_figtree_metadata(trimmed_fasta, output_file):
     lineages = {}
     sublineages = {}
     
+    # Get the lineages directory path
+    lineages_dir = get_lineages_dir()
+    
     # Determine if this is L or S segment based on the output file path
-    # Look for L_segment or S_segment in the path
     if 'L_segment' in output_file:
         segment = 'l'
     elif 'S_segment' in output_file:
         segment = 's'
     else:
-        # Default to looking for l_ or s_ in filename
         segment = 'l' if '_l_' in output_file.lower() else 's'
     
-    # Get the path to the lineages directory - it should be relative to current working directory
-    lineage_file = os.path.join('lineages', f'{segment}_lineages.txt')
+    # Get the path to the lineages file
+    lineage_file = os.path.join(lineages_dir, f'{segment}_lineages.txt')
     
     # Read lineage information if file exists
     if os.path.exists(lineage_file):
         with open(lineage_file) as f:
-            header = next(f).strip().split('\t')  # Read header line
-            # Find column indices, being flexible with column names
+            header = next(f).strip().split('\t')
             acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
             lin_idx = next((i for i, col in enumerate(header) if 'lin' in col.lower()), 1)
             sub_idx = next((i for i, col in enumerate(header) if 'sub' in col.lower()), 2)
@@ -1179,7 +1232,7 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             # Skip consensus sequences (identified by _segment suffix)
             if record.id.endswith('_segment'):
                 continue
-                
+            
             # Split the header into parts
             parts = record.id.split('_')
             
@@ -1199,13 +1252,10 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             
             # Handle reference sequences specially
             if "Reference" in parts:
-                # Format: Accession_SierraLeone_Unknown_Human_Unknown
                 f.write(f"{taxon}\tSierraLeone\tUnknown\tHuman\tUnknown\t{lineage}\t{sublineage}\n")
             elif "outgroup" in parts:
-                # Outgroup sequence: Accession_Nigeria_Lassa_Host_Pinneo_outgroup_Date
                 f.write(f"{taxon}\tNigeria\tLassa\tHuman\t1969.000\t{lineage}\t{sublineage}\n")
             else:
-                # Regular sequence: Accession_Location_City_Host_Date
                 location = parts[1] if len(parts) > 1 else "Unknown"
                 location2 = parts[2] if len(parts) > 2 else "Unknown"
                 host = parts[3] if len(parts) > 3 else "Unknown"
@@ -1363,6 +1413,9 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_
         
     filtered_sequences = []
     
+    # Get the lineages directory path
+    lineages_dir = get_lineages_dir()
+    
     # Normalize target lineage to include "Lineage" prefix if not present
     if target_lineage and not target_lineage.startswith("Lineage"):
         target_lineage = f"Lineage{target_lineage}"
@@ -1380,8 +1433,9 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_
     s_lineages = {}
     
     # Load L segment lineages
-    l_file = os.path.join('lineages', 'l_lineages.txt')
+    l_file = os.path.join(lineages_dir, 'l_lineages.txt')
     if os.path.exists(l_file):
+        print(f"Reading L segment lineage information from: {l_file}")  # Add debug print
         with open(l_file) as f:
             header = next(f).strip().split('\t')
             acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
@@ -1395,10 +1449,13 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_
                     lin = parts[lin_idx].strip()
                     sub = parts[sub_idx].strip()
                     l_lineages[acc] = (lin, sub)
+    else:
+        print(f"Warning: Could not find L segment lineage file: {l_file}")  # Add debug print
     
     # Load S segment lineages
-    s_file = os.path.join('lineages', 's_lineages.txt')
+    s_file = os.path.join(lineages_dir, 's_lineages.txt')
     if os.path.exists(s_file):
+        print(f"Reading S segment lineage information from: {s_file}")  # Add debug print
         with open(s_file) as f:
             header = next(f).strip().split('\t')
             acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
@@ -1412,6 +1469,8 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_
                     lin = parts[lin_idx].strip()
                     sub = parts[sub_idx].strip()
                     s_lineages[acc] = (lin, sub)
+    else:
+        print(f"Warning: Could not find S segment lineage file: {s_file}")  # Add debug print
     
     # Now filter sequences using the loaded lineage information
     for seq in sequences:
