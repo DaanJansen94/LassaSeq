@@ -672,13 +672,16 @@ def is_rodent_host(host):
         'natal multimammate',
         'multimammate rat',
         'multimammate mouse',
-        'hylomyscus pamfi',  # Added this species
+        'hylomyscus pamfi',
+        'cavia porcellus',
+        'guinea pig',
         # Genera
         'mus',
         'rattus',
         'lophuromys',
         'praomys',
         'hylomyscus',  # Added genus
+        'cavia',
         # Common names
         'rodent',
         'mouse',
