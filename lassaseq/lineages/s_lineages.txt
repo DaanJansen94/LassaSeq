@@ -758,7 +758,7 @@ MT193277.1	LineageVI	None
 MF990889.1	LineageVI	None
 MF990888.1	LineageVI	None
 KU961971.1	LineageVI	None
-MK107927.1	LineageI	None
-KT992425.1	LineageI	None
+MK107927.1	LineageVII	None
+KT992425.1	LineageVII	None
 MG812675.1	LineageI	None
 KM822128.1	LineageI	None
