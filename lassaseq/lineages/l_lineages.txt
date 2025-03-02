@@ -240,8 +240,8 @@ MK107885.1	LineageIII	None
 MH053465.1	LineageIII	None
 MK107884.1	LineageIII	None
 MK107886.1	LineageIII	None
-MK107872.1	LineageI	None
-KT992435.1	LineageI	None
+MK107872.1	LineageVII	None
+KT992435.1	LineageVII	None
 MG812674.1	LineageI	None
 KM822127.1	LineageI	None
 PP431206.1	LineageII	None
