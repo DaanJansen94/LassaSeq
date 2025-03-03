@@ -235,7 +235,7 @@ This optional but recommended step is crucial for obtaining reliable phylogeneti
 If you use Lassaseq in your research, please cite:
 
 ```
-Jansen, D., Laumen, J., Siebenmann, E., & Vercauteren, K. (2025). LassaSeq: A Command-Line Tool for Downloading, Processing and Analyzing Lassa Virus Sequences for Phylogenetic Analysis (Version v0.1.1) [Computer software]. https://doi.org/10.5281/zenodo.14936276
+Jansen, D., & Vercauteren, K. (2025). LassaSeq: A Command-Line Tool for Downloading, Processing and Analyzing Lassa Virus Sequences for Phylogenetic Analysis (v.0.1.0). Zenodo. https://doi.org/10.5281/zenodo.14936276
 ```
 
 ## License
