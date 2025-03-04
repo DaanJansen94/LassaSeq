@@ -19,8 +19,8 @@ setup(
             'lassaseq=lassaseq.lassaseq:cli_main',
         ],
     },
-    description="Tool for downloading Lassa virus sequences",
-    author="Your Name",
-    author_email="your.email@example.com",
-    url="https://github.com/yourusername/lassaseq"
+    description="Tool for downloading and analyzing Lassa virus sequences",
+    author="Daan Jansen",
+    author_email="jansendaan94@gmail.com",
+    url="https://github.com/DaanJansen94/LassaSeq"
 )
