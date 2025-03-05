@@ -33,11 +33,6 @@ requirements:
     - requests >=2.25.0
     - tqdm >=4.50.0
 
-channels:
-  - bioconda
-  - conda-forge
-  - defaults
-
 test:
   imports:
     - lassaseq
