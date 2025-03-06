@@ -88,6 +88,13 @@ KM821896.1	LineageIV	SublineageI
 KM821853.1	LineageIV	SublineageI
 KM821844.1	LineageIV	SublineageI
 KM821836.1	LineageIV	SublineageI
+AY179172.1	LineageIV	SublineageI
+AY628202.1	LineageIV	SublineageI
+HQ688674.1	LineageIV	SublineageI
+HQ688675.1	LineageIV	SublineageI
+U73034.2	LineageIV	SublineageI
+U63094.1	LineageIV	SublineageI
+MW004546.1	LineageIV	SublineageI
 OQ919509.1	LineageIV	SublineageII
 OR490754.1	LineageIV	SublineageII
 KM821908.1	LineageIV	SublineageII
@@ -141,6 +148,8 @@ MG812644.1	LineageIV	SublineageII
 KY425628.1	LineageIV	SublineageII
 KU978809.1	LineageIV	SublineageII
 KY425626.1	LineageIV	SublineageII
+AY628200.1	LineageIV	SublineageII
+AY628204.1	LineageIV	SublineageII
 OR490747.1	LineageIV	SublineageIII
 OR490742.1	LineageIV	SublineageIII
 OR490745.1	LineageIV	SublineageIII
@@ -176,6 +185,7 @@ MG812678.1	LineageIV	SublineageIV
 MG812671.1	LineageIV	SublineageIV
 MG812666.1	LineageIV	SublineageIV
 MG812656.1	LineageIV	SublineageIV
+MG812633.1	LineageIV	SublineageIV
 MG812633.1	LineageV	None
 OL774862.1	LineageV	None
 MK656398.1	LineageV	None
