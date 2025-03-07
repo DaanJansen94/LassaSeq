@@ -106,6 +106,10 @@ options:
   --s_sublineage        (Optional) Filter S segment sequences by sublineage                    
 ```
 
+Lassaseq can be run in two modes:
+1. Interactive Mode (default) - for interactive use
+2. Non-Interactive Mode - for HPC submissions or automated runs
+
 ### Interactive Mode
 If optional arguments are not provided, the program will run in interactive mode and prompt for choices:
 ```bash
