@@ -130,52 +130,6 @@ lassaseq -o lassa_output --genome 1 --l_sublineage III --s_sublineage II
 # Download sequences and perform phylogenetic analysis with segment-specific sublineages
 lassaseq -o lassa_output --genome 1 --host 1 --metadata 3 --phylogeny --lineage IV --l_sublineage III --s_sublineage II
 ```
-### Output Structure
-
-```
-output_directory/
-├── FASTA/
-│   ├── L_segment/
-│   │   ├── lassa_l_segments.fasta  (downloaded sequences)
-│   │   ├── reference.fasta         (reference sequence NC_004297.1)
-│   │   ├── outgroup.fasta          (Pinneo strain KM822127.1, Nigeria 1969)
-│   │   └── consensus.fasta         (optional custom consensus sequence(s))
-│   ├── S_segment/
-│   │   ├── lassa_s_segments.fasta  (downloaded sequences)
-│   │   ├── reference.fasta         (reference sequence NC_004296.1)
-│   │   ├── outgroup.fasta          (Pinneo strain KM822128.1, Nigeria 1969)
-│   │   └── consensus.fasta         (optional custom consensus sequence(s))
-│   └── unknown_segment/
-│       └── lassa_unknown_segments.fasta
-├── Phylogeny/
-│   ├── FASTA/
-│   │   ├── L_segment/
-│   │   │   ├── all_l_segments.fasta    (concatenated, deduplicated sequences)
-│   │   │   └── l_metadata.txt          (metadata for FigTree visualization)
-│   │   └── S_segment/
-│   │       ├── all_s_segments.fasta    (concatenated, deduplicated sequences)
-│   │       └── s_metadata.txt          (metadata for FigTree visualization)
-│   ├── MSA/                        (MAFFT alignments)
-│   │   ├── L_segment/
-│   │   │   └── l_aligned.fasta
-│   │   └── S_segment/
-│   │       └── s_aligned.fasta
-│   ├── TrimAl/                     (Trimmed alignments)
-│   │   ├── L_segment/
-│   │   │   └── l_trimmed.fasta
-│   │   └── S_segment/
-│   │       └── s_trimmed.fasta
-│   └── Tree/                       (IQ-TREE output)
-│       ├── L_segment/
-│       │   ├── l_trimmed.fasta.treefile
-│       │   ├── l_trimmed.fasta.contree
-│       │   └── l_trimmed.fasta.iqtree
-│       └── S_segment/
-│           ├── s_trimmed.fasta.treefile
-│           ├── s_trimmed.fasta.contree
-│           └── s_trimmed.fasta.iqtree
-└── summary_Lassa.txt
-```
 
 ### Lineage Information
 The tool includes lineage information for Lassa virus sequences in the `lineages` directory. The lineages are in line with current literature, and sublineages for lineage IV were determined using fastbaps software. Users can modify or update the lineage files (`l_lineages.txt` and `s_lineages.txt`) to include their own lineage assignments. Each file follows a tab-delimited format with columns for accession numbers, lineages, and sublineages.
@@ -183,7 +137,7 @@ The tool includes lineage information for Lassa virus sequences in the `lineages
 ### Summary File Content
 The summary_Lassa.txt file provides detailed information about:
 - Detailed host distribution with sequence counts for:
-  - Human hosts (e.g., Homo sapiens, human patient)
+  - Human hosts
   - Rodent hosts (e.g., Mastomys natalensis, Hylomyscus pamfi)
   - Other hosts
   - Sequences with no host information
