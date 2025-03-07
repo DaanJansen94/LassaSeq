@@ -8,43 +8,56 @@ Lassa virus has a bi-segmented RNA genome consisting of:
 
 ## Installation
 
-1. First, install conda if you haven't already:
+### Prerequisites
+First, install conda if you haven't already:
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+```
+
+Then, ensure you have the required channels:
+```bash
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+### Option 1: Using Conda (Recommended)
+Install LassaSeq:
+```bash
+conda create -n lassaseq -c bioconda lassaseq -y
+conda activate lassaseq
+```
+
+### Option 2: From Source Code
+1. Create and activate a new conda environment:
    ```bash
-   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-   bash Miniconda3-latest-Linux-x86_64.sh
+   conda create -n lassaseq -c bioconda python=3.9 mafft trimal iqtree
+   conda activate lassaseq
    ```
 
-2. Create and activate a new conda environment:
-   ```bash
-   conda create -n lassa_env -c bioconda python=3.9 mafft trimal iqtree
-   conda activate lassa_env
-   ```
-
-3. Install LassaSeq:
+2. Install lassaseq:
    ```bash
    git clone https://github.com/DaanJansen94/LassaSeq.git   
    cd LassaSeq
    pip install .
    ```
 
-## Re-installation
-When updates are pushed to GitHub, or when you want to use your own modifications to the code, you'll need to reinstall the package:
-
-```bash
-conda activate lassa_env  # Make sure you're in the right environment
-cd LassaSeq
-git pull  # Get the latest updates from GitHub
-pip uninstall LassaSeq
-pip install .
-```
-
-Note: Any time you modify the code or pull updates from GitHub, you need to reinstall the package using these commands for the changes to take effect.
+3. Re-installation (when updates are available):
+   ```bash
+   conda activate lassaseq  # Make sure you're in the right environment
+   cd LassaSeq
+   git pull  # Get the latest updates from GitHub
+   pip uninstall lassaseq
+   pip install .
+   ```
+   Note: Any time you modify the code or pull updates from GitHub, you need to reinstall the package using these commands for the changes to take effect.
 
 ## Usage
 
-**Important**: Always activate the conda environment before running any LassaSeq commands:
+First, make sure your conda environment is activated:
 ```bash
-conda activate lassa_env
+conda activate lassaseq
 ```
 
 To see all available options:
