@@ -9,7 +9,7 @@ MK107947.1
 MK107954.1
 MK107939.1
 
-# Extremely short sequences
+# Extremely short sequences (< 100 bp)
 GN354234.1
 GN354235.1
 GN354236.1
@@ -20,4 +20,3 @@ GN354240.1
 GN354241.1
 GN354242.1
 GN354243.1
-
