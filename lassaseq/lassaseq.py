@@ -1042,6 +1042,13 @@ def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     duplicate_count = 0
     duplicate_headers = defaultdict(list)
     
+    # Define reference lengths for L and S segments
+    reference_lengths = {
+        'L': 7200,  # ~7.2kb for L segment
+        'S': 3400   # ~3.4kb for S segment
+    }
+    min_length = reference_lengths[segment] * 0.10  # 10% of reference length
+    
     # Read from the original FASTA directory
     segment_dir = os.path.join(input_dir, "FASTA", f"{segment}_segment")
     
@@ -1051,6 +1058,11 @@ def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
         file_path = os.path.join(segment_dir, fasta_file)
         if os.path.exists(file_path):
             for record in SeqIO.parse(file_path, "fasta"):
+                # Skip sequences shorter than 10% of reference length for phylogeny
+                if len(record.seq) < min_length:
+                    print(f"Skipping {record.id} (length: {len(record.seq)}bp) - shorter than minimum required length ({min_length}bp) for phylogenetic analysis")
+                    continue
+                    
                 # Check if this header already exists
                 if record.id in sequences:
                     duplicate_count += 1
@@ -1072,13 +1084,7 @@ def concatenate_fasta_files(input_dir, phylogeny_dir, segment):
     create_figtree_metadata(output_file, metadata_output)
     print(f"Created FigTree metadata file: {metadata_output}")
     
-    # Print duplicate information if any were found
-    if duplicate_count > 0:
-        print(f"\nFound {duplicate_count} duplicate sequence headers for {segment} segment:")
-        for header, files in duplicate_headers.items():
-            print(f"  {header} found in: {', '.join(files)}")
-    
-    return len(sequences)
+    return len(sequences)  # Return number of unique sequences
 
 def download_and_write_special_sequences(output_dir):
     """Download reference and outgroup sequences and write to appropriate files"""
@@ -1271,6 +1277,13 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
     import os
     from Bio import SeqIO
     
+    # Define reference lengths and minimum required length
+    reference_lengths = {
+        'L': 7200,  # ~7.2kb for L segment
+        'S': 3400   # ~3.4kb for S segment
+    }
+    min_length = reference_lengths[segment] * 0.10  # 10% of reference length
+    
     # Setup directories
     fasta_dir = os.path.join(phylogeny_dir, "FASTA", f"{segment}_segment")
     msa_dir = os.path.join(phylogeny_dir, "MSA", f"{segment}_segment")
@@ -1279,15 +1292,34 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
     
     input_fasta = os.path.join(fasta_dir, f"all_{segment.lower()}_segments.fasta")
     
-    # Copy concatenated FASTA to MSA directory
+    # First filter sequences by length
+    filtered_records = []
+    skipped_count = 0
+    for record in SeqIO.parse(input_fasta, "fasta"):
+        if len(record.seq) >= min_length:
+            filtered_records.append(record)
+        else:
+            skipped_count += 1
+            print(f"Skipping {record.id} (length: {len(record.seq)}bp) - shorter than minimum required length ({min_length}bp) for phylogenetic analysis")
+    
+    if skipped_count > 0:
+        print(f"\nSkipped {skipped_count} sequences that were shorter than {min_length}bp (10% of reference length)")
+    
+    if not filtered_records:
+        print(f"Error: No sequences remaining after length filtering for {segment} segment")
+        return
+    
+    # Write filtered sequences to MSA directory
     msa_input = os.path.join(msa_dir, f"{segment.lower()}_sequences.fasta")
+    with open(msa_input, "w") as f:
+        SeqIO.write(filtered_records, f, "fasta")
+    
     aligned_output = os.path.join(msa_dir, f"{segment.lower()}_aligned.fasta")
     temp_aligned = os.path.join(msa_dir, "temp_aligned.fasta")
-    shutil.copy2(input_fasta, msa_input)
     
     # Store original headers
     original_headers = {}
-    for record in SeqIO.parse(msa_input, "fasta"):
+    for record in filtered_records:
         original_headers[record.id] = record.id
     
     # Perform MAFFT alignment
