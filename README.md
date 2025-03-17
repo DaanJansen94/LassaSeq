@@ -23,7 +23,7 @@ conda config --add channels conda-forge
 ```
 
 ### Option 1: Using Conda (Recommended)
-Install LassaSeq:
+Install [LassaSeq via Bioconda](https://anaconda.org/bioconda/lassaseq):
 ```bash
 conda create -n lassaseq -c bioconda lassaseq -y
 conda activate lassaseq
