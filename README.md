@@ -180,7 +180,7 @@ Due to the computationally intensive nature of recombination detection, this ana
    ```bash
    # Example using HYPHY GARD
    conda install bioconda::hyphy
-   hyphy gard --rv Gamma --mode faster --input trimmed_alignment.fasta --output gard_output.json
+   hyphy gard --rv Gamma --mode Faster --alignment trimmed_alignment.fasta --output gard_output.json
    ```
    Note: Recombination analysis can be time-consuming depending on your dataset size and chosen tool.
    
