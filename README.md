@@ -32,7 +32,7 @@ conda activate lassaseq
 ### Option 2: From Source Code
 1. Create and activate a new conda environment:
    ```bash
-   conda create -n lassaseq -c bioconda python=3.9 mafft trimal iqtree
+   conda create -n lassaseq -c conda-forge -c bioconda python=3.9 pip mafft trimal iqtree
    conda activate lassaseq
    ```
 

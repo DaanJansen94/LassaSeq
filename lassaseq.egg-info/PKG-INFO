@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: lassaseq
+Version: 0.1.0
+Summary: Tool for downloading and analyzing Lassa virus sequences
+Home-page: https://github.com/DaanJansen94/LassaSeq
+Author: Daan Jansen
+Author-email: jansendaan94@gmail.com
+License-File: LICENSE
+Requires-Dist: biopython>=1.80
+Requires-Dist: numpy>=1.20.0
+Requires-Dist: requests>=2.25.0
+Requires-Dist: tqdm>=4.50.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
