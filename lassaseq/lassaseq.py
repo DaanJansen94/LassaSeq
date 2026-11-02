@@ -2174,7 +2174,7 @@ def _get_version():
         from importlib.metadata import version as pkg_version
         return pkg_version("lassaseq")
     except Exception:
-        return "0.1.2"
+        return "0.1.3"
 
 
 def cli_main():

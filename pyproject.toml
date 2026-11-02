@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lassaseq"
-version = "0.1.2"
+version = "0.1.3"
 description = "Tool for downloading and analyzing Lassa virus sequences"
 readme = "README.md"
 requires-python = ">=3.9"
