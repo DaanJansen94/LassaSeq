@@ -2169,6 +2169,14 @@ def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_
     
     return filtered_sequences
 
+def _get_version():
+    try:
+        from importlib.metadata import version as pkg_version
+        return pkg_version("lassaseq")
+    except Exception:
+        return "0.1.0"
+
+
 def cli_main():
     try:
         parser = argparse.ArgumentParser(
@@ -2179,6 +2187,9 @@ def cli_main():
   
   # Filter by different sublineages for L and S segments:
   lassaseq -o lassa_output --genome 1 --l_sublineage III --s_sublineage II''')
+
+        parser.add_argument('-v', '--version', action='version',
+                          version=f'lassaseq {_get_version()}')
         
         parser.add_argument('-o', '--outdir', required=True,
                           help='Output directory for sequences')

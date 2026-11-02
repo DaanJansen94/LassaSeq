@@ -67,12 +67,13 @@ lassaseq --help
 
 This will display:
 ```
-usage: lassaseq [-h] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S] [--lineage] [--sublineage] [--l_sublineage] [--s_sublineage] [--proteins] [--threads]
+usage: lassaseq [-h] [-v] -o  [--genome {1,2,3}] [--completeness ] [--host {1,2,3,4}] [--metadata {1,2,3,4}] [--countries ("country1, country2") ] [--remove] [--phylogeny] [--consensus_L] [--consensus_S] [--lineage] [--sublineage] [--l_sublineage] [--s_sublineage] [--proteins] [--threads]
 
 Download and filter Lassa virus sequences
 
 options:
   -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
   -o                    Output directory for sequences
   --genome {1,2,3}      Genome completeness filter:
                         1 = Complete genomes only (>99 percent of reference length)
