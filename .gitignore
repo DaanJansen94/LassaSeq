@@ -24,3 +24,4 @@ env/
 # Temporary files
 *.tmp
 *.temp
+test_protein_out/

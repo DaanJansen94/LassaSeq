@@ -28,6 +28,8 @@ requirements:
     - mafft
     - trimal
     - iqtree
+    - minimap2
+    - pal2nal
     - numpy >=1.20.0
     - biopython >=1.80
     - requests >=2.25.0

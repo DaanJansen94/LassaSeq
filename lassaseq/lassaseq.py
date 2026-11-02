@@ -3,12 +3,15 @@ from Bio import SeqIO
 from tqdm import tqdm
 import argparse
 import os
+import re
+import shutil
+import tempfile
 from datetime import datetime
 import calendar
 import time
 import sys
 from io import StringIO
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 import subprocess
 import site
 
@@ -43,18 +46,35 @@ PINNEO_SEQUENCES = {
     }
 }
 
-# Add reference coordinates for coding regions
+# Josiah RefSeq CDS coordinates (1-based inclusive). L and GPC are complement genes.
+# NC_004297.1 (L segment): Z 66..365 (+); L complement(466..7122)
+# NC_004296.1 (S segment): NP 101..1810 (+); GPC complement(1872..3347)
 REFERENCE_COORDS = {
     'L': {
         'id': 'NC_004297.1',
-        'L_protein': {'start': 1, 'end': 6639},
-        'Z_protein': {'start': 6906, 'end': 7279}
+        'L_protein': {'start': 466, 'end': 7122, 'strand': '-'},
+        'Z_protein': {'start': 66, 'end': 365, 'strand': '+'},
     },
     'S': {
         'id': 'NC_004296.1',
-        'NP': {'start': 1, 'end': 1707},
-        'GPC': {'start': 1839, 'end': 3402}
+        'NP': {'start': 101, 'end': 1810, 'strand': '+'},
+        'GPC': {'start': 1872, 'end': 3347, 'strand': '-'},
     }
+}
+
+# Protein (CDS) alignment options — names match CLI / interactive choices
+PROTEIN_NUM = {'1': 'L', '2': 'Z', '3': 'NP', '4': 'GPC'}
+PROTEIN_DESCRIPTIONS = {
+    'L': 'RNA-dependent RNA polymerase (L segment)',
+    'Z': 'RING finger / Z matrix protein (L segment)',
+    'NP': 'nucleoprotein (S segment)',
+    'GPC': 'glycoprotein precursor (S segment)',
+}
+LASSA_PROTEIN_REGIONS = {
+    'L':   {'segment': 'L', 'ref_id': 'NC_004297.1', 'start': 466, 'end': 7122, 'strand': '-'},
+    'Z':   {'segment': 'L', 'ref_id': 'NC_004297.1', 'start': 66, 'end': 365, 'strand': '+'},
+    'NP':  {'segment': 'S', 'ref_id': 'NC_004296.1', 'start': 101, 'end': 1810, 'strand': '+'},
+    'GPC': {'segment': 'S', 'ref_id': 'NC_004296.1', 'start': 1872, 'end': 3347, 'strand': '-'},
 }
 
 def get_segment_type(record):
@@ -649,19 +669,21 @@ def analyze_hosts(sequences):
 
 def is_human_host(host):
     """Check if the host is human"""
+    # Collapse spaces so "H. sapiens" and "H.sapiens" both match
+    h = host.lower().strip().replace(' ', '')
     human_patterns = [
-        'homo sapiens', 
-        'human', 
-        'homon sapiens',  # Common misspelling
-        'h. sapiens',
+        'homosapiens',
+        'homonsapiens',  # Common misspelling
+        'homosapien',    # Common misspelling
+        'h.sapiens',     # Common GenBank form
+        'hsapiens',
+        'human',
         'humans',
-        'homo sapien',    # Common misspelling
-        'h sapiens',
-        'human patient',
+        'humanpatient',
+        'humanisolate',
         'patient',
-        'human isolate'
     ]
-    return any(pattern in host.lower() for pattern in human_patterns)
+    return any(pattern in h for pattern in human_patterns)
 
 def is_rodent_host(host):
     """Check if the host is a rodent"""
@@ -1184,7 +1206,7 @@ def get_lineages_dir():
     
     return lineages_dir
 
-def create_figtree_metadata(trimmed_fasta, output_file):
+def create_figtree_metadata(trimmed_fasta, output_file, segment=None):
     """Create metadata file for FigTree visualization from trimmed alignment headers."""
     from Bio import SeqIO
     import os
@@ -1195,17 +1217,28 @@ def create_figtree_metadata(trimmed_fasta, output_file):
     # Load lineage information from files
     lineages = {}
     sublineages = {}
+    subsublineages = {}
     
     # Get the lineages directory path
     lineages_dir = get_lineages_dir()
     
-    # Determine if this is L or S segment based on the output file path
-    if 'L_segment' in output_file:
-        segment = 'l'
-    elif 'S_segment' in output_file:
-        segment = 's'
+    # Determine if this is L or S segment based on explicit arg, protein folder, or path
+    if segment is None:
+        path_u = output_file.replace('\\', '/')
+        if 'L_segment' in path_u or '/L/' in path_u or path_u.rstrip('/').endswith('/L'):
+            segment = 'l'
+        elif 'S_segment' in path_u or '/S/' in path_u or path_u.rstrip('/').endswith('/S'):
+            segment = 's'
+        else:
+            # Protein folders: L/Z → L segment; NP/GPC → S segment
+            for prot, info in LASSA_PROTEIN_REGIONS.items():
+                if f'/{prot}/' in path_u or f'/{prot.lower()}/' in path_u.lower():
+                    segment = info['segment'].lower()
+                    break
+            else:
+                segment = 'l' if '_l_' in path_u.lower() else 's'
     else:
-        segment = 'l' if '_l_' in output_file.lower() else 's'
+        segment = segment.lower()
     
     # Get the path to the lineages file
     lineage_file = os.path.join(lineages_dir, f'{segment}_lineages.txt')
@@ -1213,10 +1246,15 @@ def create_figtree_metadata(trimmed_fasta, output_file):
     # Read lineage information if file exists
     if os.path.exists(lineage_file):
         with open(lineage_file) as f:
-            header = next(f).strip().split('\t')
-            acc_idx = next((i for i, col in enumerate(header) if 'acc' in col.lower()), 0)
-            lin_idx = next((i for i, col in enumerate(header) if 'lin' in col.lower()), 1)
-            sub_idx = next((i for i, col in enumerate(header) if 'sub' in col.lower()), 2)
+            header = [h.strip() for h in next(f).strip().split('\t')]
+            header_l = [h.lower() for h in header]
+            acc_idx = next((i for i, col in enumerate(header_l) if 'acc' in col), 0)
+            # Prefer exact-ish column names so "Sublineage" is not mistaken for Lineages
+            lin_idx = next((i for i, col in enumerate(header_l)
+                            if col.startswith('lineage') or col == 'lineages'), 1)
+            sub_idx = next((i for i, col in enumerate(header_l)
+                            if col == 'sublineage' or (col.startswith('sub') and 'subsub' not in col)), 2)
+            subsub_idx = next((i for i, col in enumerate(header_l) if 'subsub' in col), None)
             
             for line in f:
                 parts = line.strip().split('\t')
@@ -1224,10 +1262,14 @@ def create_figtree_metadata(trimmed_fasta, output_file):
                     accession = parts[acc_idx].strip()
                     lineages[accession] = parts[lin_idx].strip()
                     sublineages[accession] = parts[sub_idx].strip()
+                    if subsub_idx is not None and len(parts) > subsub_idx:
+                        subsublineages[accession] = parts[subsub_idx].strip() or "None"
+                    else:
+                        subsublineages[accession] = "None"
     
     # Write header line first
     with open(output_file, 'w') as f:
-        f.write("Taxon\tLocation\tLocation2\tHost\tDate\tLineage\tSublineage\n")
+        f.write("Taxon\tLocation\tLocation2\tHost\tDate\tLineage\tSublineage\tSubsublineage\n")
         
         # Parse FASTA file and extract metadata from headers
         for record in SeqIO.parse(trimmed_fasta, "fasta"):
@@ -1258,23 +1300,22 @@ def create_figtree_metadata(trimmed_fasta, output_file):
             # Get lineage information
             lineage = lineages.get(accession, "Unknown")
             sublineage = sublineages.get(accession, "None")
+            subsublineage = subsublineages.get(accession, "None")
             
             # Handle reference sequences specially
             if "Reference" in parts:
-                f.write(f"{taxon}\tSierraLeone\tUnknown\tHuman\tUnknown\t{lineage}\t{sublineage}\n")
+                f.write(f"{taxon}\tSierraLeone\tUnknown\tHuman\tUnknown\t{lineage}\t{sublineage}\t{subsublineage}\n")
             elif "outgroup" in parts:
-                f.write(f"{taxon}\tNigeria\tLassa\tHuman\t1969.000\t{lineage}\t{sublineage}\n")
+                f.write(f"{taxon}\tNigeria\tLassa\tHuman\t1969.000\t{lineage}\t{sublineage}\t{subsublineage}\n")
             else:
                 location = parts[1] if len(parts) > 1 else "Unknown"
                 location2 = parts[2] if len(parts) > 2 else "Unknown"
                 host = parts[3] if len(parts) > 3 else "Unknown"
                 date = parts[4] if len(parts) > 4 else "Unknown"
-                f.write(f"{taxon}\t{location}\t{location2}\t{host}\t{date}\t{lineage}\t{sublineage}\n")
+                f.write(f"{taxon}\t{location}\t{location2}\t{host}\t{date}\t{lineage}\t{sublineage}\t{subsublineage}\n")
 
-def perform_phylogenetic_analysis(phylogeny_dir, segment):
-    """Perform alignment, trimming and tree building for a segment"""
-    import shutil
-    import os
+def perform_phylogenetic_analysis(phylogeny_dir, segment, do_tree=True):
+    """Perform alignment, trimming and optionally tree building for a segment"""
     from Bio import SeqIO
     
     # Define reference lengths and minimum required length
@@ -1387,6 +1428,9 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
         
         # Remove input alignment file, keeping only trimmed output
         os.remove(trimal_input)
+
+        if not do_tree:
+            return
         
         # Copy trimmed alignment to Tree directory
         tree_input = os.path.join(tree_dir, f"{segment.lower()}_trimmed.fasta")
@@ -1398,7 +1442,8 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
         shutil.copy2(fasta_metadata, tree_metadata)
         print(f"Copied metadata file to Tree folder: {tree_metadata}")
         
-        print(f"\nBuilding phylogenetic tree for {segment} segment using IQ-TREE...")
+        iqtree_bin = _resolve_iqtree_cmd() or "iqtree2"
+        print(f"\nBuilding phylogenetic tree for {segment} segment using {iqtree_bin}...")
         
         # Change to tree directory before running IQ-TREE
         current_dir = os.getcwd()
@@ -1407,7 +1452,7 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
         try:
             # Run IQ-TREE with just the filename since we're in the correct directory
             iqtree_cmd = [
-                "iqtree2",
+                iqtree_bin,
                 "-s", f"{segment.lower()}_trimmed.fasta",
                 "-nt", "AUTO",
                 "-bb", "10000",
@@ -1440,6 +1485,587 @@ def perform_phylogenetic_analysis(phylogeny_dir, segment):
     except Exception as e:
         print(f"An unexpected error occurred: {str(e)}")
         raise
+
+
+# ---------------------------------------------------------------------------
+# Protein (CDS) alignment pipeline (minimap2 → translate → MAFFT → pal2nal)
+# ---------------------------------------------------------------------------
+
+def normalize_protein_list(proteins_str):
+    """Parse comma-separated protein names/numbers into canonical names."""
+    if not proteins_str:
+        return []
+    raw = [x.strip().upper() for x in proteins_str.split(',') if x.strip()]
+    return [PROTEIN_NUM.get(p, p) for p in raw]
+
+
+def check_protein_cds_dependencies():
+    """Require minimap2, mafft, trimal, and pal2nal.pl for protein alignment."""
+    for tool in ['minimap2', 'mafft', 'trimal']:
+        if subprocess.run(['which', tool], capture_output=True).returncode != 0:
+            print(f"Error: {tool} not found. Required for protein alignment.")
+            sys.exit(1)
+    if subprocess.run(['which', 'pal2nal.pl'], capture_output=True).returncode != 0:
+        print("Error: pal2nal.pl not found. Install with e.g. conda install -c bioconda pal2nal")
+        sys.exit(1)
+
+
+def _resolve_iqtree_cmd():
+    """Prefer iqtree2, then iqtree / iqtree3."""
+    for cmd in ('iqtree2', 'iqtree', 'iqtree3'):
+        if subprocess.run(['which', cmd], capture_output=True).returncode == 0:
+            return cmd
+    return None
+
+
+def _fetch_refseq_fasta(accession):
+    """Fetch RefSeq nucleotide FASTA from NCBI."""
+    try:
+        from urllib.request import urlopen
+        url = (
+            "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+            f"?db=nuccore&id={accession}&rettype=fasta&retmode=text"
+        )
+        with urlopen(url, timeout=30) as r:
+            return r.read().decode()
+    except Exception as e:
+        raise RuntimeError(f"Failed to fetch RefSeq {accession}: {e}")
+
+
+def _parse_cigar(cigar_str):
+    for m in re.finditer(r"(\d+)([MIDNSHP=X])", cigar_str):
+        yield m.group(2), int(m.group(1))
+
+
+def _extract_region_cds(seq, ref_start_1, ref_end_1, align_ref_start_1, cigar_str):
+    """Extract query bases that align to a 1-based inclusive RefSeq interval."""
+    out, ref_pos, query_pos = [], align_ref_start_1, 0
+    for op, length in _parse_cigar(cigar_str):
+        if op in "M=X":
+            for _ in range(length):
+                if ref_start_1 <= ref_pos <= ref_end_1:
+                    out.append(seq[query_pos])
+                ref_pos += 1
+                query_pos += 1
+        elif op == "I":
+            if ref_start_1 <= ref_pos - 1 <= ref_end_1:
+                for i in range(length):
+                    out.append(seq[query_pos + i])
+            query_pos += length
+        elif op in "D N":
+            ref_pos += length
+        elif op in "S H P":
+            query_pos += length
+    return "".join(out)
+
+
+def _revcomp(seq):
+    complement = str.maketrans("ACGTacgtnN", "TGCAtgcanN")
+    return seq.translate(complement)[::-1]
+
+
+def _extract_cds_from_sam(sam_path, ref_start, ref_end, query_ids, out_path,
+                          min_cds_fraction=0.5, strand='+'):
+    """Extract CDS nucleotides from a minimap2 SAM; reverse-complement if strand='-'."""
+    ref_len = ref_end - ref_start + 1
+    min_len = int(ref_len * min_cds_fraction)
+    query_set = set(query_ids) if query_ids else None
+    seqs = OrderedDict()
+    best_extracted_len = {}
+    with open(sam_path) as sam:
+        for line in sam:
+            if line.startswith("@"):
+                continue
+            parts = line.strip().split("\t")
+            if len(parts) < 11:
+                continue
+            qname, flag, rname, pos_s, _, cigar, _, _, _, seq = parts[:10]
+            if int(flag) & 0x900 or not seq or seq == "*":
+                continue
+            pos = int(pos_s)
+            if pos > ref_end:
+                continue
+            if query_set is not None and qname not in query_set:
+                continue
+            extracted = _extract_region_cds(seq, ref_start, ref_end, pos, cigar)
+            if strand == '-':
+                extracted = _revcomp(extracted)
+            n_ext = len(extracted)
+            best_extracted_len[qname] = max(best_extracted_len.get(qname, 0), n_ext)
+            if n_ext < min_len:
+                continue
+            if qname not in seqs or n_ext > len(seqs[qname]):
+                seqs[qname] = extracted
+    with open(out_path, "w") as f:
+        for qid in (query_ids or []):
+            if qid in seqs:
+                s = seqs[qid]
+                f.write(f">{qid}\n")
+                for i in range(0, len(s), 60):
+                    f.write(s[i:i + 60] + "\n")
+    kept = set(seqs.keys())
+    dropped_ids = [q for q in (query_ids or []) if q not in kept]
+    dropped_best_bp = {q: best_extracted_len.get(q, 0) for q in dropped_ids}
+    return len(seqs), len(query_ids or []), dropped_ids, ref_len, dropped_best_bp
+
+
+def _translate_cds_to_protein(rec):
+    from Bio.Seq import Seq
+    from Bio.SeqRecord import SeqRecord
+    s = rec.seq
+    if len(s) % 3 != 0:
+        s = s[:(len(s) // 3) * 3]
+    aa = str(s.translate(table=1, to_stop=False, cds=False))
+    return SeqRecord(Seq(aa), id=rec.id, description="")
+
+
+def _translate_cds_fasta(cds_path, protein_path):
+    records = list(SeqIO.parse(cds_path, "fasta"))
+    if not records:
+        open(protein_path, "w").close()
+        return
+    proteins = [_translate_cds_to_protein(rec) for rec in records]
+    with open(protein_path, "w") as f:
+        SeqIO.write(proteins, f, "fasta")
+
+
+def _drop_proteins_with_internal_stops(cds_path, protein_path, protein_label):
+    """Remove CDS/protein pairs with internal stop codons before MAFFT."""
+    proteins = list(SeqIO.parse(protein_path, "fasta"))
+    if not proteins:
+        return 0
+    bad_ids = []
+    for rec in proteins:
+        aa = str(rec.seq).upper().replace("-", "")
+        body = aa[:-1] if aa.endswith("*") else aa
+        if "*" in body:
+            bad_ids.append(rec.id)
+    if not bad_ids:
+        return 0
+    bad_set = set(bad_ids)
+    for eid in bad_ids:
+        shown = eid if len(eid) <= 80 else eid[:80] + "..."
+        print(f"  {protein_label}: excluding before alignment (internal stop codon): {shown}")
+    kept_prot = [r for r in proteins if r.id not in bad_set]
+    kept_cds = [r for r in SeqIO.parse(cds_path, "fasta") if r.id not in bad_set]
+    with open(protein_path, "w") as f:
+        SeqIO.write(kept_prot, f, "fasta")
+    with open(cds_path, "w") as f:
+        SeqIO.write(kept_cds, f, "fasta")
+    print(
+        f"  {protein_label}: removed {len(bad_ids)} sequence(s) with internal stop(s) "
+        f"before MAFFT ({len(kept_prot)} remain)."
+    )
+    return len(bad_ids)
+
+
+def _parse_pal2nal_failed_id(err):
+    if not err:
+        return None
+    for line in err.splitlines():
+        s = line.strip()
+        if s.startswith(">"):
+            return s[1:].strip()
+    m = re.search(r">\s*([^\s\n\r>]+)", err)
+    return m.group(1).strip() if m else None
+
+
+def _backtranslate_pal2nal(protein_aln_path, cds_path, out_path):
+    """Back-translate protein alignment to codon alignment using PAL2NAL."""
+    from Bio import AlignIO
+    from Bio.SeqRecord import SeqRecord
+    cds_by_id = {}
+    for rec in SeqIO.parse(cds_path, "fasta"):
+        cds_by_id[rec.id] = rec.seq
+        cds_by_id[rec.id.replace("/", "_")] = rec.seq
+        cds_by_id[rec.id.replace("_", "/")] = rec.seq
+    aln = AlignIO.read(protein_aln_path, "fasta")
+    cds_ordered = []
+    for rec in aln:
+        seq = (
+            cds_by_id.get(rec.id)
+            or cds_by_id.get(rec.id.replace("/", "_"))
+            or cds_by_id.get(rec.id.replace("_", "/"))
+        )
+        if seq is None:
+            return False, f"CDS missing for id: {rec.id}", None
+        cds_ordered.append(SeqRecord(seq, id=rec.id, description=""))
+    fd, tmp_cds = tempfile.mkstemp(suffix=".fasta")
+    os.close(fd)
+    try:
+        with open(tmp_cds, "w") as f:
+            SeqIO.write(cds_ordered, f, "fasta")
+        ret = subprocess.run(
+            ["pal2nal.pl", protein_aln_path, tmp_cds, "-output", "fasta"],
+            capture_output=True, text=True, timeout=600,
+        )
+        err_text = ((ret.stderr or "").strip() + "\n" + (ret.stdout or "").strip()).strip()
+        if ret.returncode != 0:
+            err = err_text or f"exit code {ret.returncode}"
+            return False, err, _parse_pal2nal_failed_id(err)
+        with open(out_path, "w") as f:
+            f.write(ret.stdout)
+        n_out = len(list(SeqIO.parse(out_path, "fasta")))
+        if n_out == 0:
+            err = err_text or "PAL2NAL produced 0 sequences (protein/CDS mismatch?)"
+            return False, err, _parse_pal2nal_failed_id(err)
+        return True, None, None
+    finally:
+        try:
+            os.unlink(tmp_cds)
+        except OSError:
+            pass
+
+
+def _collect_segment_fasta_for_protein(output_dir, segment):
+    """Build a deduplicated FASTA for one segment (download + ref + outgroup + consensus)."""
+    from Bio.SeqRecord import SeqRecord
+    from Bio.Seq import Seq
+    reference_lengths = {'L': 7200, 'S': 3400}
+    min_length = reference_lengths[segment] * 0.10
+    sequences = OrderedDict()
+    segment_dir = os.path.join(output_dir, "FASTA", f"{segment}_segment")
+    for fasta_file in [
+        f"lassa_{segment.lower()}_segments.fasta",
+        "reference.fasta",
+        "outgroup.fasta",
+        "consensus.fasta",
+    ]:
+        file_path = os.path.join(segment_dir, fasta_file)
+        if not os.path.exists(file_path):
+            continue
+        for record in SeqIO.parse(file_path, "fasta"):
+            if len(record.seq) < min_length:
+                continue
+            if record.id not in sequences:
+                sequences[record.id] = SeqRecord(
+                    Seq(str(record.seq)), id=record.id, description=""
+                )
+    return list(sequences.values())
+
+
+def run_protein_cds_pipeline(output_dir, proteins, min_cds_fraction=0.5, threads=1):
+    """
+    Extract Lassa protein CDS from L/S segment genomes, align at protein level,
+    back-translate with pal2nal, and trim. Writes Alignment/MAFFT/<protein>/ and
+    Alignment/Trimmed/<protein>/.
+    """
+    check_protein_cds_dependencies()
+    alignment_dir = os.path.join(output_dir, "Alignment")
+    work_dir = os.path.join(alignment_dir, "_work")
+    os.makedirs(work_dir, exist_ok=True)
+
+    # Prepare per-segment input FASTAs once
+    segment_inputs = {}
+    for segment in ('L', 'S'):
+        records = _collect_segment_fasta_for_protein(output_dir, segment)
+        if not records:
+            print(f"Warning: no sequences found for {segment} segment; "
+                  f"proteins on this segment will be skipped.")
+            continue
+        seg_fa = os.path.join(work_dir, f"{segment}_input.fasta")
+        with open(seg_fa, "w") as f:
+            SeqIO.write(records, f, "fasta")
+        segment_inputs[segment] = (seg_fa, [r.id for r in records])
+        print(f"Protein pipeline input ({segment} segment): {len(records)} sequences")
+
+    # Map each segment once to its RefSeq
+    segment_sam = {}
+    for segment, (seg_fa, query_ids) in segment_inputs.items():
+        ref_id = REFERENCE_SEQUENCES[segment]['id']
+        ref_fa = os.path.join(work_dir, f"{segment}_ref.fa")
+        try:
+            with open(ref_fa, "w") as f:
+                f.write(_fetch_refseq_fasta(ref_id))
+        except RuntimeError as e:
+            print(f"Warning: could not fetch {ref_id} ({e}); using local reference.fasta if present")
+            local_ref = os.path.join(output_dir, "FASTA", f"{segment}_segment", "reference.fasta")
+            if not os.path.exists(local_ref):
+                print(f"Error: no reference available for {segment} segment")
+                continue
+            shutil.copy2(local_ref, ref_fa)
+        sam_path = os.path.join(work_dir, f"{segment}_aln.sam")
+        print(f"Mapping {segment} segment sequences to {ref_id} with minimap2...")
+        with open(sam_path, "w") as f:
+            subprocess.run(
+                ["minimap2", "-a", "-t", str(threads), ref_fa, seg_fa],
+                stdout=f, stderr=subprocess.DEVNULL,
+            )
+        segment_sam[segment] = (sam_path, query_ids)
+
+    extraction_counts = {}
+    for protein in proteins:
+        info = LASSA_PROTEIN_REGIONS.get(protein)
+        if info is None:
+            print(f"Warning: unknown protein '{protein}', skipping")
+            continue
+        segment = info['segment']
+        if segment not in segment_sam:
+            print(f"  {protein}: skipped (no {segment} segment input)")
+            continue
+        sam_path, query_ids = segment_sam[segment]
+        protdir = os.path.join(work_dir, protein)
+        os.makedirs(protdir, exist_ok=True)
+        cds_path = os.path.join(protdir, "cds.fasta")
+        n_passed, n_input, dropped_ids, ref_len, dropped_best_bp = _extract_cds_from_sam(
+            sam_path, info['start'], info['end'], query_ids, cds_path,
+            min_cds_fraction=min_cds_fraction, strand=info['strand'],
+        )
+        extraction_counts[protein] = (n_passed, n_input, dropped_ids, ref_len, dropped_best_bp)
+        print(
+            f"  {protein}: extracted CDS for {n_passed}/{n_input} sequences "
+            f"(dropped {n_input - n_passed} with coverage < {min_cds_fraction * 100:.0f}% of RefSeq CDS)"
+        )
+        if dropped_ids:
+            for did in dropped_ids[:10]:
+                best = dropped_best_bp.get(did, 0)
+                pct = (100.0 * best / ref_len) if ref_len else 0
+                print(f"    dropped: {did} → {best} bp ({pct:.1f}% of ref CDS)")
+            if len(dropped_ids) > 10:
+                print(f"    ... and {len(dropped_ids) - 10} more")
+
+    # Align each protein
+    for protein in proteins:
+        protdir = os.path.join(work_dir, protein)
+        combined_cds = os.path.join(protdir, "cds.fasta")
+        if not os.path.isfile(combined_cds) or os.path.getsize(combined_cds) == 0:
+            continue
+        protein_fasta = os.path.join(protdir, "protein.fasta")
+        _translate_cds_fasta(combined_cds, protein_fasta)
+        _drop_proteins_with_internal_stops(combined_cds, protein_fasta, protein)
+        if not list(SeqIO.parse(protein_fasta, "fasta")):
+            print(f"  {protein}: no sequences left after stop-codon filter; skipping.")
+            continue
+
+        protein_aln = os.path.join(protdir, "protein_aln.fasta")
+        print(f"  Aligning {protein} proteins with MAFFT...")
+        with open(protein_aln, "w") as f:
+            r = subprocess.run(
+                ["mafft", "--auto", "--thread", str(min(threads, 32)), protein_fasta],
+                stdout=f, stderr=subprocess.PIPE, text=True,
+            )
+            if r.returncode != 0:
+                print(f"MAFFT failed for {protein}: {r.stderr}")
+                continue
+
+        cds_aligned = os.path.join(protdir, "cds_aligned.fasta")
+        exclude_for_pal2nal = set()
+        pal2nal_ok = False
+        for _ in range(50):
+            cds_input = combined_cds
+            aln_input = protein_aln
+            if exclude_for_pal2nal:
+                from Bio import AlignIO
+                from Bio.Align import MultipleSeqAlignment
+
+                def _excluded(eid):
+                    return eid in exclude_for_pal2nal
+
+                aln = AlignIO.read(protein_aln, "fasta")
+                aln_filtered = [r for r in aln if not _excluded(r.id)]
+                if not aln_filtered:
+                    break
+                cds_by_id = {rec.id: rec for rec in SeqIO.parse(combined_cds, "fasta")}
+                cds_records = [cds_by_id[r.id] for r in aln_filtered if r.id in cds_by_id]
+                if len(cds_records) != len(aln_filtered):
+                    print(f"PAL2NAL retry: ID mismatch for {protein}, skipping retry.")
+                    break
+                fd_a = tempfile.NamedTemporaryFile(mode="w", suffix=".fasta", delete=False)
+                fd_c = tempfile.NamedTemporaryFile(mode="w", suffix=".fasta", delete=False)
+                with open(fd_a.name, "w") as f:
+                    AlignIO.write(MultipleSeqAlignment(aln_filtered), f, "fasta")
+                with open(fd_c.name, "w") as f:
+                    SeqIO.write(cds_records, f, "fasta")
+                fd_a.close()
+                fd_c.close()
+                aln_input, cds_input = fd_a.name, fd_c.name
+            ok, err, failed_id = _backtranslate_pal2nal(aln_input, cds_input, cds_aligned)
+            if exclude_for_pal2nal and aln_input != protein_aln:
+                try:
+                    os.unlink(aln_input)
+                    os.unlink(cds_input)
+                except OSError:
+                    pass
+            if ok:
+                pal2nal_ok = True
+                if exclude_for_pal2nal:
+                    from Bio import AlignIO
+                    from Bio.Align import MultipleSeqAlignment
+                    aln_kept = [r for r in AlignIO.read(protein_aln, "fasta")
+                                if r.id not in exclude_for_pal2nal]
+                    with open(protein_aln, "w") as f:
+                        AlignIO.write(MultipleSeqAlignment(aln_kept), f, "fasta")
+                    prot_kept = [r for r in SeqIO.parse(protein_fasta, "fasta")
+                                 if r.id not in exclude_for_pal2nal]
+                    with open(protein_fasta, "w") as f:
+                        SeqIO.write(prot_kept, f, "fasta")
+                    cds_kept = [r for r in SeqIO.parse(combined_cds, "fasta")
+                                if r.id not in exclude_for_pal2nal]
+                    with open(combined_cds, "w") as f:
+                        SeqIO.write(cds_kept, f, "fasta")
+                    print(
+                        f"  {protein}: excluded {len(exclude_for_pal2nal)} sequence(s) "
+                        f"with pep/nuc inconsistency."
+                    )
+                break
+            if not failed_id and err:
+                failed_id = _parse_pal2nal_failed_id(err)
+            if failed_id:
+                exclude_for_pal2nal.add(failed_id)
+                shown = failed_id[:80] + ("..." if len(failed_id) > 80 else "")
+                print(f"  {protein}: excluding pep/nuc inconsistency, retrying without: {shown}")
+                continue
+            print(f"PAL2NAL failed for {protein}: {(err or 'unknown')[:500]}")
+            break
+        else:
+            print(f"PAL2NAL failed for {protein}: too many inconsistent sequences")
+        if not pal2nal_ok:
+            continue
+
+        n_in_alignment = len(list(SeqIO.parse(cds_aligned, "fasta")))
+        print(f"  {protein}: codon alignment has {n_in_alignment} sequences")
+
+        mafft_prot_dir = os.path.join(alignment_dir, "MAFFT", protein)
+        trim_prot_dir = os.path.join(alignment_dir, "Trimmed", protein)
+        os.makedirs(mafft_prot_dir, exist_ok=True)
+        os.makedirs(trim_prot_dir, exist_ok=True)
+        for name, src in [
+            ("cds.fasta", combined_cds),
+            ("protein.fasta", protein_fasta),
+            ("protein_aln.fasta", protein_aln),
+            ("cds_aligned.fasta", cds_aligned),
+        ]:
+            shutil.copy2(src, os.path.join(mafft_prot_dir, name))
+
+        trimmed_fasta = os.path.join(trim_prot_dir, "cds_trimmed.fasta")
+        r = subprocess.run(
+            ["trimal", "-in", cds_aligned, "-out", trimmed_fasta, "-automated1"],
+            capture_output=True, text=True,
+        )
+        if r.returncode != 0:
+            print(f"  TrimAl failed for {protein}, copying untrimmed")
+            shutil.copy2(cds_aligned, trimmed_fasta)
+        else:
+            print(f"  Wrote trimmed codon alignment: {trimmed_fasta}")
+
+        # FigTree metadata next to trimmed alignment
+        meta_out = os.path.join(trim_prot_dir, f"{protein.lower()}_metadata.txt")
+        create_figtree_metadata(
+            trimmed_fasta, meta_out,
+            segment=LASSA_PROTEIN_REGIONS[protein]['segment'],
+        )
+
+    try:
+        shutil.rmtree(work_dir, ignore_errors=True)
+    except Exception:
+        pass
+    return extraction_counts
+
+
+def run_protein_phylogeny(output_dir, proteins, threads=1):
+    """Build an IQ-TREE phylogeny for each protein trimmed codon alignment."""
+    iqtree_cmd = _resolve_iqtree_cmd()
+    if iqtree_cmd is None:
+        print("Error: iqtree2/iqtree not found. Required for protein phylogeny.")
+        sys.exit(1)
+
+    phylogeny_base = os.path.join(output_dir, "Phylogeny")
+    os.makedirs(phylogeny_base, exist_ok=True)
+    trimmed_dir = os.path.join(output_dir, "Alignment", "Trimmed")
+    mafft_dir = os.path.join(output_dir, "Alignment", "MAFFT")
+    nt = "AUTO" if threads <= 0 else str(threads)
+
+    for protein in proteins:
+        trimmed_fasta = os.path.join(trimmed_dir, protein, "cds_trimmed.fasta")
+        cds_aligned = os.path.join(mafft_dir, protein, "cds_aligned.fasta")
+        src = trimmed_fasta if os.path.isfile(trimmed_fasta) else cds_aligned
+        if not os.path.isfile(src):
+            print(f"  {protein}: no alignment found, skipping phylogeny")
+            continue
+        protdir = os.path.join(phylogeny_base, protein)
+        os.makedirs(protdir, exist_ok=True)
+        dest = os.path.join(protdir, "cds_aligned.fasta")
+        shutil.copy2(src, dest)
+        # Copy metadata if present
+        meta_src = os.path.join(trimmed_dir, protein, f"{protein.lower()}_metadata.txt")
+        if os.path.isfile(meta_src):
+            shutil.copy2(meta_src, os.path.join(protdir, f"{protein.lower()}_metadata.txt"))
+
+        print(f"\nBuilding phylogenetic tree for {protein} using {iqtree_cmd}...")
+        cwd = os.getcwd()
+        os.chdir(protdir)
+        try:
+            r = subprocess.run(
+                [iqtree_cmd, "-s", "cds_aligned.fasta", "-m", "MFP",
+                 "-bb", "10000", "-nt", nt],
+                capture_output=True, text=True,
+            )
+            if r.returncode != 0:
+                print(f"IQ-TREE failed for {protein}: {r.stderr}")
+            else:
+                print(f"IQ-TREE completed for {protein} in Phylogeny/{protein}/")
+                for file in os.listdir('.'):
+                    if file.endswith(('.bionj', '.ckp.gz', '.mldist', '.log')):
+                        try:
+                            os.remove(file)
+                        except OSError:
+                            pass
+        finally:
+            os.chdir(cwd)
+
+
+def prompt_alignment_and_proteins(args, interactive):
+    """Fill alignment / proteins / phylogeny from CLI or interactive prompts."""
+    alignment_from_cli = args.alignment is not None
+    phylogeny_from_cli = bool(getattr(args, '_phylogeny_explicit', False))
+
+    if args.alignment is None:
+        if interactive:
+            print("\nDo you want to perform alignment?")
+            print("1. Whole-genome (L and S segment) alignment")
+            print("2. Protein (CDS) alignment")
+            print("3. No alignment")
+            args.alignment = get_user_input(
+                "Select alignment option (1-3):", ['1', '2', '3']
+            )
+        else:
+            # Backward compatible: --phylogeny alone implies whole-segment alignment
+            args.alignment = '1' if args.phylogeny else '3'
+
+    if args.alignment == '2':
+        if not args.proteins:
+            if interactive or not alignment_from_cli:
+                print("\nSelect proteins for CDS alignment (comma-separated):")
+                for num, name in PROTEIN_NUM.items():
+                    print(f"  {num} = {name} — {PROTEIN_DESCRIPTIONS[name]}")
+                print("  Or use names: L, Z, NP, GPC")
+                choice = input("Enter proteins (default: L,NP,GPC,Z): ").strip() or "L,Z,NP,GPC"
+                args.proteins = choice
+            else:
+                args.proteins = "L,Z,NP,GPC"
+        proteins = normalize_protein_list(args.proteins)
+        invalid = [p for p in proteins if p not in LASSA_PROTEIN_REGIONS]
+        if invalid:
+            print(f"Error: unknown protein(s): {', '.join(invalid)}")
+            print(f"Valid options: {', '.join(LASSA_PROTEIN_REGIONS.keys())} (or numbers 1-4)")
+            sys.exit(1)
+        args.proteins = ','.join(proteins)
+
+    if args.alignment in ('1', '2') and not phylogeny_from_cli and interactive:
+        phy = get_user_input(
+            "\nBuild phylogenetic tree(s) from the alignment?\n"
+            "1 = Yes\n"
+            "2 = No",
+            ['1', '2']
+        )
+        args.phylogeny = (phy == '1')
+    elif args.alignment == '1' and args.phylogeny:
+        pass  # whole-segment phylogeny as before
+    elif args.alignment == '3':
+        args.phylogeny = False
+
+    return args
+
 
 def filter_by_lineage(sequences, target_lineage=None, target_sublineage=None, l_sublineage=None, s_sublineage=None):
     """Filter sequences based on lineage and/or sublineage, with separate L and S sublineage options"""
@@ -1591,9 +2217,30 @@ Available: Nigeria, Sierra Leone, Liberia, Guinea, Mali,
                           help='''(Optional) File containing accession numbers to remove
 One accession number per line, lines starting with # are ignored''')
         
-        parser.add_argument('--phylogeny', action='store_true',
-                          help='''(Optional) Create concatenated FASTA files for phylogenetic analysis
-Creates directories for MSA, recombination detection, and tree building''')
+        parser.add_argument('--alignment', '-a', type=str, choices=['1', '2', '3'],
+                          default=None, metavar='{1,2,3}',
+                          help='''Alignment type:
+1 = Whole-genome (L and S segment) alignment
+2 = Protein (CDS) alignment
+3 = No alignment
+If omitted with --phylogeny, defaults to 1 (backward compatible)''')
+
+        parser.add_argument('--proteins', '-pr', type=str, default=None, metavar='LIST',
+                          help='''For --alignment 2: comma-separated proteins
+Names: L,Z,NP,GPC  or numbers: 1=L, 2=Z, 3=NP, 4=GPC
+Example: --proteins GPC,NP or -pr 4,3''')
+
+        parser.add_argument('--min-cds-fraction', type=float, default=0.5, metavar='FRAC',
+                          help='''For --alignment 2: minimum fraction of RefSeq CDS length
+to keep a sequence (default: 0.5)''')
+
+        parser.add_argument('--threads', '-t', type=int, default=1,
+                          help='''Threads for minimap2, MAFFT, and IQ-TREE (default: 1).
+0 = use all CPUs.''')
+
+        parser.add_argument('--phylogeny', '-p', action='store_true',
+                          help='''(Optional) Build phylogenetic tree(s) from the alignment
+Whole-genome: one tree per segment. Protein: one tree per protein''')
         
         parser.add_argument('--consensus_L', type=str,
                           help='''(Optional) Path to custom consensus sequence for L segment
@@ -1625,6 +2272,7 @@ Example: --s_sublineage II''')
             sys.exit(0)
             
         args = parser.parse_args()
+        args._phylogeny_explicit = ('--phylogeny' in sys.argv) or ('-p' in sys.argv)
         
         # Initialize countries as None if not provided
         countries = None
@@ -1632,6 +2280,7 @@ Example: --s_sublineage II''')
             countries = [country.strip() for country in args.countries.split(',')]
         
         # Interactive mode if optional arguments are not provided
+        interactive = not args.genome
         if not args.genome:
             args.genome = get_user_input(
                 "\nSelect genome completeness filter:\n"
@@ -1660,10 +2309,19 @@ Example: --s_sublineage II''')
                 "3 = Keep only sequences with both known location and date\n"
                 "4 = No metadata filter",
                 ['1', '2', '3', '4'])
+
+        # Alignment / protein / phylogeny (interactive or CLI defaults)
+        args = prompt_alignment_and_proteins(args, interactive)
         
         # Continue with the rest of the code...
         print("\nStarting Lassa virus sequence download")
         print(f"Output directory: {args.outdir}")
+        if args.alignment == '2':
+            print(f"Alignment: protein CDS ({args.proteins})")
+        elif args.alignment == '1':
+            print("Alignment: whole-genome (L and S segments)")
+        if args.phylogeny:
+            print("Phylogeny: enabled")
         
         # Create output directories
         fasta_dir = os.path.join(args.outdir, "FASTA")
@@ -1774,29 +2432,39 @@ Example: --s_sublineage II''')
               f"and {written_counts['unknown']} unknown segments")
         print(f"Updated summary report written to: {os.path.join(args.outdir, 'summary_Lassa.txt')}")
 
-        # After all sequences are written, handle phylogeny if requested
-        if args.phylogeny:
-            print("\nCreating files for phylogenetic analysis...")
-            
-            # Create all phylogeny directories
+        # Alignment and optional phylogeny
+        nthreads = args.threads if getattr(args, 'threads', 1) > 0 else (os.cpu_count() or 1)
+
+        if args.alignment == '1':
+            print("\nCreating files for whole-genome (segment) alignment...")
             phylogeny_dir = create_phylogeny_directories(args.outdir)
-            
-            # Concatenate files and remove duplicates
             l_count = concatenate_fasta_files(args.outdir, phylogeny_dir, "L")
             s_count = concatenate_fasta_files(args.outdir, phylogeny_dir, "S")
-            
             print(f"\nCreated concatenated FASTA files:")
             print(f"L segment: {l_count} unique sequences")
             print(f"S segment: {s_count} unique sequences")
-            
-            # Perform phylogenetic analysis for each segment
-            perform_phylogenetic_analysis(phylogeny_dir, "L")
-            perform_phylogenetic_analysis(phylogeny_dir, "S")
-            
-            print("\nPhylogenetic analysis completed. Output files are in the following directories:")
+            perform_phylogenetic_analysis(phylogeny_dir, "L", do_tree=args.phylogeny)
+            perform_phylogenetic_analysis(phylogeny_dir, "S", do_tree=args.phylogeny)
+            print("\nWhole-genome analysis completed. Output files:")
             print(f"Alignments: {os.path.join(phylogeny_dir, 'MSA')}")
             print(f"Trimmed alignments: {os.path.join(phylogeny_dir, 'TrimAl')}")
-            print(f"Tree files: {os.path.join(phylogeny_dir, 'Tree')}")
+            if args.phylogeny:
+                print(f"Tree files: {os.path.join(phylogeny_dir, 'Tree')}")
+
+        elif args.alignment == '2':
+            proteins = normalize_protein_list(args.proteins)
+            print(f"\nRunning protein (CDS) alignment for: {', '.join(proteins)}")
+            run_protein_cds_pipeline(
+                args.outdir,
+                proteins,
+                min_cds_fraction=getattr(args, 'min_cds_fraction', 0.5),
+                threads=nthreads,
+            )
+            print(f"\nProtein alignment completed. Output: {os.path.join(args.outdir, 'Alignment')}")
+            if args.phylogeny:
+                print("\nBuilding protein phylogenies...")
+                run_protein_phylogeny(args.outdir, proteins, threads=nthreads)
+                print(f"Protein phylogenies completed. Output: {os.path.join(args.outdir, 'Phylogeny')}")
 
     except Exception as e:
         print(f"\nAn unexpected error occurred: {str(e)}", file=sys.stderr)
